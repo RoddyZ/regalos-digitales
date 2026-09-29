@@ -73,6 +73,74 @@
     capa.addEventListener('click', abrir, { once: true });
   }
 
+  function capa(html) {
+    const c = document.createElement('div');
+    c.className = 'rg-intro';
+    c.innerHTML = `<div class="rg-intro-caja">${html}</div>`;
+    document.body.appendChild(c);
+    return c;
+  }
+  function quitar(c) { c.classList.add('rg-saliendo'); setTimeout(() => c.remove(), 700); }
+
+  /* VIP: "se abre el 14 de febrero a las 00:00". Muestra cuenta regresiva hasta esa hora. */
+  function cuentaRegresiva() {
+    const meta = R.abreEl ? new Date(R.abreEl.length <= 10 ? R.abreEl + 'T00:00:00' : R.abreEl) : null;
+    if (!meta || new Date() >= meta) return Promise.resolve();
+    const c = capa(`
+      <div class="rg-intro-icono">⏳</div>
+      <p class="rg-intro-texto">${R.para ? esc(R.para) + ', tu' : 'Tu'} regalo se abrirá en</p>
+      <div class="rg-reloj"><b>0</b><small>días</small><b>0</b><small>horas</small><b>0</b><small>min</small><b>0</b><small>seg</small></div>`);
+    c.classList.add('rg-espera');
+    const n = c.querySelectorAll('.rg-reloj b');
+    return new Promise(listo => {
+      (function tic() {
+        const s = Math.max(0, Math.floor((meta - new Date()) / 1000));
+        [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60, s % 60].forEach((v, i) => n[i].textContent = v);
+        if (s > 0) return setTimeout(tic, 1000);
+        quitar(c); listo();
+      })();
+    });
+  }
+
+  // Debe coincidir con hashRespuesta() en scripts/lib.mjs
+  function normalizar(t) {
+    return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  async function sha256(t) {
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+    return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join('');
+  }
+
+  /* VIP: pregunta secreta ("¿Dónde fue nuestra primera cita?"). Responder bien abre el regalo. */
+  function preguntaSecreta(alAbrir) {
+    const icono = R.iconoIntro || document.body.dataset.icono || '🎁';
+    const c = capa(`
+      <div class="rg-intro-icono">${icono}</div>
+      <p class="rg-intro-texto">${R.para ? esc(R.para) + ', antes' : 'Antes'} de abrirlo…</p>
+      <form class="rg-pregunta">
+        <label for="rg-resp">${esc(R.pregunta)}</label>
+        <input id="rg-resp" autocomplete="off" autocapitalize="off" placeholder="Tu respuesta">
+        <button class="rg-intro-boton" type="submit">Abrir</button>
+        <p class="rg-pista" aria-live="polite"></p>
+      </form>`);
+    c.classList.add('rg-espera');
+    let intentos = 0;
+    c.querySelector('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const campo = c.querySelector('input');
+      const ok = (R.respuestas || []).includes(await sha256(normalizar(campo.value)));
+      if (ok) {
+        if (audio) audio.play().catch(() => {});
+        quitar(c);
+        alAbrir && alAbrir();
+        return;
+      }
+      intentos++;
+      campo.classList.remove('rg-mal'); void campo.offsetWidth; campo.classList.add('rg-mal');
+      c.querySelector('.rg-pista').textContent = R.pista && intentos >= 2 ? `Pista: ${R.pista}` : 'Mmm… no es esa. Intenta otra vez 💭';
+    });
+  }
+
   /* ---------- Utilidades para las plantillas ---------- */
 
   const espera = ms => new Promise(r => setTimeout(r, ms));
@@ -156,11 +224,13 @@
 
   window.Regalo = {
     datos: R, $, esc, espera, escribir, galeria, confeti, flotar, diasDesde,
-    iniciar({ alAbrir } = {}) {
+    async iniciar({ alAbrir } = {}) {
       if (expirado()) return pantallaExpirado();
       rellenarCampos();
       prepararMusica();
-      intro(alAbrir);
+      await cuentaRegresiva();
+      if (R.pregunta && R.respuestas) preguntaSecreta(alAbrir);
+      else intro(alAbrir);
     }
   };
 })();

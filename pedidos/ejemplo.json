@@ -1,6 +1,6 @@
 {
   "plantilla": "carta-amor",
-  "plan": "especial",
+  "plan": "vip",
   "cliente": "Nombre de quien compra (privado, no sale en la página)",
   "telefono": "0990000000",
   "notas": "Privado. Ej: pagó por transferencia el 28/09",
@@ -8,13 +8,20 @@
   "para": "Nombre de quien recibe",
   "de": "Firma",
   "titulo": "Título grande (opcional)",
-  "saludo": "Mi amor: (opcional, solo carta-amor)",
   "mensaje": "El mensaje.\nLos saltos de línea se respetan.",
+
+  "fotos": [{ "ruta": "fotos/foto1.jpg", "texto": "Pie de foto opcional" }],
+
+  "musica": "cancion.mp3",
+  "pregunta": "¿Dónde fue nuestra primera cita?",
+  "respuesta": "parque|el parque|parque la carolina",
+  "pista": "Había patos 🦆",
+  "abreEl": "2027-02-14T00:00",
+
+  "saludo": "Mi amor: (solo carta-amor)",
   "desde": "2022-02-14",
   "textoContador": "Llevamos juntos",
   "edad": 25,
   "meta": 15,
-  "fotos": ["fotos/foto1.jpg", { "ruta": "fotos/foto2.jpg", "texto": "Pie de foto opcional" }],
-  "musica": "cancion.mp3",
   "expira": null
 }

@@ -1,9 +1,9 @@
 {
   "plantilla": "cumpleanos",
-  "plan": "basico",
+  "plan": "chevere",
   "para": "Sofi",
   "de": "Tu hermano",
   "edad": 7,
   "mensaje": "¡Feliz cumpleaños, peque!\nQue este año esté lleno de risas, juegos y muchos sueños cumplidos.\nTe amo un montón.",
-  "fotos": ["fotos/muestra3.jpg", "fotos/muestra4.jpg"]
+  "fotos": ["fotos/muestra3.jpg"]
 }

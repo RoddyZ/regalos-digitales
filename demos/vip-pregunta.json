@@ -1,0 +1,13 @@
+{
+  "demoCodigo": "demo-vip",
+  "plantilla": "flores-amarillas",
+  "plan": "vip",
+  "para": "María",
+  "de": "Andrés",
+  "titulo": "Flores amarillas para ti",
+  "pregunta": "¿Qué flores te regalo hoy? (pista para la demo: amarillas)",
+  "respuesta": "amarillas|flores amarillas",
+  "pista": "Son del color del sol ☀️",
+  "mensaje": "Solo tú sabías la respuesta.\nY solo tú haces que mis días sean amarillos, como el sol.",
+  "fotos": ["fotos/muestra1.jpg", "fotos/muestra2.jpg", "fotos/muestra3.jpg"]
+}

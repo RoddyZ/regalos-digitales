@@ -21,6 +21,12 @@ export function codigoAleatorio(largo = 8) {
   return Array.from(bytes, b => ALFABETO[b % ALFABETO.length]).join('');
 }
 
+// Debe coincidir con normalizar() en docs/assets/regalo.js
+export function hashRespuesta(texto) {
+  const limpio = texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  return crypto.createHash('sha256').update(limpio).digest('hex');
+}
+
 const existe = p => fs.access(p).then(() => true, () => false);
 
 async function codigoLibre() {
@@ -31,7 +37,7 @@ async function codigoLibre() {
 }
 
 // Campos del pedido que no van a la página pública.
-const PRIVADOS = new Set(['plantilla', 'plan', 'codigo', 'cliente', 'telefono', 'notas', 'fotos', 'musica', 'expira']);
+const PRIVADOS = new Set(['plantilla', 'plan', 'codigo', 'cliente', 'telefono', 'notas', 'fotos', 'musica', 'expira', 'respuesta']);
 
 /**
  * Genera docs/<codigo>/ a partir de un pedido y devuelve { codigo, url, carpeta }.
@@ -49,8 +55,10 @@ export async function generarRegalo(pedido, { baseDir = RAIZ, codigo, forzar = f
   }
 
   const fotos = pedido.fotos || [];
-  if (fotos.length > plan.maxFotos) throw new Error(`El plan ${plan.nombre} permite ${plan.maxFotos} fotos y el pedido trae ${fotos.length}.`);
+  if (fotos.length > plan.maxFotos) throw new Error(plan.maxFotos ? `El plan ${plan.nombre} permite ${plan.maxFotos} foto(s) y el pedido trae ${fotos.length}.` : `El plan ${plan.nombre} no incluye fotos.`);
   if (pedido.musica && !plan.musica) throw new Error(`El plan ${plan.nombre} no incluye música.`);
+  if ((pedido.pregunta || pedido.abreEl) && !plan.extras) throw new Error(`El plan ${plan.nombre} no incluye pregunta secreta ni apertura programada.`);
+  if (pedido.pregunta && !pedido.respuesta) throw new Error('Falta "respuesta" para la pregunta secreta.');
 
   codigo = codigo || pedido.codigo || (await codigoLibre());
   if (!/^[a-z0-9-]{4,40}$/.test(codigo)) throw new Error(`Código inválido: "${codigo}" (solo minúsculas, números y guiones).`);
@@ -79,6 +87,9 @@ export async function generarRegalo(pedido, { baseDir = RAIZ, codigo, forzar = f
       datos.musica = 'musica' + ext;
     }
   }
+
+  // La respuesta secreta se guarda como hash: no se puede leer mirando el código de la página.
+  if (pedido.respuesta) datos.respuestas = String(pedido.respuesta).split('|').map(r => hashRespuesta(r));
 
   if (pedido.expira) datos.expira = pedido.expira;
   else if (plan.diasVigencia) datos.expira = new Date(Date.now() + plan.diasVigencia * 86400000).toISOString().slice(0, 10);

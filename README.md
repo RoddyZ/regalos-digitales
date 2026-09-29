@@ -29,8 +29,9 @@ Cada regalo vive en `docs/<codigo>/` y se abre con `https://roddyz.github.io/reg
 
 ## Campos del pedido
 
-`plantilla`, `plan` (basico/especial/premium), `para`, `de`, `titulo`, `mensaje` (acepta `\n`), `fotos`
+`plantilla`, `plan` (basico: sin fotos · chevere: 1 foto · vip: 10 fotos + música + extras), `para`, `de`, `titulo`, `mensaje` (acepta `\n`), `fotos`
 (ruta o `{ "ruta", "texto" }`), `musica` (mp3 local o URL; solo planes con música), `expira` (`AAAA-MM-DD`, opcional).
+Solo VIP: `pregunta` + `respuesta` (varias aceptadas con `|`, no importan mayúsculas ni tildes) + `pista` (sale al 2.º error), `abreEl` (`AAAA-MM-DDTHH:MM`, muestra cuenta regresiva).
 Por plantilla: `saludo`, `desde` + `textoContador` (carta-amor), `edad` (cumpleanos), `meta` (atrapa-corazones).
 `cliente`, `telefono` y `notas` son privados: nunca salen en la página.
 

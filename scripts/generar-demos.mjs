@@ -23,6 +23,8 @@ for (const [i, [a, b]] of colores.entries()) {
 
 for (const f of (await fs.readdir(DEMOS)).filter(f => f.endsWith('.json'))) {
   const pedido = JSON.parse(await fs.readFile(path.join(DEMOS, f), 'utf8'));
-  const { url } = await generarRegalo(pedido, { baseDir: DEMOS, codigo: 'demo-' + pedido.plantilla, forzar: true, conQR: false });
+  const codigo = pedido.demoCodigo || 'demo-' + pedido.plantilla;
+  delete pedido.demoCodigo;
+  const { url } = await generarRegalo(pedido, { baseDir: DEMOS, codigo, forzar: true, conQR: false });
   console.log('✔', url);
 }
