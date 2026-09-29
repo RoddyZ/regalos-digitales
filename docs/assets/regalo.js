@@ -23,21 +23,46 @@
     if (R.titulo) document.title = R.titulo;
   }
 
-  let audio = null;
+  /* Música, tres opciones:
+     - mp3 propio: suena de fondo al abrir, con botón ♪ para pausar.
+     - Spotify: su tarjeta oficial abajo (sin sesión reproduce 30 s, como en historias de Instagram).
+     - YouTube: su reproductor oficial en miniatura; se toca para reproducir. */
+  const musica = { reproducir() {} };
+
+  function incrustado(url) {
+    const sp = String(url).match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?(track|album|playlist|episode)\/([A-Za-z0-9]+)/);
+    if (sp) return { tipo: 'spotify', src: `https://open.spotify.com/embed/${sp[1]}/${sp[2]}?theme=0` };
+    const yt = String(url).match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+    if (yt) return { tipo: 'youtube', src: `https://www.youtube-nocookie.com/embed/${yt[1]}?playsinline=1&rel=0` };
+    return null;
+  }
+
   function prepararMusica() {
     if (!R.musica) return;
-    audio = new Audio(R.musica);
+    const emb = incrustado(R.musica);
+    if (emb) {
+      const caja = document.createElement('div');
+      caja.className = emb.tipo === 'spotify' ? 'rg-cancion' : 'rg-yt';
+      caja.innerHTML = `<iframe src="${emb.src}" title="Nuestra canción" loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        <button type="button" class="rg-cerrar" aria-label="Ocultar la canción">×</button>`;
+      caja.querySelector('.rg-cerrar').onclick = () => caja.remove();
+      document.body.appendChild(caja);
+      musica.reproducir = () => setTimeout(() => caja.classList.add('rg-visible'), 1500);
+      return;
+    }
+    const audio = new Audio(R.musica);
     audio.loop = true;
     audio.volume = 0.7;
-    const btn = document.createElement('button');
-    btn.className = 'rg-musica';
-    btn.setAttribute('aria-label', 'Pausar o reanudar la música');
-    btn.textContent = '♪';
-    btn.onclick = () => {
-      if (audio.paused) { audio.play(); btn.classList.remove('rg-off'); }
-      else { audio.pause(); btn.classList.add('rg-off'); }
-    };
-    document.body.appendChild(btn);
+    const boton = document.createElement('button');
+    boton.className = 'rg-musica rg-off';
+    boton.setAttribute('aria-label', 'Pausar o reanudar la música');
+    boton.textContent = '♪';
+    boton.onclick = () => audio.paused ? audio.play() : audio.pause();
+    audio.onplay = () => boton.classList.remove('rg-off');
+    audio.onpause = () => boton.classList.add('rg-off');
+    document.body.appendChild(boton);
+    musica.reproducir = () => audio.play().catch(() => {});
   }
 
   function pantallaExpirado() {
@@ -65,7 +90,7 @@
       </div>`;
     document.body.appendChild(capa);
     const abrir = () => {
-      if (audio) audio.play().catch(() => {});
+      musica.reproducir();
       capa.classList.add('rg-saliendo');
       setTimeout(() => capa.remove(), 700);
       alAbrir && alAbrir();
@@ -130,7 +155,7 @@
       const campo = c.querySelector('input');
       const ok = (R.respuestas || []).includes(await sha256(normalizar(campo.value)));
       if (ok) {
-        if (audio) audio.play().catch(() => {});
+        musica.reproducir();
         quitar(c);
         alAbrir && alAbrir();
         return;
