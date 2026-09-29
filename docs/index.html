@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detalle QR · Regalos digitales con código QR</title>
+<meta name="description" content="Sorprende con un regalo digital: flores amarillas, cartas de amor, cumpleaños y juegos. Lo escanean con un QR y se abre una experiencia hecha solo para esa persona.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --fondo: #fffaf4; --texto: #2d1b33; --suave: #6f5a76; --acento: #ff5f8f; --amarillo: #ffc93c; --tarjeta: #ffffff; --borde: #f0e4ea; }
+  @media (prefers-color-scheme: dark) { :root { --fondo: #170f1c; --texto: #fbeff5; --suave: #bba8c2; --tarjeta: #22182a; --borde: #33263b; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fondo); color: var(--texto); font-family: 'Quicksand', system-ui, sans-serif; line-height: 1.55; }
+  a { color: inherit; }
+  .envoltura { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  header { text-align: center; padding: 64px 0 40px; }
+  .logo { font-family: 'Dancing Script', cursive; font-size: 1.6rem; color: var(--acento); }
+  h1 { font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.15; margin: 12px auto 16px; max-width: 16ch; }
+  h1 em { font-style: normal; background: linear-gradient(transparent 60%, color-mix(in srgb, var(--amarillo) 55%, transparent) 60%); }
+  header p { color: var(--suave); max-width: 52ch; margin: 0 auto 28px; font-size: 1.1rem; }
+  .cta { display: inline-block; background: var(--acento); color: #fff; text-decoration: none; font-weight: 700; padding: 14px 28px; border-radius: 999px; box-shadow: 0 10px 24px color-mix(in srgb, var(--acento) 35%, transparent); }
+
+  section { padding: 40px 0; }
+  h2 { text-align: center; font-size: 1.8rem; margin: 0 0 8px; }
+  .sub { text-align: center; color: var(--suave); margin: 0 0 28px; }
+
+  .pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .paso { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 18px; padding: 22px; }
+  .paso b { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--amarillo); color: #2d1b33; margin-bottom: 10px; }
+  .paso p { margin: 4px 0 0; color: var(--suave); }
+
+  .plantillas { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+  .plantilla { display: flex; flex-direction: column; text-decoration: none; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 18px; overflow: hidden; transition: transform .2s; }
+  .plantilla:hover { transform: translateY(-4px); }
+  .plantilla .portada { height: 150px; display: grid; place-items: center; font-size: 64px; }
+  .plantilla div:last-child { padding: 16px 18px 20px; }
+  .plantilla h3 { margin: 0 0 4px; }
+  .plantilla p { margin: 0 0 10px; color: var(--suave); font-size: .95rem; }
+  .plantilla span { font-weight: 700; color: var(--acento); }
+
+  .planes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: start; }
+  .plan { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 18px; padding: 26px 22px; }
+  .plan.destacado { border: 2px solid var(--acento); }
+  .plan .etiqueta { display: inline-block; font-size: .8rem; font-weight: 700; color: #fff; background: var(--acento); border-radius: 99px; padding: 2px 10px; margin-bottom: 8px; }
+  .plan h3 { margin: 0; }
+  .precio { font-size: 2.6rem; font-weight: 700; margin: 4px 0 12px; }
+  .precio small { font-size: 1rem; color: var(--suave); font-weight: 400; }
+  .plan ul { padding-left: 20px; margin: 0; color: var(--suave); }
+  .plan li { margin: 6px 0; }
+
+  .ocasiones { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .ocasiones span { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 99px; padding: 8px 16px; }
+
+  footer { text-align: center; padding: 48px 0 64px; color: var(--suave); }
+</style>
+</head>
+<body>
+  <div class="envoltura">
+    <header>
+      <div class="logo">Detalle QR</div>
+      <h1>Un regalo que se <em>abre con un QR</em></h1>
+      <p>Flores amarillas, cartas de amor, cumpleaños y juegos. Escanean el código y se abre una experiencia hecha solo para esa persona, con tus fotos, tu mensaje y su canción.</p>
+      <a class="cta" id="whatsapp" href="#">Pedir el mío por WhatsApp</a>
+    </header>
+
+    <section>
+      <h2>Así funciona</h2>
+      <p class="sub">Listo el mismo día.</p>
+      <div class="pasos">
+        <div class="paso"><b>1</b><strong>Elige un diseño</strong><p>Mira los ejemplos de abajo y escoge el que más le va.</p></div>
+        <div class="paso"><b>2</b><strong>Envíanos tus fotos y mensaje</strong><p>Por WhatsApp. Nosotros lo armamos.</p></div>
+        <div class="paso"><b>3</b><strong>Recibe tu QR</strong><p>Imprímelo, ponlo en una tarjeta o en un ramo, o envíalo por mensaje.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Diseños</h2>
+      <p class="sub">Toca uno para verlo como lo verá quien lo reciba.</p>
+      <div class="plantillas">
+        <a class="plantilla" href="demo-flores-amarillas/"><div class="portada" style="background:linear-gradient(#0b1026,#1b2350)">🌻</div><div><h3>Flores amarillas</h3><p>Un jardín que florece de noche, con luciérnagas y tu mensaje.</p><span>Ver ejemplo →</span></div></a>
+        <a class="plantilla" href="demo-carta-amor/"><div class="portada" style="background:linear-gradient(#6d1a2e,#26060f)">💌</div><div><h3>Carta de amor</h3><p>Un sobre que se abre, y un contador de días juntos. Para pareja o mamá.</p><span>Ver ejemplo →</span></div></a>
+        <a class="plantilla" href="demo-cumpleanos/"><div class="portada" style="background:linear-gradient(#5b2a7a,#1b0d29)">🎂</div><div><h3>Cumpleaños</h3><p>Sopla las velas de verdad, con el micrófono del celular.</p><span>Ver ejemplo →</span></div></a>
+        <a class="plantilla" href="demo-atrapa-corazones/"><div class="portada" style="background:linear-gradient(#5c1f8a,#14082b)">💘</div><div><h3>Atrapa corazones</h3><p>Un minijuego: al atraparlos todos se revela tu mensaje.</p><span>Ver ejemplo →</span></div></a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Planes</h2>
+      <p class="sub">Un pago, sin mensualidades.</p>
+      <div class="planes">
+        <div class="plan"><h3>Básico</h3><div class="precio">$5</div><ul><li>Cualquier diseño</li><li>Tu mensaje personalizado</li><li>Hasta 3 fotos</li><li>Código QR en alta calidad</li></ul></div>
+        <div class="plan destacado"><span class="etiqueta">El más pedido</span><h3>Especial</h3><div class="precio">$15</div><ul><li>Todo lo del Básico</li><li>Hasta 10 fotos con pie de foto</li><li>Canción de fondo</li><li>Contador de días juntos</li></ul></div>
+        <div class="plan"><h3>Premium</h3><div class="precio">$25</div><ul><li>Todo lo del Especial</li><li>Hasta 30 fotos</li><li>Minijuego o diseño a medida</li><li>Cambios al mensaje cuando quieras</li></ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Para cualquier ocasión</h2>
+      <p class="sub">Y si no ves la tuya, escríbenos.</p>
+      <div class="ocasiones">
+        <span>🌻 21 de septiembre</span><span>❤️ San Valentín</span><span>👩 Día de la Madre</span><span>👨 Día del Padre</span><span>🎂 Cumpleaños</span><span>💍 Aniversario</span><span>🎓 Graduación</span><span>🎄 Navidad</span><span>🙏 Perdón</span><span>💐 Porque sí</span>
+      </div>
+    </section>
+
+    <footer>Hecho con cariño en Ecuador · Detalle QR</footer>
+  </div>
+<script>
+  // Número de WhatsApp: cámbialo aquí y en config.json (formato internacional, sin +).
+  const WHATSAPP = '593000000000';
+  document.getElementById('whatsapp').href =
+    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('¡Hola! Quiero un regalo digital con QR 🎁')}`;
+</script>
+</body>
+</html>

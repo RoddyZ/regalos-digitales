@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Atrapa los corazones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/regalo.css">
+<style>
+  :root {
+    --rg-fondo: #14082b;
+    --rg-texto: #fdf0ff;
+    --rg-acento: #ff5fa2;
+    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #3d1670, #0c0419);
+  }
+  body { background: radial-gradient(circle at 50% 110%, #5c1f8a, #14082b 60%); min-height: 100svh; user-select: none; }
+
+  .hud { position: fixed; top: 0; left: 0; right: 0; z-index: 20; padding: 16px; text-align: center; transition: opacity .6s; }
+  .hud p { margin: 0 0 10px; font-weight: 600; }
+  .barra { height: 12px; max-width: 360px; margin: 0 auto; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+  .barra i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ff9ecb, var(--rg-acento)); border-radius: inherit; transition: width .3s; }
+
+  #juego { position: fixed; inset: 0; overflow: hidden; touch-action: manipulation; }
+  .corazon { position: absolute; top: -60px; font-size: 42px; line-height: 1; padding: 10px; cursor: pointer; animation: caer linear forwards; filter: drop-shadow(0 0 10px rgba(255,95,162,.7)); }
+  .corazon.atrapado { animation: explotar .35s ease-out forwards !important; pointer-events: none; }
+  @keyframes caer { to { transform: translateY(calc(100svh + 120px)) rotate(20deg); } }
+  @keyframes explotar { to { transform: scale(2.2); opacity: 0; } }
+  .mas { position: absolute; font-weight: 700; color: var(--rg-acento); pointer-events: none; animation: subir .8s ease-out forwards; }
+  @keyframes subir { to { transform: translateY(-50px); opacity: 0; } }
+
+  .final { position: relative; z-index: 30; max-width: 620px; margin: 0 auto; padding: 12vh 16px 80px; text-align: center; }
+  .final h1 { font-family: var(--rg-fuente-titulo); font-size: clamp(2.3rem, 10vw, 3.6rem); color: var(--rg-acento); margin: 0 0 20px; }
+  .carta { text-align: left; background: rgba(255,255,255,.07); border: 1px solid rgba(255,95,162,.35); border-radius: 18px; padding: 26px 22px; backdrop-filter: blur(6px); }
+  .carta p { white-space: pre-line; line-height: 1.7; font-size: 1.08rem; margin: 0; min-height: 3em; }
+  .final h2 { font-family: var(--rg-fuente-titulo); font-size: 2rem; color: var(--rg-acento); margin: 48px 0 8px; }
+</style>
+</head>
+<body data-icono="💘">
+  <div class="hud" id="hud">
+    <p id="textoHud">Atrapa <span id="meta">15</span> corazones para ver tu sorpresa</p>
+    <div class="barra"><i id="progreso"></i></div>
+  </div>
+  <div id="juego"></div>
+
+  <main class="final" id="final" hidden>
+    <h1 class="rg-oculto" id="titulo" data-campo="titulo">¡Lo lograste!</h1>
+    <div class="carta rg-oculto" id="carta">
+      <p id="mensaje"></p>
+      <div class="rg-firma">— <span data-campo="de"></span></div>
+    </div>
+    <h2 class="rg-oculto" id="tituloFotos">Para ti</h2>
+    <div id="galeria" class="rg-oculto"></div>
+  </main>
+
+<script>window.REGALO = {"para":"Vale","de":"Tu novio","titulo":"¡Me atrapaste!","meta":12,"mensaje":"Así como atrapaste todos esos corazones, un día atrapaste el mío.\nFeliz aniversario, amor. 💘","fotos":[{"src":"f1.webp"},{"src":"f2.webp"},{"src":"f3.webp"}]};</script>
+<script src="../assets/regalo.js"></script>
+<script>
+  const { $, espera, escribir, galeria, confeti, flotar, datos } = Regalo;
+  const META = Math.max(3, parseInt(datos.meta, 10) || 15);
+  $('#meta').textContent = META;
+  const juego = $('#juego');
+  const simbolos = datos.simbolos || ['❤', '💖', '💗', '💝'];
+  let atrapados = 0, generador = null;
+
+  function soltar() {
+    const c = document.createElement('div');
+    c.className = 'corazon';
+    c.textContent = simbolos[(Math.random() * simbolos.length) | 0];
+    c.style.left = 5 + Math.random() * 80 + 'vw';
+    // Se acelera un poco a medida que avanzas
+    c.style.animationDuration = Math.max(2.4, 5.5 - atrapados * 0.15) + Math.random() * 1.5 + 's';
+    c.addEventListener('pointerdown', e => atrapar(c, e));
+    c.addEventListener('animationend', () => c.classList.contains('atrapado') || c.remove());
+    juego.appendChild(c);
+  }
+
+  function atrapar(c, e) {
+    if (c.classList.contains('atrapado')) return;
+    c.classList.add('atrapado');
+    setTimeout(() => c.remove(), 400);
+    const m = document.createElement('div');
+    m.className = 'mas'; m.textContent = '+1';
+    m.style.left = e.clientX + 'px'; m.style.top = e.clientY + 'px';
+    juego.appendChild(m);
+    setTimeout(() => m.remove(), 800);
+    if (navigator.vibrate) navigator.vibrate(15);
+    atrapados++;
+    $('#progreso').style.width = Math.min(100, atrapados / META * 100) + '%';
+    if (atrapados === META) ganar();
+  }
+
+  async function ganar() {
+    clearInterval(generador);
+    $('#textoHud').textContent = '¡Todos atrapados! 💘';
+    confeti({ colores: ['#ff5fa2', '#ff9ecb', '#ffd6e8', '#c77dff', '#ffffff'], duracion: 4500 });
+    await espera(900);
+    juego.querySelectorAll('.corazon').forEach(c => c.remove());
+    $('#hud').style.opacity = 0;
+    $('#final').hidden = false;
+    flotar(['❤', '♡'], { cada: 600 });
+    await espera(100);
+    $('#titulo').classList.add('rg-visible');
+    await espera(700);
+    $('#carta').classList.add('rg-visible');
+    await escribir($('#mensaje'), datos.mensaje || 'Así como atrapaste esos corazones, atrapaste el mío.');
+    if (datos.fotos && datos.fotos.length) { $('#tituloFotos').classList.add('rg-visible'); $('#galeria').classList.add('rg-visible'); }
+  }
+
+  Regalo.iniciar({
+    alAbrir() { soltar(); generador = setInterval(soltar, 650); }
+  });
+  galeria($('#galeria'));
+  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
+</script>
+</body>
+</html>

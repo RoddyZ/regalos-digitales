@@ -1,0 +1,9 @@
+{
+  "plantilla": "flores-amarillas",
+  "plan": "especial",
+  "para": "María",
+  "de": "Andrés",
+  "titulo": "Flores amarillas para ti",
+  "mensaje": "Dicen que las flores amarillas se regalan a quien te llena de alegría.\nY tú, desde que llegaste, llenas mis días de luz.\nTe quiero muchísimo.",
+  "fotos": ["fotos/muestra1.jpg", { "ruta": "fotos/muestra2.jpg", "texto": "Nuestro primer viaje" }, "fotos/muestra3.jpg"]
+}

@@ -1,0 +1,10 @@
+{
+  "urlBase": "https://roddyz.github.io/regalos-digitales/",
+  "marca": "Detalle QR",
+  "whatsapp": "593000000000",
+  "planes": {
+    "basico":   { "precio": 5,  "nombre": "Básico",   "maxFotos": 3,  "musica": false, "diasVigencia": null },
+    "especial": { "precio": 15, "nombre": "Especial", "maxFotos": 10, "musica": true,  "diasVigencia": null },
+    "premium":  { "precio": 25, "nombre": "Premium",  "maxFotos": 30, "musica": true,  "diasVigencia": null }
+  }
+}

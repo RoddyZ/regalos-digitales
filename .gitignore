@@ -1,0 +1,8 @@
+node_modules/
+# Pedidos reales y entregas (datos de clientes, QRs): nunca al repo público
+pedidos/*
+!pedidos/ejemplo.json
+!pedidos/fotos-ejemplo/
+entregas/
+.DS_Store
+Thumbs.db

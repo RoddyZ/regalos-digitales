@@ -1,0 +1,10 @@
+{
+  "plantilla": "carta-amor",
+  "plan": "especial",
+  "para": "Mamá",
+  "de": "Tu hija que te adora",
+  "titulo": "Feliz día, mamá",
+  "saludo": "Mi querida mamá:",
+  "mensaje": "Gracias por cada desvelo, por cada consejo y por cada abrazo.\nTodo lo bueno que soy te lo debo a ti.\nTe amo infinitamente.",
+  "fotos": [{ "ruta": "fotos/muestra2.jpg", "texto": "Siempre juntas" }, "fotos/muestra1.jpg"]
+}

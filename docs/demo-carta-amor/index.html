@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Una carta para ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/regalo.css">
+<style>
+  :root {
+    --rg-fondo: #3b0d1a;
+    --rg-texto: #fff1ec;
+    --rg-acento: #ff6b81;
+    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #7a1d33, #26060f);
+  }
+  body { background: radial-gradient(circle at 50% 20%, #6d1a2e, #3b0d1a 60%, #26060f); min-height: 100svh; }
+
+  .escena { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; text-align: center; }
+  .escena > p { margin: 0; opacity: .85; min-height: 1.5em; }
+  .sobre .hoja span { display: block; text-align: center; padding-top: 14%; font-family: var(--rg-fuente-titulo); font-size: 1.5rem; color: #a4133c; }
+  h1 { font-family: var(--rg-fuente-titulo); font-size: clamp(2.2rem, 9vw, 3.4rem); color: var(--rg-acento); margin: 0 0 6px; }
+
+  /* Sobre */
+  .sobre { position: relative; margin-top: 110px; width: min(86vw, 340px); aspect-ratio: 3 / 2; cursor: pointer; perspective: 800px; }
+  .sobre .cuerpo { position: absolute; inset: 0; background: #f4d9c6; border-radius: 6px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
+  .sobre .frente { position: absolute; inset: 0; z-index: 3; border-radius: 6px;
+    background: linear-gradient(to top right, #edcbb3 50%, transparent 50.5%) left / 50% 100% no-repeat,
+                linear-gradient(to top left, #edcbb3 50%, transparent 50.5%) right / 50% 100% no-repeat,
+                linear-gradient(to top, #e8c1a6 0 50%, transparent 50%); }
+  .sobre .solapa { position: absolute; left: 0; right: 0; top: 0; height: 60%; z-index: 4; transform-origin: top;
+    background: #e3b797; clip-path: polygon(0 0, 100% 0, 50% 100%); transition: transform .8s ease, z-index 0s .4s; }
+  .sobre .sello { position: absolute; left: 50%; top: 60%; z-index: 5; width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff4d6d, #a4133c); display: grid; place-items: center; font-size: 24px; box-shadow: 0 3px 8px rgba(0,0,0,.4); transition: opacity .4s; animation: rg-latido 1.8s infinite; }
+  .sobre .hoja { position: absolute; left: 6%; right: 6%; top: 8%; bottom: 8%; z-index: 2; background: #fffaf3; border-radius: 4px; transition: transform 1s ease .6s; }
+  .sobre.abierto { cursor: default; }
+  .sobre.abierto .solapa { transform: rotateX(180deg); z-index: 1; }
+  .sobre.abierto .sello { opacity: 0; }
+  .sobre.abierto .hoja { transform: translateY(-45%); }
+
+  .contador { margin-top: 40px; font-size: 1.05rem; }
+  .contador b { display: block; font-family: var(--rg-fuente-titulo); font-size: 3rem; color: var(--rg-acento); line-height: 1.1; }
+
+  .contenido { position: relative; z-index: 2; max-width: 620px; margin: 0 auto; padding: 0 16px 80px; }
+  .carta { background: #fffaf3; color: #4a1c26; border-radius: 6px; padding: 30px 24px;
+    background-image: repeating-linear-gradient(transparent 0 31px, #f1dfd4 31px 32px); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+  .carta .saludo { font-family: var(--rg-fuente-titulo); font-size: 1.8rem; margin: 0 0 10px; }
+  .carta p#mensaje { white-space: pre-line; line-height: 32px; font-size: 1.08rem; margin: 0; min-height: 3em; }
+  .contenido h2 { font-family: var(--rg-fuente-titulo); font-size: 2rem; text-align: center; color: var(--rg-acento); margin: 48px 0 8px; }
+</style>
+</head>
+<body data-icono="💌">
+  <section class="escena">
+    <h1 data-campo="titulo">Tengo algo que decirte</h1>
+    <p id="pista">Toca el sobre para abrirlo</p>
+    <div class="sobre" id="sobre" role="button" aria-label="Abrir la carta">
+      <div class="cuerpo"></div>
+      <div class="hoja"><span>♡</span></div>
+      <div class="frente"></div>
+      <div class="solapa"></div>
+      <div class="sello">❤</div>
+    </div>
+    <div class="contador rg-oculto" id="contador"></div>
+  </section>
+
+  <main class="contenido" id="contenido" hidden>
+    <article class="carta rg-oculto" id="carta">
+      <p class="saludo">Para <span data-campo="para">ti</span>:</p>
+      <p id="mensaje"></p>
+      <div class="rg-firma">Con amor, <span data-campo="de"></span></div>
+    </article>
+    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia</h2>
+    <div id="galeria" class="rg-oculto"></div>
+  </main>
+
+<script>window.REGALO = {"para":"Mamá","de":"Tu hija que te adora","titulo":"Feliz día, mamá","saludo":"Mi querida mamá:","mensaje":"Gracias por cada desvelo, por cada consejo y por cada abrazo.\nTodo lo bueno que soy te lo debo a ti.\nTe amo infinitamente.","fotos":[{"src":"f1.webp","texto":"Siempre juntas"},{"src":"f2.webp"}]};</script>
+<script src="../assets/regalo.js"></script>
+<script>
+  const { $, espera, escribir, galeria, flotar, diasDesde, datos } = Regalo;
+
+  // Saludo configurable ("Mi querida mamá:"); por defecto "Para <nombre>:".
+  if (datos.saludo) $('.saludo').textContent = datos.saludo;
+
+  const dias = diasDesde(datos.desde);
+  if (dias !== null && dias >= 0) {
+    $('#contador').innerHTML = `${Regalo.esc(datos.textoContador || 'Llevamos juntos')}<b>${dias.toLocaleString('es')} días</b>`;
+  } else $('#contador').remove();
+
+  let abierto = false;
+  $('#sobre').addEventListener('click', async () => {
+    if (abierto) return;
+    abierto = true;
+    $('#sobre').classList.add('abierto');
+    $('#pista').textContent = '';
+    flotar(['❤', '💕', '♡'], { cada: 380 });
+    await espera(1600);
+    $('#contador') && $('#contador').classList.add('rg-visible');
+    $('#contenido').hidden = false;
+    await espera(900);
+    $('#carta').classList.add('rg-visible');
+    $('#carta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    await escribir($('#mensaje'), datos.mensaje || 'Gracias por existir.');
+    if (datos.fotos && datos.fotos.length) { $('#tituloFotos').classList.add('rg-visible'); $('#galeria').classList.add('rg-visible'); }
+  });
+
+  Regalo.iniciar({});
+  galeria($('#galeria'));
+  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
+</script>
+</body>
+</html>

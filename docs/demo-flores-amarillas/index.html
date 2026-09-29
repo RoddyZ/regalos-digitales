@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Flores amarillas para ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/regalo.css">
+<style>
+  :root {
+    --rg-fondo: #0b1026;
+    --rg-texto: #fff8e1;
+    --rg-acento: #ffd23f;
+    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #1d2657, #070a1a);
+  }
+  body { background: linear-gradient(#070a1a, #121a44 60%, #1b2350); }
+
+  .cielo { position: fixed; inset: 0; pointer-events: none; }
+  .estrella { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; animation: brillar 3s ease-in-out infinite; }
+  .luciernaga { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #fff3a0; box-shadow: 0 0 10px 3px #ffe45c; animation: volar 9s ease-in-out infinite alternate; opacity: 0; }
+  @keyframes brillar { 50% { opacity: .2; } }
+  @keyframes volar { 0% { opacity: 0; transform: translate(0,0); } 20% { opacity: 1; } 100% { opacity: .2; transform: translate(60px,-80px); } }
+
+  .escena { position: relative; min-height: 100svh; display: flex; flex-direction: column; }
+  .cabecera { text-align: center; padding: 11vh 20px 0; z-index: 2; }
+  .cabecera h1 { font-family: var(--rg-fuente-titulo); font-weight: 600; font-size: clamp(2.4rem, 10vw, 4rem); margin: 0; color: var(--rg-acento); text-shadow: 0 0 24px rgba(255,210,63,.45); }
+  .cabecera p { margin: 8px 0 0; font-size: 1.05rem; opacity: .85; }
+
+  #jardin { position: absolute; left: 0; right: 0; bottom: 0; height: 72svh; width: 100%; }
+  .tallo { fill: none; stroke: #2f8f46; stroke-width: 4; stroke-linecap: round; }
+  .hoja { fill: #3fae5a; transform: scale(0); transition: transform 1s ease; }
+  .flor { transform-box: fill-box; transform-origin: center; transform: scale(0) rotate(-90deg); transition: transform 1.4s cubic-bezier(.2,1.4,.4,1); }
+  .crecida .hoja { transform: scale(1); }
+  .crecida .flor { transform: scale(1) rotate(0); }
+  .flor .centro { fill: #6b3f12; }
+  .flor.abierta { animation: mecer 5s ease-in-out infinite; }
+  @keyframes mecer { 50% { transform: rotate(6deg); } }
+
+  .bajar { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 3; font-size: .9rem; opacity: 0; transition: opacity 1s; text-align: center; }
+  .bajar.rg-visible { opacity: .8; animation: rebote 2s infinite; }
+  @keyframes rebote { 50% { transform: translate(-50%, 6px); } }
+
+  .contenido { position: relative; z-index: 2; max-width: 620px; margin: 0 auto; padding: 40px 16px 80px; }
+  .carta { background: rgba(255,248,225,.08); border: 1px solid rgba(255,210,63,.25); border-radius: 18px; padding: 26px 22px; backdrop-filter: blur(4px); }
+  .carta p { white-space: pre-line; line-height: 1.7; font-size: 1.08rem; margin: 0; min-height: 3em; }
+  .contenido h2 { font-family: var(--rg-fuente-titulo); font-size: 2rem; text-align: center; color: var(--rg-acento); margin: 48px 0 8px; }
+</style>
+</head>
+<body data-icono="🌻">
+  <div class="cielo" id="cielo"></div>
+
+  <section class="escena">
+    <header class="cabecera rg-oculto" id="cabecera">
+      <h1 data-campo="titulo">Flores amarillas para ti</h1>
+      <p>Para <span data-campo="para">ti</span></p>
+    </header>
+    <svg id="jardin" viewBox="0 0 400 520" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
+    <div class="bajar" id="bajar">desliza ↓</div>
+  </section>
+
+  <main class="contenido">
+    <div class="carta rg-oculto" id="carta">
+      <p id="mensaje"></p>
+      <div class="rg-firma">— <span data-campo="de"></span></div>
+    </div>
+    <h2 class="rg-oculto" id="tituloFotos">Nuestros momentos</h2>
+    <div id="galeria" class="rg-oculto"></div>
+  </main>
+
+<script>window.REGALO = {"para":"María","de":"Andrés","titulo":"Flores amarillas para ti","mensaje":"Dicen que las flores amarillas se regalan a quien te llena de alegría.\nY tú, desde que llegaste, llenas mis días de luz.\nTe quiero muchísimo.","fotos":[{"src":"f1.webp"},{"src":"f2.webp","texto":"Nuestro primer viaje"},{"src":"f3.webp"}]};</script>
+<script src="../assets/regalo.js"></script>
+<script>
+  const { $, espera, escribir, galeria, flotar, datos } = Regalo;
+
+  // Cielo estrellado + luciérnagas
+  const cielo = $('#cielo');
+  for (let i = 0; i < 70; i++) {
+    const e = document.createElement('div');
+    e.className = 'estrella';
+    Object.assign(e.style, { left: Math.random()*100+'%', top: Math.random()*60+'%', animationDelay: Math.random()*3+'s' });
+    cielo.appendChild(e);
+  }
+  for (let i = 0; i < 14; i++) {
+    const l = document.createElement('div');
+    l.className = 'luciernaga';
+    Object.assign(l.style, { left: Math.random()*95+'%', top: 45+Math.random()*50+'%', animationDelay: Math.random()*9+'s', animationDuration: 7+Math.random()*6+'s' });
+    cielo.appendChild(l);
+  }
+
+  // Dibuja flores (tipo cempasúchil/girasol) con SVG
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = $('#jardin');
+  const el = (tag, attrs, padre) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); padre && padre.appendChild(n); return n; };
+  const defs = el('defs', {}, svg);
+  const grad = el('radialGradient', { id: 'petalo', cx: '50%', cy: '100%', r: '100%' }, defs);
+  el('stop', { offset: '0%', 'stop-color': '#ff9f1c' }, grad);
+  el('stop', { offset: '100%', 'stop-color': '#ffe066' }, grad);
+
+  const flores = [];
+  const posiciones = [40, 95, 150, 200, 250, 305, 360, 120, 280, 70, 330];
+  posiciones.forEach((x, i) => {
+    const alto = 190 + Math.random() * 230;
+    const topeY = 520 - alto;
+    const curva = x + (Math.random() - 0.5) * 50;
+    const g = el('g', {}, svg);
+    const tallo = el('path', { class: 'tallo', d: `M${x} 520 Q${curva} ${520 - alto/2} ${x} ${topeY}` }, g);
+    const lado = i % 2 ? 1 : -1;
+    const hy = 520 - alto * (0.3 + Math.random() * 0.2);
+    el('path', { class: 'hoja', d: `M${x} ${hy} q${18*lado} -14 ${30*lado} -4 q${-14*lado} 12 ${-30*lado} 4z`, style: `transform-origin:${x}px ${hy}px` }, g);
+    const flor = el('g', { class: 'flor' }, g);
+    const radio = 14 + Math.random() * 10;
+    for (let capa = 0; capa < 2; capa++) {
+      const n = 14;
+      for (let p = 0; p < n; p++) {
+        const ang = (360 / n) * p + capa * (180 / n);
+        el('ellipse', { cx: x, cy: topeY - radio * (capa ? 0.45 : 0.62), rx: radio * 0.28, ry: radio * (capa ? 0.45 : 0.62), fill: 'url(#petalo)', transform: `rotate(${ang} ${x} ${topeY})`, opacity: capa ? 1 : .9 }, flor);
+      }
+    }
+    el('circle', { class: 'centro', cx: x, cy: topeY, r: radio * 0.32 }, flor);
+    const largo = tallo.getTotalLength();
+    tallo.style.strokeDasharray = largo;
+    tallo.style.strokeDashoffset = largo;
+    tallo.style.transition = 'stroke-dashoffset 2.2s ease-out';
+    flores.push({ g, tallo, flor, orden: Math.random() });
+  });
+
+  function mostrar(el) { el && el.classList.add('rg-visible'); }
+
+  Regalo.iniciar({
+    async alAbrir() {
+      await espera(400);
+      mostrar($('#cabecera'));
+      flores.sort((a, b) => a.orden - b.orden);
+      flores.forEach((f, i) => setTimeout(() => {
+        f.tallo.style.strokeDashoffset = 0;
+        setTimeout(() => { f.g.classList.add('crecida'); setTimeout(() => f.flor.classList.add('abierta'), 1500); }, 1900);
+      }, i * 260));
+      await espera(4200);
+      mostrar($('#bajar'));
+      flotar(['✿', '❀', '✦'], { cada: 900 });
+
+      // Revela la carta cuando el usuario baja
+      const obs = new IntersectionObserver(async ([e]) => {
+        if (!e.isIntersecting) return;
+        obs.disconnect();
+        mostrar($('#carta'));
+        await escribir($('#mensaje'), datos.mensaje || 'Porque tú haces que todo florezca.');
+        if (datos.fotos && datos.fotos.length) { mostrar($('#tituloFotos')); mostrar($('#galeria')); }
+      }, { threshold: 0.3 });
+      obs.observe($('#carta'));
+    }
+  });
+  galeria($('#galeria'));
+  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
+</script>
+</body>
+</html>
