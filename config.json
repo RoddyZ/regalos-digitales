@@ -1,7 +1,7 @@
 {
   "urlBase": "https://roddyz.github.io/regalos-digitales/",
   "marca": "Detalle QR",
-  "whatsapp": "593000000000",
+  "whatsapp": "593992700393",
   "planes": {
     "basico":  { "precio": 5,  "nombre": "Básico",  "maxFotos": 0,  "musica": false, "extras": false, "diasVigencia": null },
     "chevere": { "precio": 10, "nombre": "Chévere", "maxFotos": 1,  "musica": false, "extras": false, "diasVigencia": null },
