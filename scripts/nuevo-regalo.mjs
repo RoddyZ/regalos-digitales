@@ -5,6 +5,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
+import { createInterface as createPromesas } from 'node:readline/promises';
 import { generarRegalo, leerConfig, ENTREGAS, PLANTILLAS, RAIZ } from './lib.mjs';
 
 const args = process.argv.slice(2);
@@ -14,12 +15,19 @@ const archivoArg = args.find(a => !a.startsWith('--'));
 const limpiarRuta = t => t.trim().replace(/^&\s*/, '').replace(/^["']|["']$/g, '');
 
 async function asistente() {
-  // Cola de líneas: funciona igual escribiendo a mano o con respuestas pegadas de golpe.
-  const rl = createInterface({ input: process.stdin, terminal: process.stdin.isTTY });
-  const cola = [], esperando = [];
-  rl.on('line', l => esperando.length ? esperando.shift()(l) : cola.push(l));
-  rl.on('close', () => { while (esperando.length) esperando.shift()(''); });
-  rl.question = texto => { process.stdout.write(texto); return cola.length ? Promise.resolve(cola.shift()) : new Promise(r => esperando.push(r)); };
+  let rl;
+  if (process.stdin.isTTY) {
+    // Terminal normal: se ve lo que escribes. Ctrl+C cancela sin crear nada.
+    rl = createPromesas({ input: process.stdin, output: process.stdout });
+    rl.on('SIGINT', () => { console.log('\n✘ Cancelado. No se creó ningún regalo.'); process.exit(1); });
+  } else {
+    // Respuestas que llegan todas juntas (pegadas o desde un archivo): se leen en cola.
+    rl = createInterface({ input: process.stdin, terminal: false });
+    const cola = [], esperando = [];
+    rl.on('line', l => esperando.length ? esperando.shift()(l) : cola.push(l));
+    rl.on('close', () => { while (esperando.length) esperando.shift()(''); });
+    rl.question = texto => { process.stdout.write(texto); return cola.length ? Promise.resolve(cola.shift()) : new Promise(r => esperando.push(r)); };
+  }
   const preguntar = async (texto, defecto = '') => (await rl.question(`${texto}${defecto ? ` [${defecto}]` : ''}: `)).trim() || defecto;
   const elegir = async (texto, opciones) => {
     opciones.forEach((o, i) => console.log(`   ${i + 1}) ${o.etiqueta}`));

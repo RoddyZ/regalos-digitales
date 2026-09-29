@@ -341,6 +341,7 @@ Por defecto los regalos son **permanentes**.
 |---|---|
 | `✘ El plan X no incluye …` | El pedido trae algo que su plan no permite: cambia el plan o quita ese elemento |
 | `✘ Ya existe un regalo con código …` | Estás regenerando uno que existe: añade `--forzar` |
+| El asistente no muestra lo que escribes | Actualiza el proyecto (`git pull`). Usa la terminal de VS Code o PowerShell. **Ctrl+C** cancela sin crear nada |
 | `✘ No encuentro ese archivo` al arrastrar una foto | Revisa que el archivo exista; también puedes escribir la ruta completa |
 | El enlace da "Regalo no encontrado" | Espera 2 minutos después del `git push`; revisa en *Actions* que la publicación terminó |
 | La tarjeta de Spotify no aparece | Revisa que el enlace sea de una **canción** (`/track/`) y que el plan sea VIP |
