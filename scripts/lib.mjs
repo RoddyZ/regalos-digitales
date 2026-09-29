@@ -109,8 +109,23 @@ export async function generarRegalo(pedido, { baseDir = RAIZ, codigo, forzar = f
 export async function generarQR(codigo, url, pedido = {}) {
   const dir = path.join(ENTREGAS, codigo);
   await fs.mkdir(dir, { recursive: true });
-  const opciones = { errorCorrectionLevel: 'H', margin: 2, color: { dark: '#1a1026', light: '#ffffff' } };
-  await QRCode.toFile(path.join(dir, 'qr.png'), url, { ...opciones, width: 1200 });
+  const config = await leerConfig();
+  // Nivel H: el QR sigue leyéndose aunque el logo tape hasta ~30% del centro.
+  const opciones = { errorCorrectionLevel: 'H', margin: 2, color: { dark: config.qrColor || '#1a1026', light: '#ffffff' } };
+  const png = await QRCode.toBuffer(url, { ...opciones, width: 1200 });
+  const logo = config.qrLogo && path.resolve(RAIZ, config.qrLogo);
+  if (logo && (await existe(logo))) {
+    const lado = 1200, marco = 300, tam = 250; // el logo ocupa ~21% del ancho
+    const fondo = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${marco}" height="${marco}"><rect width="100%" height="100%" rx="36" fill="#fff"/></svg>`);
+    const icono = await sharp(logo).resize(tam, tam, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } }).png().toBuffer();
+    const centro = (lado - marco) / 2;
+    await sharp(png).composite([
+      { input: fondo, left: centro, top: centro },
+      { input: icono, left: (lado - tam) / 2, top: (lado - tam) / 2 }
+    ]).toFile(path.join(dir, 'qr.png'));
+  } else {
+    await fs.writeFile(path.join(dir, 'qr.png'), png);
+  }
   await fs.writeFile(path.join(dir, 'qr.svg'), await QRCode.toString(url, { ...opciones, type: 'svg' }));
   await fs.writeFile(path.join(dir, 'pedido.json'), JSON.stringify({ ...pedido, codigo }, null, 2));
   const registro = path.join(ENTREGAS, 'registro.csv');

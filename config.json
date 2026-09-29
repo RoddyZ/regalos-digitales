@@ -2,9 +2,32 @@
   "urlBase": "https://roddyz.github.io/regalos-digitales/",
   "marca": "Detalle QR",
   "whatsapp": "593992700393",
+  "qrLogo": "marca/logo.png",
+  "qrColor": "#1f1b16",
   "planes": {
-    "basico":  { "precio": 5,  "nombre": "Básico",  "maxFotos": 0,  "musica": false, "extras": false, "diasVigencia": null },
-    "chevere": { "precio": 10, "nombre": "Chévere", "maxFotos": 1,  "musica": false, "extras": false, "diasVigencia": null },
-    "vip":     { "precio": 15, "nombre": "VIP",     "maxFotos": 10, "musica": true,  "extras": true,  "diasVigencia": null }
+    "basico": {
+      "precio": 5,
+      "nombre": "Básico",
+      "maxFotos": 0,
+      "musica": false,
+      "extras": false,
+      "diasVigencia": null
+    },
+    "chevere": {
+      "precio": 10,
+      "nombre": "Chévere",
+      "maxFotos": 1,
+      "musica": false,
+      "extras": false,
+      "diasVigencia": null
+    },
+    "vip": {
+      "precio": 15,
+      "nombre": "VIP",
+      "maxFotos": 10,
+      "musica": true,
+      "extras": true,
+      "diasVigencia": null
+    }
   }
 }

@@ -1,0 +1,1 @@
+Pon aquí tu logo como logo.png (cuadrado, fondo transparente). Se pone en el centro de cada QR nuevo.

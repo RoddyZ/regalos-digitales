@@ -25,7 +25,8 @@ Cada regalo vive en `docs/<codigo>/` y se abre con `https://roddyz.github.io/reg
 | `demos/` | Pedidos de muestra → `docs/demo-<plantilla>/` (`npm run demos`) | Sí |
 | `pedidos/` | Pedidos reales con datos del cliente | **No** (.gitignore) |
 | `entregas/` | QRs y registro de ventas | **No** (.gitignore) — respáldalo |
-| `config.json` | URL base, WhatsApp y planes (precio, máx. fotos, música, vigencia) | Sí |
+| `config.json` | URL base, planes, color del QR (`qrColor`) y logo del QR (`qrLogo`) | Sí |
+| `marca/logo.png` | Tu logo: va en el centro de cada QR (opcional) | Sí |
 
 ## Campos del pedido
 
