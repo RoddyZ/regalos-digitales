@@ -23,7 +23,7 @@ y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay serv
 8. [Poner tu logo en el QR](#8-poner-tu-logo-en-el-qr)
 9. [Cambiar WhatsApp y redes sociales de la portada](#9-cambiar-whatsapp-y-redes-sociales-de-la-portada)
 10. [Privacidad: qué se sube y qué no](#10-privacidad-qué-se-sube-y-qué-no)
-11. [Publicación en GitHub Pages](#11-publicación-en-github-pages)
+11. [Publicación: GitHub Pages y Cloudflare Pages](#11-publicación-github-pages-y-cloudflare-pages)
 12. [Crear una plantilla nueva](#12-crear-una-plantilla-nueva)
 13. [Vigencia y limpieza](#13-vigencia-y-limpieza)
 14. [Problemas comunes](#14-problemas-comunes)
@@ -383,7 +383,7 @@ regalos publicados se pueden ver navegando el repositorio en GitHub. Los código
 
 ---
 
-## 11. Publicación en GitHub Pages
+## 11. Publicación: GitHub Pages y Cloudflare Pages
 
 **Configuración (una sola vez, ya hecha):** en GitHub → *Settings → Pages → Branch:* `main`, *carpeta:* `/docs` → *Save*.
 
@@ -391,6 +391,51 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
 
 > **Aviso "Node.js 20 is deprecated…" en Actions:** puedes ignorarlo. Viene del proceso interno de GitHub,
 > no de este proyecto. La publicación funciona igual.
+
+### Publicar en Cloudflare Pages (recomendado para vender)
+
+GitHub Pages es para proyectos personales; sus reglas no permiten usarlo como tienda. **Cloudflare Pages** es
+gratis, sí permite uso comercial, no limita las visitas y publica la misma carpeta `docs/` con cada `git push`.
+Te da una dirección gratis del tipo **`detallazo.pages.dev`**.
+
+**A. Crear el sitio (una sola vez, unos 10 minutos)**
+
+1. Entra a <https://dash.cloudflare.com/sign-up> y crea una cuenta gratis con tu correo.
+2. En el menú de la izquierda abre **Workers & Pages** (o **Compute → Workers & Pages**) → **Create**
+   → pestaña **Pages** → **Import an existing Git repository** (o *Connect to Git*).
+3. Elige **GitHub**, autoriza a Cloudflare y dale acceso **solo** al repositorio `regalos-digitales`.
+4. Configura el proyecto:
+   - **Project name:** `detallazo` (de ahí sale `detallazo.pages.dev`; si está ocupado, prueba `detallazo-ec`).
+   - **Production branch:** `main`
+   - **Framework preset:** `None`
+   - **Build command:** déjalo vacío
+   - **Build output directory:** `docs`
+5. Pulsa **Save and Deploy**. En 1 o 2 minutos abre `https://detallazo.pages.dev` y revisa la portada y una demo.
+
+**B. Que los QR nuevos usen la dirección nueva**
+
+6. En `config.json` cambia `"urlBase"` por tu dirección, con la barra al final:
+   `"urlBase": "https://detallazo.pages.dev/"`
+7. Publica el cambio: `git add config.json && git commit -m "Dirección de Cloudflare" && git push`.
+8. Crea un regalo de prueba y escanea su QR: debe abrir `detallazo.pages.dev/<código>/`. Bórralo después.
+
+Desde ese momento, cada `git push` publica en los dos sitios a la vez, y Cloudflare lo hace en menos de un minuto.
+El estado de cada publicación se ve en Cloudflare → tu proyecto → **Deployments**.
+
+**C. No apagues GitHub Pages.** Los QR que ya entregaste apuntan a `roddyz.github.io/regalos-digitales/…` y
+deben seguir funcionando. Como los dos sitios publican la misma carpeta, no hay que hacer nada más.
+
+**D. Dominio propio (opcional, con costo)**
+
+`detallazo.pages.dev` es gratis para siempre. Un dominio propio (`detallazo.com` o `detallazo.ec`) da más
+confianza, pero se paga cada año: un `.com` cuesta unos $10–12 en Cloudflare (*Domain Registration*), y un `.ec`
+se compra en nic.ec. Los dominios "gratis" que se ofrecen en internet no son confiables: pueden quitártelos y los
+QR impresos dejarían de funcionar. Cuando lo tengas:
+
+1. Cloudflare → tu proyecto → **Custom domains** → **Set up a custom domain** → escribe `detallazo.com`.
+2. Si compraste el dominio en Cloudflare, se configura solo. Si fue en otro lado, sigue las instrucciones de
+   Cloudflare para apuntar el dominio (cambiar los *nameservers* o crear un registro CNAME).
+3. Cambia `urlBase` a `https://detallazo.com/` y publica (paso 6 y 7).
 
 ---
 

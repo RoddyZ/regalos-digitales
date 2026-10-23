@@ -110,7 +110,13 @@ Cada una tiene su demo (`demos/*.json` → `docs/demo-*`).
 - No suena sola al abrir: los celulares bloquean el sonido automático y Spotify no lo permite. Aparece la tarjeta de la
   canción y la persona toca ▶.
 
-## 9. Verificación
+## 9. Publicación en Cloudflare Pages
+- Nueva guía en el README (sección 11): crear el sitio gratis en Cloudflare Pages (`detallazo.pages.dev`),
+  cambiar `urlBase` para los QR nuevos, mantener GitHub Pages para los QR ya entregados y, opcionalmente, conectar
+  un dominio propio.
+- Todo el sitio usa rutas relativas, así que funciona igual en la raíz de otro dominio; la página 404 también.
+
+## 10. Verificación
 - **Portada:** probada en 1440, 390 y 360 px y en modo claro y oscuro, sin desplazamiento horizontal ni errores en
   consola.
 - **Los 9 diseños y la demo con pregunta secreta:** recorridos completos en móvil de forma automática, con la
