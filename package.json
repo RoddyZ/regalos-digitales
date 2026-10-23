@@ -6,6 +6,7 @@
   "description": "Regalos digitales con QR: plantillas estáticas + generador de enlaces únicos",
   "scripts": {
     "nuevo": "node scripts/nuevo-regalo.mjs",
+    "admin": "node scripts/servidor-admin.mjs",
     "demos": "node scripts/generar-demos.mjs",
     "limpiar": "node scripts/limpiar-expirados.mjs",
     "servir": "npx --yes serve docs -l 5173"

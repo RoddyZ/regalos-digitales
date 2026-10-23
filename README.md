@@ -54,9 +54,16 @@ Listo. Esto solo se hace la primera vez (o en una computadora nueva).
 
 Guarda las fotos en la carpeta **`pedidos/fotos/`** (esa carpeta nunca se sube a internet).
 
-**Luego**, en la terminal:
+**Luego**, puedes crearlo de dos formas:
 
+### Opción A: Desde el panel web visual (Recomendado)
+```bash
+npm run admin
 ```
+Abre `http://localhost:4200` en tu navegador para crear el regalo con interfaz visual, arrastrar fotos y descargar la tarjeta imprimible directamente.
+
+### Opción B: Desde la terminal interactiva
+```bash
 npm run nuevo
 ```
 
@@ -81,11 +88,12 @@ El asistente te pregunta todo, una cosa a la vez:
 Al terminar verás algo así:
 
 ```
-✔ Regalo creado
-  Código: pvnda5gr
-  URL:    https://roddyz.github.io/regalos-digitales/pvnda5gr/
-  QR:     D:\regalos-digitales\entregas\pvnda5gr\qr.png
-  Pedido: pedidos\lorena-2026-09-29.json
+✔ Regalo creado con éxito
+  Código:  pvnda5gr
+  URL:     https://roddyz.github.io/regalos-digitales/pvnda5gr/
+  QR:      D:\regalos-digitales\entregas\pvnda5gr\qr.png
+  Tarjeta: D:\regalos-digitales\entregas\pvnda5gr\tarjeta-regalo.png (300 DPI lista para imprimir)
+  Pedido:  pedidos\lorena-2026-09-29.json
 ```
 
 - Si respondiste `s`, en **1 a 2 minutos** el enlace ya funciona.

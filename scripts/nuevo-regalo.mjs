@@ -121,12 +121,13 @@ try {
   if (publicar) publicarEnGit(codigo);
 
   console.log(`
-  ✔ Regalo creado
-    Código: ${codigo}
-    URL:    ${url}
-    QR:     ${path.join(ENTREGAS, codigo, 'qr.png')}
-    Pedido: ${path.relative(RAIZ, archivo)}
-  ${publicar ? '\n  🌐 Publicado: estará en línea en ~1 minuto.' : `\n  Para publicar: git add docs && git commit -m "Regalo ${codigo}" && git push`}
+  ✔ Regalo creado con éxito
+    Código:  ${codigo}
+    URL:     ${url}
+    QR:      ${path.join(ENTREGAS, codigo, 'qr.png')}
+    Tarjeta: ${path.join(ENTREGAS, codigo, 'tarjeta-regalo.png')} (300 DPI lista para imprimir)
+    Pedido:  ${path.relative(RAIZ, archivo)}
+  ${publicar ? '\n  🌐 Publicado: estará en línea en ~1 minuto.' : `\n  Para publicar: git add docs/${codigo} && git commit -m "Regalo ${codigo}" && git push`}
 `);
 } catch (e) {
   console.error('✘', e.message);

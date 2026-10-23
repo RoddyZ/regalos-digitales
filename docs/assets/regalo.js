@@ -1,6 +1,6 @@
-/* Motor común de todas las plantillas.
- * Cada regalo trae sus datos en window.REGALO (inyectado por scripts/nuevo-regalo.mjs).
- * La plantilla llama a Regalo.iniciar({ alAbrir }) y usa las utilidades de abajo. */
+/* ==========================================================================
+   Detalle QR · Motor Estético de Regalos Digitales (Lógica de Cliente)
+   ========================================================================== */
 (function () {
   const R = window.REGALO || {};
   const $ = (s, el = document) => el.querySelector(s);
@@ -23,10 +23,6 @@
     if (R.titulo) document.title = R.titulo;
   }
 
-  /* Música, tres opciones:
-     - mp3 propio: suena de fondo al abrir, con botón ♪ para pausar.
-     - Spotify: su tarjeta oficial abajo (sin sesión reproduce 30 s, como en historias de Instagram).
-     - YouTube: su reproductor oficial en miniatura; se toca para reproducir. */
   const musica = { reproducir() {} };
 
   function incrustado(url) {
@@ -45,19 +41,26 @@
       caja.className = emb.tipo === 'spotify' ? 'rg-cancion' : 'rg-yt';
       caja.innerHTML = `<iframe src="${emb.src}" title="Nuestra canción" loading="lazy"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-        <button type="button" class="rg-cerrar" aria-label="Ocultar la canción">×</button>`;
+        <button type="button" class="rg-cerrar" aria-label="Ocultar canción">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+        </button>`;
       caja.querySelector('.rg-cerrar').onclick = () => caja.remove();
       document.body.appendChild(caja);
-      musica.reproducir = () => setTimeout(() => caja.classList.add('rg-visible'), 1500);
+      musica.reproducir = () => setTimeout(() => caja.classList.add('rg-visible'), 1200);
       return;
     }
     const audio = new Audio(R.musica);
     audio.loop = true;
-    audio.volume = 0.7;
+    audio.volume = 0.75;
     const boton = document.createElement('button');
     boton.className = 'rg-musica rg-off';
-    boton.setAttribute('aria-label', 'Pausar o reanudar la música');
-    boton.textContent = '♪';
+    boton.setAttribute('aria-label', 'Pausar o reanudar música');
+    boton.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+        <circle cx="12" cy="12" r="3" fill="currentColor"/>
+        <path d="M12 2a10 10 0 0 1 10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3"/>
+      </svg>`;
     boton.onclick = () => audio.paused ? audio.play() : audio.pause();
     audio.onplay = () => boton.classList.remove('rg-off');
     audio.onpause = () => boton.classList.add('rg-off');
@@ -69,54 +72,67 @@
     document.body.innerHTML = `
       <div class="rg-intro rg-expirado">
         <div class="rg-intro-caja">
-          <div class="rg-intro-icono">⌛</div>
-          <p class="rg-intro-texto">Este regalo ya no está disponible.</p>
+          <div class="rg-intro-emblema"><span class="rg-intro-icono">⏳</span></div>
+          <p class="rg-intro-texto">Este detalle ha cumplido su tiempo de vigencia.</p>
         </div>
       </div>`;
   }
 
-  /* Pantalla "toca para abrir": además de crear expectativa,
-     el toque del usuario es lo que permite reproducir música en el celular. */
+  /* Pantalla de unboxing/apertura */
   function intro(alAbrir) {
-    const icono = R.iconoIntro || document.body.dataset.icono || '🎁';
-    const texto = R.para ? `${esc(R.para)}, tienes un regalo` : 'Tienes un regalo';
+    const icono = R.iconoIntro || document.body.dataset.icono || '✨';
+    const paraHtml = R.para ? `<p class="rg-intro-para">Para ${esc(R.para)}</p>` : '';
     const capa = document.createElement('div');
     capa.className = 'rg-intro';
     capa.innerHTML = `
       <div class="rg-intro-caja">
-        <div class="rg-intro-icono">${icono}</div>
-        <p class="rg-intro-texto">${texto}</p>
-        <button class="rg-intro-boton" type="button">Toca para abrir</button>
+        <div class="rg-intro-emblema"><span class="rg-intro-icono">${icono}</span></div>
+        ${paraHtml}
+        <h2 class="rg-intro-texto">Hay un detalle preparado para ti</h2>
+        <button class="rg-intro-boton" type="button">
+          Abrir detalle
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
       </div>`;
     document.body.appendChild(capa);
     const abrir = () => {
       musica.reproducir();
       capa.classList.add('rg-saliendo');
-      setTimeout(() => capa.remove(), 700);
+      setTimeout(() => capa.remove(), 800);
       alAbrir && alAbrir();
     };
     capa.addEventListener('click', abrir, { once: true });
   }
 
-  function capa(html) {
+  function crearCapa(html) {
     const c = document.createElement('div');
     c.className = 'rg-intro';
     c.innerHTML = `<div class="rg-intro-caja">${html}</div>`;
     document.body.appendChild(c);
     return c;
   }
-  function quitar(c) { c.classList.add('rg-saliendo'); setTimeout(() => c.remove(), 700); }
+  function quitar(c) {
+    c.classList.add('rg-saliendo');
+    setTimeout(() => c.remove(), 800);
+  }
 
-  /* VIP: "se abre el 14 de febrero a las 00:00". Muestra cuenta regresiva hasta esa hora. */
+  /* VIP: Apertura programada */
   function cuentaRegresiva() {
     const meta = R.abreEl ? new Date(R.abreEl.length <= 10 ? R.abreEl + 'T00:00:00' : R.abreEl) : null;
     if (!meta || new Date() >= meta) return Promise.resolve();
-    const c = capa(`
-      <div class="rg-intro-icono">⏳</div>
-      <p class="rg-intro-texto">${R.para ? esc(R.para) + ', tu' : 'Tu'} regalo se abrirá en</p>
-      <div class="rg-reloj"><b>0</b><small>días</small><b>0</b><small>horas</small><b>0</b><small>min</small><b>0</b><small>seg</small></div>`);
+    const paraHtml = R.para ? `<p class="rg-intro-para">${esc(R.para)}</p>` : '';
+    const c = crearCapa(`
+      <div class="rg-intro-emblema"><span class="rg-intro-icono">⏳</span></div>
+      ${paraHtml}
+      <h2 class="rg-intro-texto">Este regalo se abrirá en</h2>
+      <div class="rg-reloj">
+        <div class="rg-reloj-bloque"><b>0</b><small>días</small></div>
+        <div class="rg-reloj-bloque"><b>0</b><small>horas</small></div>
+        <div class="rg-reloj-bloque"><b>0</b><small>min</small></div>
+        <div class="rg-reloj-bloque"><b>0</b><small>seg</small></div>
+      </div>`);
     c.classList.add('rg-espera');
-    const n = c.querySelectorAll('.rg-reloj b');
+    const n = c.querySelectorAll('.rg-reloj-bloque b');
     return new Promise(listo => {
       (function tic() {
         const s = Math.max(0, Math.floor((meta - new Date()) / 1000));
@@ -127,7 +143,6 @@
     });
   }
 
-  // Debe coincidir con hashRespuesta() en scripts/lib.mjs
   function normalizar(t) {
     return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
   }
@@ -136,16 +151,21 @@
     return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join('');
   }
 
-  /* VIP: pregunta secreta ("¿Dónde fue nuestra primera cita?"). Responder bien abre el regalo. */
+  /* VIP: Pregunta Secreta */
   function preguntaSecreta(alAbrir) {
-    const icono = R.iconoIntro || document.body.dataset.icono || '🎁';
-    const c = capa(`
-      <div class="rg-intro-icono">${icono}</div>
-      <p class="rg-intro-texto">${R.para ? esc(R.para) + ', antes' : 'Antes'} de abrirlo…</p>
+    const icono = R.iconoIntro || document.body.dataset.icono || '🔒';
+    const paraHtml = R.para ? `<p class="rg-intro-para">${esc(R.para)}</p>` : '';
+    const c = crearCapa(`
+      <div class="rg-intro-emblema"><span class="rg-intro-icono">${icono}</span></div>
+      ${paraHtml}
+      <h2 class="rg-intro-texto">Antes de abrirlo…</h2>
       <form class="rg-pregunta">
         <label for="rg-resp">${esc(R.pregunta)}</label>
-        <input id="rg-resp" autocomplete="off" autocapitalize="off" placeholder="Tu respuesta">
-        <button class="rg-intro-boton" type="submit">Abrir</button>
+        <input id="rg-resp" autocomplete="off" autocapitalize="off" placeholder="Escribe tu respuesta">
+        <button class="rg-intro-boton" type="submit">
+          Desbloquear
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
         <p class="rg-pista" aria-live="polite"></p>
       </form>`);
     c.classList.add('rg-espera');
@@ -161,39 +181,39 @@
         return;
       }
       intentos++;
-      campo.classList.remove('rg-mal'); void campo.offsetWidth; campo.classList.add('rg-mal');
-      c.querySelector('.rg-pista').textContent = R.pista && intentos >= 2 ? `Pista: ${R.pista}` : 'Mmm… no es esa. Intenta otra vez 💭';
+      campo.classList.remove('rg-mal');
+      void campo.offsetWidth;
+      campo.classList.add('rg-mal');
+      c.querySelector('.rg-pista').textContent = R.pista && intentos >= 2 ? `Pista: ${R.pista}` : 'Respuesta incorrecta. Intenta otra vez 💭';
     });
   }
 
-  /* ---------- Utilidades para las plantillas ---------- */
-
   const espera = ms => new Promise(r => setTimeout(r, ms));
 
-  // Efecto máquina de escribir. Respeta saltos de línea del mensaje.
-  async function escribir(el, texto, ms = 38) {
+  async function escribir(el, texto, ms = 32) {
     el.textContent = '';
     el.classList.add('rg-cursor');
     for (const ch of String(texto || '')) {
       el.textContent += ch;
-      await espera(ch === '\n' ? ms * 6 : /[.,!?¡¿]/.test(ch) ? ms * 5 : ms);
+      await espera(ch === '\n' ? ms * 6 : /[.,!?¡¿]/.test(ch) ? ms * 4 : ms);
     }
     el.classList.remove('rg-cursor');
   }
 
-  // Galería deslizable (scroll-snap) con fotos del regalo.
   function galeria(contenedor, clase = '') {
     const fotos = R.fotos || [];
-    if (!fotos.length) { contenedor.remove(); return; }
+    if (!fotos.length) { contenedor && contenedor.remove(); return; }
     contenedor.classList.add('rg-galeria');
     if (clase) contenedor.classList.add(clase);
     contenedor.innerHTML = fotos.map((f, i) =>
-      `<figure style="--i:${i}"><img src="${esc(f.src || f)}" alt="" loading="lazy">` +
-      (f.texto ? `<figcaption>${esc(f.texto)}</figcaption>` : '') + `</figure>`).join('');
+      `<figure style="--i:${i}">
+        <img src="${esc(f.src || f)}" alt="Fotografía especial" loading="lazy">` +
+        (f.texto ? `<figcaption>${esc(f.texto)}</figcaption>` : '') +
+      `</figure>`).join('');
   }
 
-  // Confeti ligero con canvas, sin librerías.
-  function confeti({ duracion = 3500, colores = ['#ffd166', '#ef476f', '#06d6a0', '#118ab2', '#ffffff'], cantidad = 160 } = {}) {
+  /* Confeti armonioso con paleta elegante */
+  function confeti({ duracion = 3800, colores = ['#f6d89b', '#e5b869', '#ffffff', '#e898ac', '#b8a6d9'], cantidad = 140 } = {}) {
     const c = document.createElement('canvas');
     c.className = 'rg-canvas';
     document.body.appendChild(c);
@@ -202,10 +222,14 @@
     const ajustar = () => { c.width = innerWidth * dpr; c.height = innerHeight * dpr; };
     ajustar();
     const P = Array.from({ length: cantidad }, () => ({
-      x: Math.random() * c.width, y: -Math.random() * c.height * 0.5,
-      w: (6 + Math.random() * 6) * dpr, h: (8 + Math.random() * 8) * dpr,
-      vy: (2 + Math.random() * 3) * dpr, vx: (Math.random() - 0.5) * 2 * dpr,
-      r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.2,
+      x: Math.random() * c.width,
+      y: -Math.random() * c.height * 0.4,
+      w: (5 + Math.random() * 6) * dpr,
+      h: (8 + Math.random() * 8) * dpr,
+      vy: (2.2 + Math.random() * 2.8) * dpr,
+      vx: (Math.random() - 0.5) * 1.8 * dpr,
+      r: Math.random() * Math.PI,
+      vr: (Math.random() - 0.5) * 0.16,
       col: colores[(Math.random() * colores.length) | 0]
     }));
     const fin = performance.now() + duracion;
@@ -214,8 +238,11 @@
       P.forEach(p => {
         p.x += p.vx; p.y += p.vy; p.r += p.vr;
         if (p.y > c.height && t < fin) { p.y = -20; p.x = Math.random() * c.width; }
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
-        ctx.fillStyle = p.col; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.cos(p.r * 2));
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r);
+        ctx.fillStyle = p.col;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h * Math.cos(p.r * 2));
         ctx.restore();
       });
       if (P.some(p => p.y < c.height + 20)) requestAnimationFrame(paso);
@@ -223,8 +250,7 @@
     })(performance.now());
   }
 
-  // Emojis/símbolos flotando hacia arriba (corazones, estrellas…).
-  function flotar(simbolos = ['❤'], { cada = 450, duracion = 0 } = {}) {
+  function flotar(simbolos = ['✧'], { cada = 500, duracion = 0 } = {}) {
     const capa = document.createElement('div');
     capa.className = 'rg-flotantes';
     document.body.appendChild(capa);
@@ -232,16 +258,15 @@
       const s = document.createElement('span');
       s.textContent = simbolos[(Math.random() * simbolos.length) | 0];
       s.style.left = Math.random() * 100 + 'vw';
-      s.style.fontSize = 14 + Math.random() * 22 + 'px';
-      s.style.animationDuration = 5 + Math.random() * 5 + 's';
+      s.style.fontSize = 14 + Math.random() * 20 + 'px';
+      s.style.animationDuration = 6 + Math.random() * 5 + 's';
       capa.appendChild(s);
-      setTimeout(() => s.remove(), 10000);
+      setTimeout(() => s.remove(), 11000);
     }, cada);
     if (duracion) setTimeout(() => clearInterval(id), duracion);
     return () => clearInterval(id);
   }
 
-  // Días transcurridos desde una fecha ISO (para contadores "llevamos X días").
   function diasDesde(fechaISO) {
     if (!fechaISO) return null;
     return Math.floor((Date.now() - new Date(fechaISO + 'T00:00:00')) / 86400000);
