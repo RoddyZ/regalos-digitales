@@ -6,7 +6,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { createInterface as createPromesas } from 'node:readline/promises';
-import { generarRegalo, leerConfig, ENTREGAS, PLANTILLAS, RAIZ } from './lib.mjs';
+import { generarRegalo, leerConfig, slug, PLANTILLAS, RAIZ } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const archivoArg = args.find(a => !a.startsWith('--'));
@@ -69,7 +69,7 @@ async function asistente() {
     }
   }
   if (plan.musica) {
-    const m = limpiarRuta(await preguntar(' Canción: enlace de Spotify o YouTube, o archivo mp3 (Enter = sin música)'));
+    const m = limpiarRuta(await preguntar(' Canción: enlace de Spotify (o YouTube) (Enter = sin música)'));
     if (m) p.musica = m;
   }
   if (plan.extras) {
@@ -87,6 +87,9 @@ async function asistente() {
     if (desde) p.desde = desde;
   }
   if (p.plantilla === 'cumpleanos') p.edad = await preguntar(' Edad que cumple (Enter = sin edad)');
+  if (p.plantilla === 'graduacion') p.carrera = await preguntar(' Carrera o logro (ej. Ingeniería en Software · Promoción 2026; Enter = sin carrera)');
+  if (p.plantilla === 'ano-nuevo') p.anio = await preguntar(' Año que llega (Enter = automático)');
+  if (p.plantilla === 'san-valentin') p.propuesta = await preguntar(' Pregunta (Enter = «¿Quieres ser mi San Valentín?»)');
 
   p.cliente = await preguntar(' Cliente que compra (privado)');
   p.telefono = await preguntar(' Teléfono del cliente (privado)');
@@ -94,7 +97,7 @@ async function asistente() {
   rl.close();
 
   for (const k of Object.keys(p)) if (p[k] === '' || (Array.isArray(p[k]) && !p[k].length)) delete p[k];
-  const nombre = `${(p.para || 'regalo').toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-')}-${new Date().toISOString().slice(0, 10)}`;
+  const nombre = `${slug(p.para)}-${new Date().toISOString().slice(0, 10)}`;
   const archivo = path.join(RAIZ, 'pedidos', `${nombre}.json`);
   await fs.writeFile(archivo, JSON.stringify(p, null, 2));
   return { archivo, publicar };
@@ -112,7 +115,7 @@ try {
   if (!archivo) ({ archivo, publicar } = await asistente());
 
   const pedido = JSON.parse(await fs.readFile(archivo, 'utf8'));
-  const { codigo, url } = await generarRegalo(pedido, {
+  const { codigo, url, entrega } = await generarRegalo(pedido, {
     baseDir: path.dirname(path.resolve(archivo)),
     forzar: args.includes('--forzar')
   });
@@ -124,8 +127,9 @@ try {
   ✔ Regalo creado con éxito
     Código:  ${codigo}
     URL:     ${url}
-    QR:      ${path.join(ENTREGAS, codigo, 'qr.png')}
-    Tarjeta: ${path.join(ENTREGAS, codigo, 'tarjeta-regalo.png')} (300 DPI lista para imprimir)
+    Carpeta: ${path.relative(RAIZ, entrega)}
+    QR:      ${path.join(entrega, 'qr.png')}
+    Tarjeta: ${path.join(entrega, 'tarjeta-regalo.png')} (300 DPI lista para imprimir)
     Pedido:  ${path.relative(RAIZ, archivo)}
   ${publicar ? '\n  🌐 Publicado: estará en línea en ~1 minuto.' : `\n  Para publicar: git add docs/${codigo} && git commit -m "Regalo ${codigo}" && git push`}
 `);

@@ -9,6 +9,7 @@
     "admin": "node scripts/servidor-admin.mjs",
     "demos": "node scripts/generar-demos.mjs",
     "limpiar": "node scripts/limpiar-expirados.mjs",
+    "ordenar-entregas": "node scripts/ordenar-entregas.mjs",
     "servir": "npx --yes serve docs -l 5173"
   },
   "dependencies": {

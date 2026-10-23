@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>¿Quieres ser mi San Valentín?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../assets/regalo.css">
+<style>
+  :root {
+    --rg-fondo: #16080e;
+    --rg-texto: #fdf6f4;
+    --rg-acento: #e9b9a0;
+    --rg-acento-luz: #f6d6c4;
+    --rg-rosa: #e8708c;
+    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #3a1220, #0d0508);
+  }
+
+  body {
+    background: radial-gradient(ellipse at 50% 30%, #3b1222 0%, #1d0a12 55%, #0b0407 100%);
+    min-height: 100svh;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .escena {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px 20px 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .corazon-grande {
+    width: 120px;
+    margin: 0 auto 26px;
+    filter: drop-shadow(0 18px 30px rgba(232, 112, 140, 0.45));
+    animation: latir 1.3s ease-in-out infinite;
+  }
+
+  .corazon-grande svg { width: 100%; height: auto; display: block; }
+
+  @keyframes latir {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.12); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.08); }
+  }
+
+  .para {
+    font-family: var(--rg-fuente-acento);
+    font-size: 2.3rem;
+    color: var(--rg-acento-luz);
+    margin: 0 0 6px;
+    line-height: 1;
+  }
+
+  h1 {
+    font-family: var(--rg-fuente-titulo);
+    font-size: clamp(2.2rem, 8vw, 3.4rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 34px;
+    line-height: 1.15;
+    max-width: 14em;
+  }
+
+  .respuestas {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    min-height: 70px;
+  }
+
+  .respuestas button {
+    font-family: var(--rg-fuente);
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 999px;
+    padding: 14px 34px;
+    cursor: pointer;
+    border: 0;
+    transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  #si {
+    color: #fff;
+    background: linear-gradient(135deg, #f08aa3, #d04f6f);
+    box-shadow: 0 12px 28px -8px rgba(232, 112, 140, 0.7);
+    transform: scale(var(--crece, 1));
+  }
+
+  #no {
+    color: var(--rg-texto);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+    z-index: 20;
+  }
+
+  #no.huyendo { position: fixed; }
+
+  .pista {
+    margin: 22px 0 0;
+    color: var(--rg-texto-suave);
+    font-size: 0.9rem;
+    min-height: 1.4em;
+  }
+
+  .contenido {
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 20px 90px;
+  }
+
+  .carta {
+    background: #fdf7f4;
+    color: #2c1d22;
+    border-radius: 16px;
+    padding: 38px 30px;
+    box-shadow: 0 24px 55px -14px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(233, 185, 160, 0.4);
+  }
+
+  .carta p {
+    white-space: pre-line;
+    line-height: 1.75;
+    font-size: 1.08rem;
+    margin: 0;
+    min-height: 3em;
+  }
+
+  .carta .rg-firma { color: #b23c5a; }
+
+  .contenido h2 {
+    font-family: var(--rg-fuente-titulo);
+    font-size: 2.1rem;
+    text-align: center;
+    color: var(--rg-acento-luz);
+    margin: 54px 0 12px;
+  }
+</style>
+</head>
+<body data-icono="💌">
+  <section class="escena" id="escena">
+    <div class="corazon-grande" aria-hidden="true">
+      <svg viewBox="0 0 100 90">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#f6a0b4"/>
+            <stop offset="1" stop-color="#c8405f"/>
+          </linearGradient>
+        </defs>
+        <path d="M50 86 C20 64 2 46 2 26 A22 22 0 0 1 50 14 A22 22 0 0 1 98 26 C98 46 80 64 50 86 Z" fill="url(#g)"/>
+        <ellipse cx="30" cy="24" rx="9" ry="5" fill="#fff" opacity="0.35" transform="rotate(-30 30 24)"/>
+      </svg>
+    </div>
+    <p class="para" data-campo="para" data-opcional></p>
+    <h1 id="propuesta">¿Quieres ser mi San Valentín?</h1>
+    <div class="respuestas">
+      <button id="si" type="button">Sí ❤</button>
+      <button id="no" type="button">No</button>
+    </div>
+    <p class="pista" id="pista"></p>
+  </section>
+
+  <main class="contenido" id="contenido" hidden>
+    <div class="carta rg-oculto" id="carta">
+      <p id="mensaje"></p>
+      <div class="rg-firma">— <span data-campo="de"></span></div>
+    </div>
+    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia</h2>
+    <div id="galeria" class="rg-oculto"></div>
+  </main>
+
+<script>window.REGALO = {"para":"Vale","de":"Tu novio","mensaje":"Sabía que dirías que sí.\nGracias por elegirme cada día; contigo todo se siente como 14 de febrero.\nTe quiero muchísimo.","fotos":[{"src":"f1.webp"},{"src":"f2.webp"},{"src":"f3.webp"}]};</script>
+<script src="../assets/regalo.js"></script>
+<script>
+  const { $, espera, escribir, galeria, confeti, flotar, datos } = Regalo;
+
+  if (datos.propuesta) $('#propuesta').textContent = datos.propuesta;
+
+  // El "No" se escapa y el "Sí" crece cada vez que intentan tocarlo.
+  const frases = ['¿En serio? 🥺', 'Piénsalo bien…', '¿Segurísimo?', 'Me vas a romper el corazón', 'Última oportunidad', 'Ese botón no funciona 😌'];
+  const no = $('#no'), si = $('#si');
+  let intentos = 0;
+
+  function escapar(e) {
+    e.preventDefault();
+    intentos++;
+    no.textContent = frases[Math.min(intentos - 1, frases.length - 1)];
+    si.style.setProperty('--crece', Math.min(1 + intentos * 0.14, 1.9));
+    const r = no.getBoundingClientRect();
+    if (!no.classList.contains('huyendo')) {
+      no.style.left = r.left + 'px';
+      no.style.top = r.top + 'px';
+      no.classList.add('huyendo');
+      void no.offsetWidth;
+    }
+    const margen = 16;
+    const x = margen + Math.random() * Math.max(0, innerWidth - r.width - margen * 2);
+    const y = margen + Math.random() * Math.max(0, innerHeight - r.height - margen * 2);
+    no.style.left = x + 'px';
+    no.style.top = y + 'px';
+    if (navigator.vibrate) navigator.vibrate(12);
+    if (intentos >= 3) $('#pista').textContent = 'Creo que solo queda una opción ❤';
+  }
+  no.addEventListener('pointerenter', e => e.pointerType === 'mouse' && escapar(e));
+  no.addEventListener('pointerdown', escapar);
+  no.addEventListener('click', e => e.preventDefault());
+
+  si.addEventListener('click', async () => {
+    no.remove();
+    si.disabled = true;
+    $('#pista').textContent = '';
+    if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
+    confeti({ duracion: 5000, colores: ['#f08aa3', '#f6d6c4', '#ffffff', '#d04f6f', '#e9b9a0'] });
+    flotar(['❤', '♡', '✧'], { cada: 420, duracion: 14000 });
+    $('#propuesta').textContent = datos.titulo || '¡Sabía que dirías que sí!';
+    si.textContent = 'Sí, para siempre ❤';
+    await espera(1800);
+    $('#contenido').hidden = false;
+    $('#carta').classList.add('rg-visible');
+    $('#carta').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await escribir($('#mensaje'), datos.mensaje || 'Gracias por elegirme otra vez.\nContigo cada día se siente como 14 de febrero.');
+    if (datos.fotos && datos.fotos.length) {
+      $('#tituloFotos').classList.add('rg-visible');
+      $('#galeria').classList.add('rg-visible');
+    }
+  });
+
+  Regalo.iniciar({});
+  galeria($('#galeria'));
+  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
+</script>
+</body>
+</html>

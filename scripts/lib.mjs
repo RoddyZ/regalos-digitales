@@ -29,12 +29,76 @@ export function hashRespuesta(texto) {
 
 const existe = p => fs.access(p).then(() => true, () => false);
 
+// "María José" → "maria-jose"
+export function slug(texto, largo = 24) {
+  return String(texto || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, largo).replace(/-+$/, '') || 'regalo';
+}
+
+/**
+ * Todas las entregas (carpetas con pedido.json) en cualquier nivel de entregas/.
+ * Devuelve [{ dir, pedido, numero }], ordenadas por número de pedido.
+ */
+export async function listarEntregas() {
+  const encontradas = [];
+  async function recorrer(dir, nivel) {
+    const items = await fs.readdir(dir, { withFileTypes: true }).catch(() => []);
+    if (items.some(i => i.isFile() && i.name === 'pedido.json')) {
+      try {
+        const pedido = JSON.parse(await fs.readFile(path.join(dir, 'pedido.json'), 'utf8'));
+        const m = path.basename(dir).match(/^(\d{4,})-/);
+        const numero = m ? parseInt(m[1], 10) : null;
+        encontradas.push({ dir, pedido, numero });
+      } catch {}
+      return;
+    }
+    if (nivel < 3) for (const i of items) if (i.isDirectory()) await recorrer(path.join(dir, i.name), nivel + 1);
+  }
+  await recorrer(ENTREGAS, 0);
+  return encontradas.sort((a, b) => (a.numero ?? Infinity) - (b.numero ?? Infinity));
+}
+
+/**
+ * Carpeta de entrega de un regalo:  entregas/<NN-plan>/<plantilla>/<0001-para-codigo>/
+ * Si el regalo ya existía (un cambio con --forzar), conserva su número y lo mueve si cambió de plan o plantilla.
+ * El código y la URL pública no dependen de esta carpeta.
+ */
+export async function carpetaEntrega(codigo, pedido, config) {
+  const todas = await listarEntregas();
+  const previa = todas.find(e => e.pedido.codigo === codigo || path.basename(e.dir).endsWith('-' + codigo) || path.basename(e.dir) === codigo);
+  const numero = previa?.numero ?? Math.max(0, ...todas.map(e => e.numero || 0)) + 1;
+
+  const planes = Object.keys(config.planes);
+  const plan = pedido.plan || 'basico';
+  const carpetaPlan = `${String(planes.indexOf(plan) + 1).padStart(2, '0')}-${plan}`;
+  const destino = path.join(ENTREGAS, carpetaPlan, pedido.plantilla, `${String(numero).padStart(4, '0')}-${slug(pedido.para)}-${codigo}`);
+
+  if (previa && previa.dir !== destino) {
+    await fs.mkdir(path.dirname(destino), { recursive: true });
+    await fs.rename(previa.dir, destino);
+    await borrarVacias(path.dirname(previa.dir));
+  }
+  await fs.mkdir(destino, { recursive: true });
+  return destino;
+}
+
+// Sube desde dir borrando carpetas vacías, sin pasar de entregas/.
+async function borrarVacias(dir) {
+  while (dir.startsWith(ENTREGAS + path.sep)) {
+    if ((await fs.readdir(dir).catch(() => ['x'])).length) return;
+    await fs.rmdir(dir);
+    dir = path.dirname(dir);
+  }
+}
+
 async function codigoLibre() {
   for (;;) {
     const c = codigoAleatorio();
     if (!(await existe(path.join(SITIO, c)))) return c;
   }
 }
+
+const ENLACE_MUSICA = /^https:\/\/(open\.spotify\.com|(www\.|m\.)?youtube\.com|youtu\.be)\//;
 
 // Campos del pedido que son privados y no van a la web pública.
 const PRIVADOS = new Set(['plantilla', 'plan', 'codigo', 'cliente', 'telefono', 'notas', 'fotos', 'musica', 'expira', 'respuesta']);
@@ -63,6 +127,11 @@ export async function validarPedido(pedido, config) {
 
   if (pedido.musica && plan && !plan.musica) {
     errores.push(`El plan ${plan.nombre} no incluye música.`);
+  }
+
+  // Solo enlaces: la canción se reproduce desde Spotify/YouTube y la página no pesa más.
+  if (pedido.musica && !ENLACE_MUSICA.test(pedido.musica)) {
+    errores.push('La canción debe ser un enlace de Spotify (o YouTube). No se suben archivos de audio.');
   }
 
   if ((pedido.pregunta || pedido.abreEl) && plan && !plan.extras) {
@@ -108,15 +177,7 @@ export async function generarRegalo(pedido, { baseDir = RAIZ, codigo, forzar = f
     datos.fotos.push(typeof f === 'string' || !f.texto ? { src: nombre } : { src: nombre, texto: f.texto });
   }
 
-  if (pedido.musica) {
-    if (/^https?:\/\//.test(pedido.musica)) {
-      datos.musica = pedido.musica;
-    } else {
-      const ext = path.extname(pedido.musica) || '.mp3';
-      await fs.copyFile(path.resolve(baseDir, pedido.musica), path.join(carpeta, 'musica' + ext));
-      datos.musica = 'musica' + ext;
-    }
-  }
+  if (pedido.musica) datos.musica = pedido.musica;
 
   if (pedido.respuesta) {
     datos.respuestas = String(pedido.respuesta).split('|').map(r => hashRespuesta(r));
@@ -135,17 +196,16 @@ export async function generarRegalo(pedido, { baseDir = RAIZ, codigo, forzar = f
   await fs.writeFile(path.join(carpeta, 'index.html'), html);
 
   const url = config.urlBase.replace(/\/?$/, '/') + codigo + '/';
-  if (conQR) await generarQR(codigo, url, pedido);
-  return { codigo, url, carpeta };
+  const entrega = conQR ? await generarQR(codigo, url, pedido) : null;
+  return { codigo, url, carpeta, entrega };
 }
 
 /**
  * Genera el paquete de entrega física y digital: QR individual y Tarjeta Imprimible de Alta Resolución.
  */
 export async function generarQR(codigo, url, pedido = {}) {
-  const dir = path.join(ENTREGAS, codigo);
-  await fs.mkdir(dir, { recursive: true });
   const config = await leerConfig();
+  const dir = await carpetaEntrega(codigo, pedido, config);
 
   const opciones = {
     errorCorrectionLevel: 'H',
@@ -178,7 +238,7 @@ export async function generarQR(codigo, url, pedido = {}) {
     url,
     pedido,
     qrBuffer: qrBufferFinal,
-    marca: config.marca || 'Detalle QR'
+    marca: config.marca || 'Detallazo'
   });
 
   await fs.writeFile(path.join(dir, 'pedido.json'), JSON.stringify({ ...pedido, codigo }, null, 2));
@@ -192,6 +252,7 @@ export async function generarQR(codigo, url, pedido = {}) {
     registro,
     [new Date().toISOString(), codigo, pedido.plantilla, pedido.plan, pedido.cliente, pedido.telefono, url].map(csv).join(',') + '\n'
   );
+  return dir;
 }
 
 /**
@@ -225,10 +286,10 @@ async function generarTarjetaImprimible({ dir, codigo, url, pedido, qrBuffer, ma
 
     <!-- Cabecera / Marca -->
     <text x="600" y="190" text-anchor="middle" font-family="'Georgia', serif" font-size="28" letter-spacing="8" fill="#8c7863">· ${marca.toUpperCase()} ·</text>
-    <text x="600" y="270" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="68" fill="#1f1b16">Un detalle especial</text>
+    <text x="600" y="270" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="68" fill="#1f1b16">Te llegó un detallazo</text>
 
     <!-- Destinatario -->
-    <text x="600" y="380" text-anchor="middle" font-family="'Georgia', serif" font-size="46" fill="#992437">Para ti, ${destinatario}</text>
+    <text x="600" y="380" text-anchor="middle" font-family="'Georgia', serif" font-size="46" fill="#992437">Para ${destinatario}</text>
 
     <!-- Marco blanco para el QR con sombra -->
     <rect x="250" y="470" width="700" height="700" rx="32" fill="#ffffff" filter="url(#shadow)"/>
@@ -244,6 +305,7 @@ async function generarTarjetaImprimible({ dir, codigo, url, pedido, qrBuffer, ma
     <!-- Remitente o Código -->
     <text x="600" y="1530" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="42" fill="#1f1b16">${remitente}</text>
     <text x="600" y="1660" text-anchor="middle" font-family="'Courier New', monospace" font-size="20" letter-spacing="4" fill="#a89988">CÓDIGO: ${codigo.toUpperCase()}</text>
+    <text x="600" y="1700" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="22" fill="#8c7863">Tu regalo listo, hecho con mucho amor</text>
   </svg>
   `;
 

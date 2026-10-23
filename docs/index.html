@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Detalle QR · Atelier de Regalos Digitales con Código QR</title>
-<meta name="description" content="Flores interactivas, cartas con sello de cera, cumpleaños y recuerdos multimedia que se abren con la cámara de tu celular. Personalizados con tus fotos y música.">
+<title>Detallazo · Tu regalo listo, hecho con mucho amor</title>
+<meta name="description" content="Regalos digitales que se abren con la cámara del celular: flores que florecen, cartas con sello de cera, velas que se soplan de verdad. Con tus fotos, tu mensaje y su canción. Hecho en Ecuador.">
 <meta name="theme-color" content="#f7f3ec" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121013" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e5b869'/><text x='16' y='22' font-size='18' text-anchor='middle' font-family='Georgia,serif' font-style='italic' fill='%23191512'>d</text></svg>">
@@ -16,6 +16,8 @@
     const t = localStorage.getItem('tema');
     if (t) document.documentElement.dataset.theme = t;
   } catch {}
+  // Oculta lo que se va a animar antes del primer pintado (se quita si GSAP no carga).
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('anim');
 </script>
 <style>
   :root {
@@ -66,7 +68,7 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 24px; }
   body {
     margin: 0;
     background: var(--papel);
@@ -122,7 +124,6 @@
 
   .marca span {
     color: var(--dorado);
-    font-style: normal;
     font-weight: 600;
   }
 
@@ -655,7 +656,7 @@
     .plan-card .descripcion { min-height: 0; }
   }
 
-  /* ---------- Proceso de Atelier ---------- */
+  /* ---------- Cómo funciona ---------- */
   .pasos-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -730,7 +731,7 @@
 
   .pie-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
     gap: 48px;
   }
 
@@ -777,15 +778,361 @@
   }
 
   :focus-visible { outline: 2px solid var(--dorado); outline-offset: 3px; }
+
+  /* ---------- Escena de escaneo (portada) ---------- */
+  .escaneo {
+    position: relative;
+    width: 450px;
+    height: 450px;
+  }
+
+  .escaneo .tarjeta-regalo {
+    position: absolute;
+    left: 0;
+    top: 40px;
+    width: 262px;
+    padding: 32px 22px 24px;
+  }
+
+  .cel {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 196px;
+    height: 404px;
+    border-radius: 36px;
+    padding: 8px;
+    background: #141217;
+    box-shadow: var(--sombra-elevada), inset 0 0 0 2px rgba(255, 255, 255, 0.12), 0 0 0 3px #26222c;
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+
+  .cel-isla {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 58px;
+    height: 16px;
+    border-radius: 10px;
+    background: #000;
+    z-index: 6;
+  }
+
+  .cel-pantalla {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 29px;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  .vista {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* 1 · Cámara */
+  .vista-camara {
+    background: radial-gradient(circle at 40% 45%, #6b5a48 0%, #3a3029 45%, #17130f 100%);
+  }
+
+  .camara-qr {
+    width: 118px;
+    padding: 9px;
+    background: #fdfaf6;
+    border-radius: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+    transform: rotate(-4deg);
+  }
+
+  .camara-qr svg { display: block; width: 100%; height: auto; }
+
+  .marco-escaneo {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    left: 50%;
+    top: 50%;
+    margin: -75px 0 0 -75px;
+  }
+
+  .marco-escaneo i {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    border-radius: 4px;
+  }
+  .marco-escaneo i:nth-child(1) { left: 0; top: 0; border-right: 0; border-bottom: 0; }
+  .marco-escaneo i:nth-child(2) { right: 0; top: 0; border-left: 0; border-bottom: 0; }
+  .marco-escaneo i:nth-child(3) { left: 0; bottom: 0; border-right: 0; border-top: 0; }
+  .marco-escaneo i:nth-child(4) { right: 0; bottom: 0; border-left: 0; border-top: 0; }
+
+  .laser {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    top: 8%;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, #f5d697, transparent);
+    box-shadow: 0 0 12px 2px rgba(245, 214, 151, 0.7);
+  }
+
+  .aviso-qr {
+    position: absolute;
+    top: 38px;
+    left: 9px;
+    right: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    background: rgba(38, 36, 40, 0.86);
+    backdrop-filter: blur(10px);
+    text-align: left;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .aviso-icono {
+    flex: 0 0 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #f5d697, #c5933a);
+    color: #1a1614;
+    font-size: 13px;
+  }
+
+  .aviso-qr b { display: block; font-size: 10.5px; line-height: 1.3; }
+  .aviso-qr small { display: block; font-size: 9.5px; line-height: 1.3; color: rgba(255, 255, 255, 0.7); }
+
+  .camara-ui {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 8.5px;
+    letter-spacing: 0.14em;
+    color: #f5d697;
+  }
+
+  .camara-ui span {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: inset 0 0 0 3px #000, inset 0 0 0 20px #fff;
+  }
+
+  /* 2 · Apertura del regalo */
+  .vista-regalo {
+    background: radial-gradient(circle at 50% 40%, #1d2a4a, #0a0f1e);
+    padding: 0 16px;
+  }
+
+  .vr-emblema {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02));
+    margin-bottom: 14px;
+  }
+
+  .vr-para { font-family: 'Pinyon Script', cursive; font-size: 1.55rem; color: #f5d697; margin: 0; line-height: 1.1; }
+  .vista-regalo h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.02rem; line-height: 1.25; margin: 6px 0 16px; }
+
+  .vr-boton {
+    position: relative;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #1a1614;
+    background: linear-gradient(135deg, #f5d697, #e5b869);
+    padding: 9px 16px;
+    border-radius: 999px;
+  }
+
+  /* 3 · Flores */
+  .vista-flores {
+    background: radial-gradient(ellipse at 50% 100%, #1f2a48 0%, #0b1020 60%, #05070f 100%);
+    justify-content: flex-start;
+    padding-top: 52px;
+  }
+
+  .vf-texto { font-family: 'Fraunces', serif; font-style: italic; font-size: 1rem; color: #f5d697; margin: 0; }
+  .vf-de { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); margin: 4px 0 0; }
+
+  .vista-flores svg { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; }
+
+  .luciernaga {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f5d697;
+    box-shadow: 0 0 8px 2px rgba(245, 214, 151, 0.8);
+  }
+
+  .toque {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pasos-escaneo {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pasos-escaneo li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--tinta-suave);
+    padding: 6px 14px 6px 6px;
+    border-radius: 999px;
+    border: 1px solid var(--linea);
+    background: var(--tarjeta);
+    transition: color 0.3s, border-color 0.3s, background 0.3s;
+  }
+
+  .pasos-escaneo li b {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.72rem;
+    background: var(--papel-suave);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .pasos-escaneo li.activo { color: var(--tinta); border-color: var(--dorado); }
+  .pasos-escaneo li.activo b { background: var(--dorado); color: #1a1614; }
+
+  @media (max-width: 900px) {
+    .tarjeta-zona { margin-bottom: 0; }
+  }
+  .tarjeta-pista span.badge { white-space: nowrap; }
+
+  @media (max-width: 480px) {
+    .escaneo { zoom: 0.74; }
+    .pasos-escaneo { gap: 6px; flex-wrap: nowrap; }
+    .pasos-escaneo li { font-size: 0.74rem; padding: 4px 9px 4px 4px; gap: 5px; white-space: nowrap; }
+    .pasos-escaneo li b { width: 20px; height: 20px; }
+    .tarjeta-pista { font-size: 0.82rem; }
+  }
+  @media (max-width: 370px) {
+    .escaneo { zoom: 0.66; }
+  }
+
+  /* ---------- Filtros de la colección ---------- */
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filtro {
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--tinta-suave);
+    background: transparent;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .filtro:hover { color: var(--tinta); border-color: var(--dorado); }
+  .filtro.activo { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+
+  .diseno-item[hidden] { display: none; }
+
+  .diseno-item h3 .nuevo {
+    display: inline-block;
+    vertical-align: 0.2em;
+    margin-left: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a1614;
+    background: var(--dorado);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  /* ---------- Animaciones de entrada (GSAP + Lenis) ---------- */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  /* Se oculta solo si las librerías cargaron (clase "anim" en <html>). Usa la propiedad
+     "translate" para no chocar con los "transform" de los efectos hover. */
+  html.anim .revelar {
+    opacity: 0;
+    translate: 0 36px;
+    transition-property: opacity, translate, transform, border-color, box-shadow, color, background;
+    transition-duration: 0.9s, 0.9s, 0.3s, 0.25s, 0.3s, 0.25s, 0.25s;
+    transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: var(--retraso, 0s), var(--retraso, 0s), 0s, 0s, 0s, 0s, 0s;
+  }
+  html.anim .revelar.visto { opacity: 1; translate: none; }
+  html.anim .portada h1, html.anim .dividir { visibility: hidden; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.anim .revelar { opacity: 1; translate: none; }
+    html.anim .portada h1, html.anim .dividir { visibility: visible; }
+  }
 </style>
 </head>
 <body>
   <div class="caja">
     <header class="barra">
-      <a class="marca" href="./">Detalle<span> QR</span></a>
+      <a class="marca" href="./" aria-label="Detallazo">Detall<span>azo</span></a>
       <nav>
-        <a href="#catalogo">Colección</a>
-        <a href="#precios">Planes</a>
+        <a href="#catalogo">Diseños</a>
+        <a href="#precios">Precios</a>
         <a href="#proceso">Cómo funciona</a>
         <a href="#contacto">Contacto</a>
         <button class="tema-btn" id="tema" type="button" aria-label="Cambiar tema">
@@ -797,19 +1144,20 @@
 
     <div class="portada">
       <div>
-        <div class="etiqueta-intro">Atelier de Regalos Digitales · Ecuador</div>
-        <h1>Un detalle íntimo que despierta con <em>la cámara</em> de su celular.</h1>
-        <p class="lead">Entregas un código QR de alta resolución. Al escanearlo, florece una experiencia creada exclusivamente para esa persona: flores interactivas, cartas con sello de cera o velas para soplar de verdad. Personalizado con sus fotos, tu dedicatoria y su canción favorita.</p>
+        <div class="etiqueta-intro">Tu regalo listo, hecho con mucho amor</div>
+        <h1>Un detallazo que se abre con <em>la cámara</em> de su celular.</h1>
+        <p class="lead">Le entregas una tarjeta con un código QR. Lo escanea y se abre un regalo hecho solo para esa persona: flores que florecen, una carta con sello de cera o velas que se soplan de verdad. Con sus fotos, tu mensaje y su canción favorita.</p>
         <div class="acciones">
           <a class="btn-principal" data-whatsapp href="#">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
-            Crear mi regalo
+            Quiero el mío
           </a>
-          <a class="enlace-secundario" href="#catalogo">Explorar diseños interactivos ↓</a>
+          <a class="enlace-secundario" href="#catalogo">Ver los diseños ↓</a>
         </div>
       </div>
 
       <div class="tarjeta-zona">
+        <div class="escaneo" id="escaneo">
         <div class="tarjeta-regalo" role="img" aria-label="Tarjeta física de regalo con código QR">
           <div class="sello-lacre">✦</div>
           <div class="qr-recuadro">
@@ -817,12 +1165,72 @@
           </div>
           <div class="dedicatoria">
             <p class="para">Para María</p>
-            <p class="de">De: Andrés</p>
+            <p class="de">De: Roddy</p>
           </div>
         </div>
+
+          <!-- Celular que escanea la tarjeta: cámara → aviso → regalo → flores (animado con GSAP) -->
+          <div class="cel" id="cel" aria-hidden="true">
+            <div class="cel-isla"></div>
+            <div class="cel-pantalla">
+              <div class="vista vista-camara">
+                <div class="camara-qr" id="camaraQr"></div>
+                <div class="marco-escaneo"><i></i><i></i><i></i><i></i></div>
+                <div class="laser"></div>
+                <div class="aviso-qr">
+                  <span class="aviso-icono">✦</span>
+                  <div><b>Detallazo</b><small>Abrir regalo para María</small></div>
+                  <span class="toque"></span>
+                </div>
+                <div class="camara-ui">FOTO<span></span></div>
+              </div>
+
+              <div class="vista vista-regalo">
+                <div class="vr-emblema">🌻</div>
+                <p class="vr-para">Para María</p>
+                <h4>Hay un detalle preparado para ti</h4>
+                <span class="vr-boton">ABRIR DETALLE →<span class="toque"></span></span>
+              </div>
+
+              <div class="vista vista-flores">
+                <p class="vf-texto">Flores amarillas para ti</p>
+                <p class="vf-de">De: Roddy</p>
+                <i class="luciernaga" style="left:22%;top:46%"></i>
+                <i class="luciernaga" style="left:70%;top:38%"></i>
+                <i class="luciernaga" style="left:44%;top:30%"></i>
+                <i class="luciernaga" style="left:84%;top:56%"></i>
+                <i class="luciernaga" style="left:12%;top:62%"></i>
+                <svg viewBox="0 0 180 230" aria-hidden="true">
+                  <path class="tallo" d="M90 230 C88 190 94 160 90 118" stroke="#3f8a4a" stroke-width="3.5" fill="none" stroke-dasharray="120"/>
+                  <path class="tallo" d="M50 230 C52 200 40 180 44 150" stroke="#3f8a4a" stroke-width="3" fill="none" stroke-dasharray="120"/>
+                  <path class="tallo" d="M134 230 C132 205 142 186 138 160" stroke="#3f8a4a" stroke-width="3" fill="none" stroke-dasharray="120"/>
+                  <path d="M90 190 q-18 -6 -24 -20 q16 2 24 20z M90 175 q18 -6 24 -20 q-16 2 -24 20z" fill="#3f8a4a" class="hoja"/>
+                  <g class="flor" style="transform-origin:90px 112px">
+                    <g fill="#f2c230"><ellipse cx="90" cy="94" rx="8" ry="16"/><ellipse cx="90" cy="130" rx="8" ry="16"/><ellipse cx="72" cy="112" rx="16" ry="8"/><ellipse cx="108" cy="112" rx="16" ry="8"/><ellipse cx="77" cy="99" rx="8" ry="15" transform="rotate(-45 77 99)"/><ellipse cx="103" cy="125" rx="8" ry="15" transform="rotate(-45 103 125)"/><ellipse cx="103" cy="99" rx="8" ry="15" transform="rotate(45 103 99)"/><ellipse cx="77" cy="125" rx="8" ry="15" transform="rotate(45 77 125)"/></g>
+                    <circle cx="90" cy="112" r="9" fill="#6b3f1d"/>
+                  </g>
+                  <g class="flor" style="transform-origin:44px 146px">
+                    <g fill="#f7d15a"><ellipse cx="44" cy="133" rx="6" ry="12"/><ellipse cx="44" cy="159" rx="6" ry="12"/><ellipse cx="31" cy="146" rx="12" ry="6"/><ellipse cx="57" cy="146" rx="12" ry="6"/></g>
+                    <circle cx="44" cy="146" r="7" fill="#6b3f1d"/>
+                  </g>
+                  <g class="flor" style="transform-origin:138px 156px">
+                    <g fill="#f7d15a"><ellipse cx="138" cy="143" rx="6" ry="12"/><ellipse cx="138" cy="169" rx="6" ry="12"/><ellipse cx="125" cy="156" rx="12" ry="6"/><ellipse cx="151" cy="156" rx="12" ry="6"/></g>
+                    <circle cx="138" cy="156" r="7" fill="#6b3f1d"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ol class="pasos-escaneo" id="pasosEscaneo" aria-label="Cómo funciona en 3 pasos">
+          <li><b>1</b>Escanean</li>
+          <li><b>2</b>Se abre</li>
+          <li><b>3</b>Se emocionan</li>
+        </ol>
         <div class="tarjeta-pista">
-          <span class="badge">Demo real</span>
-          <span>Escanea el QR con tu móvil (clave: <em>amarillas</em>)</span>
+          <span class="badge">Pruébalo</span>
+          <span>Escanéalo con tu celular (clave: <em>amarillas</em>)</span>
         </div>
       </div>
     </div>
@@ -833,22 +1241,28 @@
     <div class="caja">
       <div class="seccion-encabezado">
         <div>
-          <h2>La <em>Colección</em></h2>
-          <p>Experiencias diseñadas con cuidado artesanal y código a medida. Selecciona una para probarla en vivo.</p>
+          <h2 class="dividir">Escoge tu <em>detalle</em></h2>
+          <p>Cada diseño trae su propia sorpresa. Toca uno y pruébalo aquí mismo.</p>
+        </div>
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar diseños">
+          <button class="filtro activo" type="button" data-filtro="todas">Todas</button>
+          <button class="filtro" type="button" data-filtro="amor">Amor</button>
+          <button class="filtro" type="button" data-filtro="celebraciones">Celebraciones</button>
+          <button class="filtro" type="button" data-filtro="fechas">Fechas especiales</button>
         </div>
       </div>
 
       <div class="catalogo-layout">
         <ol class="disenos-lista" id="lista">
-          <li class="diseno-item activo" data-demo="demo-flores-amarillas/">
+          <li class="diseno-item revelar activo" data-demo="demo-flores-amarillas/" data-cat="amor fechas">
             <span class="num">01</span>
             <div>
               <h3>Flores Amarillas</h3>
-              <p>Un jardín nocturno que germina pétalo a pétalo bajo un manto de luciérnagas. Ideal para conmemorar el 21 de septiembre o un detalle espontáneo.</p>
+              <p>Un jardín nocturno que germina pétalo a pétalo bajo un manto de luciérnagas. Ideal para el 21 de septiembre o un detalle espontáneo.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
-          <li class="diseno-item" data-demo="demo-carta-amor/">
+          <li class="diseno-item revelar" data-demo="demo-carta-amor/" data-cat="amor">
             <span class="num">02</span>
             <div>
               <h3>Carta de Amor & Gratitud</h3>
@@ -856,7 +1270,7 @@
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
-          <li class="diseno-item" data-demo="demo-cumpleanos/">
+          <li class="diseno-item revelar" data-demo="demo-cumpleanos/" data-cat="celebraciones">
             <span class="num">03</span>
             <div>
               <h3>Celebración de Cumpleaños</h3>
@@ -864,11 +1278,43 @@
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
-          <li class="diseno-item" data-demo="demo-atrapa-corazones/">
+          <li class="diseno-item revelar" data-demo="demo-atrapa-corazones/" data-cat="amor">
             <span class="num">04</span>
             <div>
               <h3>Atrapa Corazones</h3>
               <p>Minijuego interactivo estilo arcade chic: al recolectar los corazones en pantalla, se desbloquea el mensaje y la galería de fotos.</p>
+            </div>
+            <span class="btn-probar">Probar →</span>
+          </li>
+          <li class="diseno-item revelar" data-demo="demo-san-valentin/" data-cat="amor fechas">
+            <span class="num">05</span>
+            <div>
+              <h3>San Valentín<span class="nuevo">Nuevo</span></h3>
+              <p>La pregunta que no se puede rechazar: «¿Quieres ser mi San Valentín?». El botón del «No» se escapa y el «Sí» crece hasta que lo toquen.</p>
+            </div>
+            <span class="btn-probar">Probar →</span>
+          </li>
+          <li class="diseno-item revelar" data-demo="demo-graduacion/" data-cat="celebraciones">
+            <span class="num">06</span>
+            <div>
+              <h3>Graduación<span class="nuevo">Nuevo</span></h3>
+              <p>Un birrete que se lanza al cielo con un toque y un diploma que se despliega con tu dedicatoria, la carrera y las fotos del camino.</p>
+            </div>
+            <span class="btn-probar">Probar →</span>
+          </li>
+          <li class="diseno-item revelar" data-demo="demo-navidad/" data-cat="fechas">
+            <span class="num">07</span>
+            <div>
+              <h3>Feliz Navidad<span class="nuevo">Nuevo</span></h3>
+              <p>Un árbol bajo la nieve que se enciende esfera por esfera. Al brillar la estrella, aparece la carta navideña y los recuerdos del año.</p>
+            </div>
+            <span class="btn-probar">Probar →</span>
+          </li>
+          <li class="diseno-item revelar" data-demo="demo-ano-nuevo/" data-cat="fechas celebraciones">
+            <span class="num">08</span>
+            <div>
+              <h3>Feliz Año Nuevo<span class="nuevo">Nuevo</span></h3>
+              <p>Cuenta regresiva 5, 4, 3, 2, 1 y un cielo de fuegos artificiales que se lanzan con el dedo. Para brindar por todo lo que viene.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -893,17 +1339,17 @@
     <div class="caja">
       <div class="seccion-encabezado">
         <div>
-          <h2>Planes de <em>Inversión</em></h2>
-          <p>Cualquier plantilla se adapta a cualquiera de los planes. Pago único, sin mensualidades ni caducidad obligatoria.</p>
+          <h2 class="dividir">¿Cuánto <em>cuesta</em>?</h2>
+          <p>Cualquier diseño va con cualquier plan. Pagas una sola vez, sin mensualidades.</p>
         </div>
       </div>
 
       <div class="planes-grid">
-        <!-- Básico -->
-        <div class="plan-card">
+        <!-- Sencillo -->
+        <div class="plan-card revelar">
           <div>
             <div class="cabecera-plan">
-              <h3>Básico</h3>
+              <h3>Sencillo</h3>
               <div class="precio">
                 <span class="monto">$5</span>
                 <span class="periodo">/ detalle</span>
@@ -911,17 +1357,17 @@
             </div>
             <p class="descripcion">La experiencia digital completa con tu dedicatoria personalizada y entrega en enlace web permanente más código QR listo para imprimir.</p>
             <ul class="plan-caracteristicas">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cualquier plantilla de la colección</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cualquier diseño, a tu elección</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Mensaje y dedicatoria personalizada</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>QR de alta resolución para tarjeta</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Enlace permanente sin fecha de caducidad</li>
             </ul>
           </div>
-          <a class="btn-plan" data-whatsapp-plan="Básico" href="#">Elegir Básico</a>
+          <a class="btn-plan" data-whatsapp-plan="Sencillo" href="#">Quiero el Sencillo</a>
         </div>
 
         <!-- Chévere (Destacado) -->
-        <div class="plan-card destacado">
+        <div class="plan-card destacado revelar">
           <span class="badge-destacado">El más solicitado</span>
           <div>
             <div class="cabecera-plan">
@@ -931,22 +1377,22 @@
                 <span class="periodo">/ detalle</span>
               </div>
             </div>
-            <p class="descripcion">Todo lo del plan Básico, complementado con una fotografía especial tratada en alta definición y soporte para un ajuste de dedicatoria sin costo.</p>
+            <p class="descripcion">Todo lo del plan Sencillo, complementado con una fotografía especial tratada en alta definición y soporte para un ajuste de dedicatoria sin costo.</p>
             <ul class="plan-caracteristicas">
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Todo lo incluido en el plan Básico</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Todo lo incluido en el plan Sencillo</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1 Fotografía destacada estilo Polaroid</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Pie de foto o cita especial</li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Tarjeta de regalo imprimible en alta definición</li>
             </ul>
           </div>
-          <a class="btn-plan" data-whatsapp-plan="Chévere" href="#">Elegir Chévere</a>
+          <a class="btn-plan" data-whatsapp-plan="Chévere" href="#">Quiero el Chévere</a>
         </div>
 
-        <!-- VIP -->
-        <div class="plan-card">
+        <!-- Bacán -->
+        <div class="plan-card revelar">
           <div>
             <div class="cabecera-plan">
-              <h3>VIP Multimedia</h3>
+              <h3>Bacán</h3>
               <div class="precio">
                 <span class="monto">$15</span>
                 <span class="periodo">/ detalle</span>
@@ -960,11 +1406,11 @@
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cuenta regresiva hasta fecha/hora exacta</li>
             </ul>
           </div>
-          <a class="btn-plan" data-whatsapp-plan="VIP" href="#">Elegir VIP</a>
+          <a class="btn-plan" data-whatsapp-plan="Bacán" href="#">Quiero el Bacán</a>
         </div>
       </div>
 
-      <p class="nota-aclaratoria">⚡ Entrega el mismo día. Te enviamos la tarjeta digital y el archivo imprimible listos para sorprender.</p>
+      <p class="nota-aclaratoria">⚡ Listo el mismo día, de una. Te enviamos el QR y la tarjeta lista para imprimir.</p>
     </div>
   </section>
 
@@ -973,26 +1419,26 @@
     <div class="caja">
       <div class="seccion-encabezado">
         <div>
-          <h2>El <em>Proceso</em></h2>
-          <p>De tu idea al código QR en cuestión de horas.</p>
+          <h2 class="dividir">¿Cómo es la <em>vuelta</em>?</h2>
+          <p>De tu idea al QR en pocas horas. Así de fácil.</p>
         </div>
       </div>
 
       <div class="pasos-grid">
-        <div class="paso-card">
+        <div class="paso-card revelar">
           <div class="numero">01</div>
-          <h4>Envías los detalles</h4>
-          <p>Nos indicas por WhatsApp la plantilla que elegiste, para quién es el regalo, tu mensaje y las fotos o canción correspondientes a tu plan.</p>
+          <h4>Nos escribes</h4>
+          <p>Por WhatsApp nos cuentas qué diseño te gustó, para quién es, tu mensaje y las fotos o la canción, según tu plan.</p>
         </div>
-        <div class="paso-card">
+        <div class="paso-card revelar">
           <div class="numero">02</div>
-          <h4>Producción & Revisión</h4>
-          <p>Compilamos tu página y te compartimos el enlace privado para que verifiques cada detalle e interacción antes de entregarlo.</p>
+          <h4>Lo armamos y lo revisas</h4>
+          <p>Armamos tu regalo y te mandamos el enlace para que lo pruebes antes de entregarlo. Si algo no te cuadra, lo ajustamos.</p>
         </div>
-        <div class="paso-card">
+        <div class="paso-card revelar">
           <div class="numero">03</div>
           <h4>Recibes tu QR</h4>
-          <p>Te entregamos el código QR y la tarjeta imprimible en formato de alta resolución para que la coloques en una caja, sobre, ramo o mensaje.</p>
+          <p>Te enviamos el QR y la tarjeta lista para imprimir. Ponla en una caja, un sobre o junto a un ramo, y a esperar la reacción.</p>
         </div>
       </div>
     </div>
@@ -1002,14 +1448,17 @@
   <section>
     <div class="caja">
       <div class="pills-ocasiones">
-        <span class="pill">Aniversarios</span>
-        <span class="pill">Cumpleaños</span>
-        <span class="pill">Flores amarillas (21 de Septiembre)</span>
-        <span class="pill">San Valentín</span>
-        <span class="pill">Día de la Madre</span>
-        <span class="pill">Relaciones a distancia</span>
-        <span class="pill">Graduaciones</span>
-        <span class="pill">Detalles sorpresa espontáneos</span>
+        <span class="pill revelar">Aniversarios</span>
+        <span class="pill revelar">Cumpleaños</span>
+        <span class="pill revelar">San Valentín</span>
+        <span class="pill revelar">Flores amarillas (21 de septiembre)</span>
+        <span class="pill revelar">Graduaciones</span>
+        <span class="pill revelar">Día de la Madre</span>
+        <span class="pill revelar">Día del Padre</span>
+        <span class="pill revelar">Navidad</span>
+        <span class="pill revelar">Año Nuevo</span>
+        <span class="pill revelar">Relaciones a distancia</span>
+        <span class="pill revelar">Detalles sorpresa espontáneos</span>
       </div>
     </div>
   </section>
@@ -1019,8 +1468,8 @@
     <div class="caja">
       <div class="pie-grid">
         <div>
-          <a class="marca" href="./">Detalle<span> QR</span></a>
-          <p style="color: var(--tinta-suave); margin-top: 12px; max-width: 26em;">Atelier digital dedicado a inmortalizar momentos únicos a través de experiencias web artesanales y códigos QR de alta gama.</p>
+          <a class="marca" href="./" aria-label="Detallazo">Detall<span>azo</span></a>
+          <p style="color: var(--tinta-suave); margin-top: 12px; max-width: 26em;">Hacemos regalos que no se olvidan: se escanean, se abren y emocionan. Tu regalo listo, hecho con mucho amor.</p>
         </div>
         <div>
           <h5>Pedidos & Asesoría</h5>
@@ -1028,6 +1477,7 @@
             <li><a data-whatsapp href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>Atención vía WhatsApp</a></li>
           </ul>
         </div>
+        <!-- PENDIENTE: redes sociales ocultas hasta tener perfiles reales (ver PENDIENTES.md)
         <div>
           <h5>Redes Sociales</h5>
           <ul>
@@ -1036,11 +1486,12 @@
             <li><a data-red="facebook" href="#" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.5V4.4a20 20 0 0 0-2.2-.1c-2.2 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z"/></svg>Facebook</a></li>
           </ul>
         </div>
+        -->
       </div>
 
       <div class="pie-legal">
-        <span>© <span id="anio">2026</span> Detalle QR · Hecho con dedicación en Ecuador</span>
-        <span>Código estático privado · Sin rastreadores intrusivos</span>
+        <span>© <span id="anio">2026</span> Detallazo · Hecho con mucho amor en Ecuador</span>
+        <span>Tus fotos y mensajes son privados · Sin publicidad ni rastreadores</span>
       </div>
     </div>
   </footer>
@@ -1053,8 +1504,10 @@
     facebook: 'https://www.facebook.com/'
   };
 
-  const mensajeDefecto = encodeURIComponent('¡Hola! Me gustaría crear un regalo digital personalizado 🎁');
-  const baseWa = `https://wa.me/${CONTACTO.whatsapp}?text=`;
+  // api.whatsapp.com conserva los acentos y emojis; wa.me a veces los convierte en "�".
+  // Usa solo emojis simples (✨ ❤) para que se vean igual en celular, web y escritorio.
+  const baseWa = `https://api.whatsapp.com/send?phone=${CONTACTO.whatsapp}&text=`;
+  const mensajeDefecto = encodeURIComponent('¡Hola! ✨ Vi Detallazo y quiero sorprender a alguien. ¿Me ayudan a armar el regalo?');
   document.querySelectorAll('[data-whatsapp]').forEach(a => {
     a.href = baseWa + mensajeDefecto;
     a.target = '_blank';
@@ -1063,7 +1516,11 @@
 
   document.querySelectorAll('[data-whatsapp-plan]').forEach(a => {
     const plan = a.dataset.whatsappPlan;
-    const txt = encodeURIComponent(`¡Hola! Deseo pedir el plan ${plan} de Detalle QR ✨`);
+    const txt = encodeURIComponent(
+      `¡Hola! ✨ Quiero el plan ${plan} de Detallazo.\n\n` +
+      `• Para quién es:\n• Ocasión:\n• Plantilla que me gustó:\n\n` +
+      `¿Cómo seguimos?`
+    );
     a.href = baseWa + txt;
     a.target = '_blank';
     a.rel = 'noopener';
@@ -1094,11 +1551,146 @@
         window.location.href = demoSrc;
         return;
       }
+      if (item.classList.contains('activo')) return;
       pantalla.src = demoSrc;
       items.forEach(x => x.classList.remove('activo'));
       item.classList.add('activo');
     });
   });
+
+  // Filtros de la colección
+  document.querySelectorAll('#filtros .filtro').forEach(boton => {
+    boton.addEventListener('click', () => {
+      document.querySelectorAll('#filtros .filtro').forEach(b => b.classList.toggle('activo', b === boton));
+      const f = boton.dataset.filtro;
+      let i = 0;
+      items.forEach(item => {
+        const ver = f === 'todas' || item.dataset.cat.split(' ').includes(f);
+        item.hidden = !ver;
+        if (ver && window.gsap) gsap.fromTo(item, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.45, delay: i++ * 0.05, ease: 'power2.out', clearProps: 'transform,opacity,visibility' });
+      });
+      window.ScrollTrigger && ScrollTrigger.refresh();
+    });
+  });
+
+  // El celular de la portada "ve" el mismo QR de la tarjeta.
+  document.getElementById('camaraQr').innerHTML = document.querySelector('.tarjeta-regalo .qr-recuadro').innerHTML;
+</script>
+
+<!-- Animación: GSAP (+ScrollTrigger, SplitText) y desplazamiento suave con Lenis. Copias locales en assets/vendor. -->
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/SplitText.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script>
+(function () {
+  const raiz = document.documentElement;
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!window.gsap || !window.ScrollTrigger || !window.SplitText) { raiz.classList.remove('anim'); return; }
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  // ---------- Desplazamiento suave ----------
+  if (window.Lenis && !reducido) {
+    const lenis = new Lenis({ anchors: { offset: -24 }, lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  // ---------- Títulos que aparecen palabra por palabra ----------
+  const titulo = document.querySelector('.portada h1');
+  SplitText.create(titulo, {
+    type: 'lines,words',
+    mask: 'lines',
+    autoSplit: true,
+    onSplit(self) {
+      gsap.set(titulo, { visibility: 'visible' });
+      return gsap.from(self.words, { yPercent: 110, duration: 1.1, stagger: 0.045, ease: 'expo.out', delay: 0.1 });
+    }
+  });
+  gsap.from('.portada .etiqueta-intro, .portada .lead, .portada .acciones', { y: 24, autoAlpha: 0, duration: 1, stagger: 0.12, delay: 0.45, ease: 'power3.out' });
+  gsap.from('#escaneo', { y: 40, autoAlpha: 0, duration: 1.2, delay: 0.3, ease: 'power3.out' });
+
+  document.querySelectorAll('.dividir').forEach(h => {
+    SplitText.create(h, {
+      type: 'lines,words',
+      mask: 'lines',
+      autoSplit: true,
+      onSplit(self) {
+        gsap.set(h, { visibility: 'visible' });
+        return gsap.from(self.words, { yPercent: 110, duration: 1, stagger: 0.06, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 88%', once: true } });
+      }
+    });
+  });
+
+  // ---------- Tarjetas que suben al entrar en pantalla (la transición la hace el CSS) ----------
+  ScrollTrigger.batch('.revelar', {
+    start: 'top 92%',
+    once: true,
+    onEnter: lote => lote.forEach((el, i) => { el.style.setProperty('--retraso', i * 0.08 + 's'); el.classList.add('visto'); })
+  });
+
+  // ---------- Celular del catálogo: transición al cambiar de diseño ----------
+  const pantalla = document.getElementById('pantalla');
+  pantalla.addEventListener('load', () => gsap.fromTo(pantalla, { autoAlpha: 0, scale: 0.97 }, { autoAlpha: 1, scale: 1, duration: 0.55, ease: 'power2.out' }));
+
+  // ---------- Escena de escaneo: cámara → aviso → regalo → flores ----------
+  const escena = document.getElementById('escaneo');
+  const q = s => escena.querySelector(s);
+  const qa = s => escena.querySelectorAll(s);
+  const pasos = document.querySelectorAll('#pasosEscaneo li');
+  const paso = n => () => pasos.forEach((p, i) => p.classList.toggle('activo', i === n));
+  const toque = el => gsap.timeline()
+    .fromTo(el.querySelector('.toque'), { scale: 0.4, autoAlpha: 1 }, { scale: 1.6, autoAlpha: 0, duration: 0.55, ease: 'power2.out' })
+    .to(el, { scale: 0.94, duration: 0.12, yoyo: true, repeat: 1 }, 0);
+
+  gsap.set([q('.vista-regalo'), q('.vista-flores'), q('.aviso-qr')], { autoAlpha: 0 });
+  gsap.fromTo('#cel', { x: 70, rotate: 16 }, { x: 0, rotate: 5, duration: 1.4, delay: 0.5, ease: 'expo.out' });
+  gsap.to('#cel', { y: -8, rotate: 6.5, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.9 });
+
+  if (reducido) {
+    gsap.set(q('.vista-camara'), { autoAlpha: 0 });
+    gsap.set(q('.vista-regalo'), { autoAlpha: 1 });
+    paso(1)();
+    return;
+  }
+
+  const recuadro = document.querySelector('.tarjeta-regalo .qr-recuadro');
+  const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3, defaults: { ease: 'power2.out' }, delay: 1.4 });
+  tl.call(paso(0))
+    .set(q('.vista-camara'), { autoAlpha: 1 })
+    .set(q('.aviso-qr'), { autoAlpha: 0, y: -14 })
+    .set(q('.laser'), { autoAlpha: 0 })
+    .set(qa('.marco-escaneo i'), { borderColor: 'rgba(255,255,255,0.85)' })
+    .fromTo(q('.camara-qr'), { scale: 0.72, rotate: -14, x: -18, y: 14, filter: 'blur(3px)' }, { scale: 1, rotate: -4, x: 0, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out' })
+    .fromTo(q('.marco-escaneo'), { scale: 1.12 }, { scale: 1, duration: 0.7 }, '<0.3')
+    .set(q('.laser'), { autoAlpha: 1, top: '8%' })
+    .to(q('.laser'), { top: '90%', duration: 0.85, ease: 'sine.inOut', repeat: 1, yoyo: true })
+    .to(q('.laser'), { autoAlpha: 0, duration: 0.2 })
+    .to(qa('.marco-escaneo i'), { borderColor: '#e5b869', duration: 0.2 }, '<')
+    .to(q('.marco-escaneo'), { scale: 0.9, duration: 0.4, ease: 'back.out(3)' }, '<')
+    .fromTo(recuadro, { boxShadow: '0 0 0 0px rgba(229,184,105,0)' }, { boxShadow: '0 0 0 7px rgba(229,184,105,0.55)', duration: 0.3, yoyo: true, repeat: 1 }, '<')
+    .to(q('.aviso-qr'), { autoAlpha: 1, y: 0, duration: 0.5, ease: 'back.out(2)' })
+    .add(toque(q('.aviso-qr')), '+=0.7')
+    .call(paso(1))
+    .to(q('.vista-camara'), { autoAlpha: 0, duration: 0.4 })
+    .fromTo(q('.vista-regalo'), { autoAlpha: 0, scale: 1.06, filter: 'blur(0px)' }, { autoAlpha: 1, scale: 1, duration: 0.6 }, '<')
+    .fromTo(q('.vr-emblema'), { scale: 0.6, rotate: -20 }, { scale: 1, rotate: 0, duration: 0.8, ease: 'back.out(2)' }, '<0.1')
+    .add(toque(q('.vr-boton')), '+=1.1')
+    .call(paso(2))
+    .to(q('.vista-regalo'), { autoAlpha: 0, scale: 1.05, filter: 'blur(6px)', duration: 0.6 })
+    .to(q('.vista-flores'), { autoAlpha: 1, duration: 0.5 }, '<')
+    .fromTo(qa('.tallo'), { strokeDashoffset: 120 }, { strokeDashoffset: 0, duration: 1.1, stagger: 0.15, ease: 'power2.inOut' }, '<0.2')
+    .fromTo(q('.hoja'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, '-=0.6')
+    .fromTo(qa('.flor'), { scale: 0, rotate: -90 }, { scale: 1, rotate: 0, duration: 0.8, stagger: 0.15, ease: 'back.out(1.8)' }, '-=0.5')
+    .fromTo(qa('.vf-texto, .vf-de'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1 }, '-=0.5')
+    .fromTo(qa('.luciernaga'), { autoAlpha: 0, y: 0 }, { autoAlpha: 1, y: -26, duration: 1.6, stagger: 0.12, ease: 'sine.out' }, '<')
+    .to({}, { duration: 2.4 })
+    .to(q('.vista-flores'), { autoAlpha: 0, duration: 0.5 });
+
+  // Se pausa cuando la escena no está en pantalla (ahorra batería en celulares).
+  ScrollTrigger.create({ trigger: escena, start: 'top bottom', end: 'bottom top', onToggle: e => (e.isActive ? tl.resume() : tl.pause()) });
+})();
 </script>
 </body>
 </html>
