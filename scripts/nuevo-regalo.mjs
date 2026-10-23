@@ -90,6 +90,7 @@ async function asistente() {
   if (p.plantilla === 'graduacion') p.carrera = await preguntar(' Carrera o logro (ej. Ingeniería en Software · Promoción 2026; Enter = sin carrera)');
   if (p.plantilla === 'ano-nuevo') p.anio = await preguntar(' Año que llega (Enter = automático)');
   if (p.plantilla === 'san-valentin') p.propuesta = await preguntar(' Pregunta (Enter = «¿Quieres ser mi San Valentín?»)');
+  if (p.plantilla === 'dia-del-padre') p.placa = await preguntar(' Texto de la placa (Enter = «Al mejor papá del mundo»)');
 
   p.cliente = await preguntar(' Cliente que compra (privado)');
   p.telefono = await preguntar(' Teléfono del cliente (privado)');

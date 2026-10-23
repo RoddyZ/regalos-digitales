@@ -1,11 +1,12 @@
 # Detallazo · Tu regalo listo, hecho con mucho amor
 
-Cada regalo es una página web con su propio enlace (por ejemplo `https://roddyz.github.io/regalos-digitales/pvnda5gr/`)
-y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay servidor ni base de datos que pagar.
+Cada regalo es una página web con su propio enlace (por ejemplo `https://detallazo-ec.pages.dev/pvnda5gr/`)
+y un código QR que la abre. Todo se publica gratis en Cloudflare Pages: no hay servidor ni base de datos que pagar.
 
-- **Portada / tienda:** https://roddyz.github.io/regalos-digitales/
+- **Portada / tienda:** https://detallazo-ec.pages.dev/
 - **Demos:** `…/demo-flores-amarillas/`, `…/demo-carta-amor/`, `…/demo-cumpleanos/`, `…/demo-atrapa-corazones/`,
-  `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-vip/` (clave: *amarillas*)
+  `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-dia-del-padre/`,
+  `…/demo-vip/` (clave: *amarillas*)
 - **Pendientes:** lo que falta por hacer está en [PENDIENTES.md](PENDIENTES.md).
 
 ---
@@ -22,7 +23,7 @@ y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay serv
 8. [Poner tu logo en el QR](#8-poner-tu-logo-en-el-qr)
 9. [Cambiar WhatsApp y redes sociales de la portada](#9-cambiar-whatsapp-y-redes-sociales-de-la-portada)
 10. [Privacidad: qué se sube y qué no](#10-privacidad-qué-se-sube-y-qué-no)
-11. [Publicación en GitHub Pages](#11-publicación-en-github-pages)
+11. [Publicación: GitHub Pages y Cloudflare Pages](#11-publicación-github-pages-y-cloudflare-pages)
 12. [Crear una plantilla nueva](#12-crear-una-plantilla-nueva)
 13. [Vigencia y limpieza](#13-vigencia-y-limpieza)
 14. [Problemas comunes](#14-problemas-comunes)
@@ -48,7 +49,7 @@ Listo. Esto solo se hace la primera vez (o en una computadora nueva).
 
 **Antes de empezar**, pide al cliente por WhatsApp:
 
-- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones, San Valentín, graduación, Navidad o Año Nuevo)
+- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones, San Valentín, graduación, Navidad, Año Nuevo o Día del Padre)
   y el plan (Sencillo, Chévere o Bacán).
 - Para quién es y cómo firma.
 - El mensaje.
@@ -92,11 +93,12 @@ El asistente te pregunta todo, una cosa a la vez:
 | Fotos | **Arrastra la foto** desde la carpeta hasta la terminal y pulsa Enter. Después te pide un pie de foto (opcional). Enter vacío para terminar |
 | Canción | Pega el enlace de Spotify o YouTube (ver [sección 5](#5-música-enlace-de-spotify)) |
 | Pregunta secreta / Se abre el | Solo plan Bacán. Enter para saltar (ver [sección 7](#7-extras-del-plan-bacán-pregunta-secreta-y-apertura-programada)) |
-| ¿Desde cuándo están juntos? | Solo carta-amor. Fecha `2022-02-14` para mostrar "Llevamos juntos X días". Enter para saltar |
+| ¿Desde cuándo están juntos? | Solo carta-amor. Fecha `2022-02-14` para mostrar "Juntos desde hace X días". Enter para saltar |
 | Edad | Solo cumpleaños. Enter para saltar |
 | Carrera o logro | Solo graduación. Ej. `Ingeniería en Software · Promoción 2026`. Enter para saltar |
 | Año que llega | Solo año nuevo. Enter = automático (desde julio muestra el año siguiente) |
 | Pregunta | Solo San Valentín. Enter = *"¿Quieres ser mi San Valentín?"*. Puedes poner otra, ej. *"¿Quieres ser mi novia?"* |
+| Texto de la placa | Solo Día del Padre. Enter = *"Al mejor papá del mundo"*. Ej. *"Al mejor papá y abuelito"* (máx. 40 letras) |
 | Cliente / Teléfono | Datos de quien compra. **Son privados**: no salen en la página |
 | ¿Publicar ya en internet? | `s` para subirlo de una vez; `n` para revisarlo antes |
 
@@ -105,7 +107,7 @@ Al terminar verás algo así:
 ```
 ✔ Regalo creado con éxito
   Código:  pvnda5gr
-  URL:     https://roddyz.github.io/regalos-digitales/pvnda5gr/
+  URL:     https://detallazo-ec.pages.dev/pvnda5gr/
   Carpeta: entregas\03-vip\carta-amor\0001-lorena-pvnda5gr
   QR:      D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\qr.png
   Tarjeta: D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\tarjeta-regalo.png (300 DPI lista para imprimir)
@@ -174,10 +176,29 @@ Dentro de cada carpeta encuentras:
 |---|---|
 | `qr.png` | Para enviar por WhatsApp o imprimir en tamaño normal (1200×1200 px) |
 | `qr.svg` | Para imprimir en grande (no pierde calidad) |
-| `tarjeta-regalo.png` | Tarjeta lista para imprimir (1200×1800 px) con el QR, el nombre y la firma |
+| `tarjeta-regalo.png` | Tarjeta lista para imprimir (ver abajo) |
 | `pedido.json` | Copia del pedido, por si acaso |
 
 **Antes de entregar, escanea el QR con tu celular** y prueba el regalo completo.
+
+### La tarjeta para imprimir
+
+`tarjeta-regalo.png` mide **10 × 15 cm** (1200 × 1800 px a 300 DPI), el tamaño de una foto normal. Trae:
+
+- Un marco del color del diseño (amarillo en flores, rosado en carta, verde en Navidad…).
+- La cajita de regalo, *"Para María"* escrito a mano y el título **"Tu regalo está aquí"**.
+- El QR pegado con cinta y los 3 pasos para abrirlo: *Abre la cámara · Apunta al código · Toca el enlace*.
+- La firma (*"De: Andrés"*), la frase de la marca y el código del regalo.
+
+Para imprimirla:
+
+1. Ábrela y elige **Imprimir → tamaño 10 × 15 cm** (o "4 × 6 pulgadas"), sin márgenes y al 100 %.
+2. Mejor en papel fotográfico o cartulina mate. También sirve en un estudio de fotos: se pide como foto de 10 × 15.
+3. Si usas una hoja A4, entran 4 tarjetas: recórtalas por el borde de color.
+4. Escanea la tarjeta impresa antes de entregarla.
+
+Las letras de la tarjeta (Fraunces, Caveat y Nunito, de licencia libre) están en `marca/fuentes/`. No las borres:
+sin ellas la tarjeta no se puede generar.
 
 > ⚠️ La carpeta `entregas/` no se sube a internet: **haz una copia de respaldo** (Google Drive, USB) de vez en cuando.
 
@@ -284,7 +305,7 @@ Si un pedido trae algo que su plan no incluye, el generador no lo deja pasar y a
 - Formato: `2027-02-14 00:00` (año-mes-día hora:minutos, hora del celular de quien lo abre).
 - Ideal para entregar el QR la noche anterior y que se abra a la medianoche.
 
-Pruébalo en la demo: https://roddyz.github.io/regalos-digitales/demo-vip/ (respuesta: *amarillas*).
+Pruébalo en la demo: https://detallazo-ec.pages.dev/demo-vip/ (respuesta: *amarillas*).
 
 ---
 
@@ -362,7 +383,7 @@ regalos publicados se pueden ver navegando el repositorio en GitHub. Los código
 
 ---
 
-## 11. Publicación en GitHub Pages
+## 11. Publicación: GitHub Pages y Cloudflare Pages
 
 **Configuración (una sola vez, ya hecha):** en GitHub → *Settings → Pages → Branch:* `main`, *carpeta:* `/docs` → *Save*.
 
@@ -371,13 +392,61 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
 > **Aviso "Node.js 20 is deprecated…" en Actions:** puedes ignorarlo. Viene del proceso interno de GitHub,
 > no de este proyecto. La publicación funciona igual.
 
+### Publicar en Cloudflare Pages (recomendado para vender)
+
+GitHub Pages es para proyectos personales; sus reglas no permiten usarlo como tienda. **Cloudflare Pages** es
+gratis, sí permite uso comercial, no limita las visitas y publica la misma carpeta `docs/` con cada `git push`.
+Te da una dirección gratis del tipo **`detallazo.pages.dev`**.
+
+> **Ya está hecho:** el sitio oficial es **https://detallazo-ec.pages.dev/** y `urlBase` ya apunta ahí. Cada `git push`
+> a `main` lo publica solo. Los pasos de abajo sirven si algún día hay que volver a crearlo.
+
+**A. Crear el sitio (una sola vez, unos 10 minutos)**
+
+1. Entra a <https://dash.cloudflare.com/sign-up> y crea una cuenta gratis con tu correo.
+2. En el menú de la izquierda abre **Workers & Pages** (o **Compute → Workers & Pages**) → **Create**
+   → pestaña **Pages** → **Import an existing Git repository** (o *Connect to Git*).
+3. Elige **GitHub**, autoriza a Cloudflare y dale acceso **solo** al repositorio `regalos-digitales`.
+4. Configura el proyecto:
+   - **Project name:** `detallazo` (de ahí sale `detallazo.pages.dev`; si está ocupado, prueba `detallazo-ec`).
+   - **Production branch:** `main`
+   - **Framework preset:** `None`
+   - **Build command:** déjalo vacío
+   - **Build output directory:** `docs`
+5. Pulsa **Save and Deploy**. En 1 o 2 minutos abre `https://detallazo.pages.dev` y revisa la portada y una demo.
+
+**B. Que los QR nuevos usen la dirección nueva**
+
+6. En `config.json` cambia `"urlBase"` por tu dirección, con la barra al final:
+   `"urlBase": "https://detallazo.pages.dev/"`
+7. Publica el cambio: `git add config.json && git commit -m "Dirección de Cloudflare" && git push`.
+8. Crea un regalo de prueba y escanea su QR: debe abrir `detallazo.pages.dev/<código>/`. Bórralo después.
+
+Desde ese momento, cada `git push` publica en los dos sitios a la vez, y Cloudflare lo hace en menos de un minuto.
+El estado de cada publicación se ve en Cloudflare → tu proyecto → **Deployments**.
+
+**C. No apagues GitHub Pages.** Los QR que ya entregaste apuntan a `roddyz.github.io/regalos-digitales/…` y
+deben seguir funcionando. Como los dos sitios publican la misma carpeta, no hay que hacer nada más.
+
+**D. Dominio propio (opcional, con costo)**
+
+`detallazo.pages.dev` es gratis para siempre. Un dominio propio (`detallazo.com` o `detallazo.ec`) da más
+confianza, pero se paga cada año: un `.com` cuesta unos $10–12 en Cloudflare (*Domain Registration*), y un `.ec`
+se compra en nic.ec. Los dominios "gratis" que se ofrecen en internet no son confiables: pueden quitártelos y los
+QR impresos dejarían de funcionar. Cuando lo tengas:
+
+1. Cloudflare → tu proyecto → **Custom domains** → **Set up a custom domain** → escribe `detallazo.com`.
+2. Si compraste el dominio en Cloudflare, se configura solo. Si fue en otro lado, sigue las instrucciones de
+   Cloudflare para apuntar el dominio (cambiar los *nameservers* o crear un registro CNAME).
+3. Cambia `urlBase` a `https://detallazo.com/` y publica (paso 6 y 7).
+
 ---
 
 ## 12. Crear una plantilla nueva
 
 1. Copia una plantilla de `plantillas/` (ej. `carta-amor.html` → `dia-de-la-madre.html`) y cambia el diseño.
-2. Conserva estas cuatro piezas, que conectan la plantilla con el sistema:
-   - `<link rel="stylesheet" href="../assets/regalo.css">`
+2. Conserva estas piezas, que conectan la plantilla con el sistema:
+   - `<link rel="stylesheet" href="../assets/regalo.css">` y `<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">`
    - `<script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>` (aquí se ponen los datos de cada regalo)
    - `<script src="../assets/regalo.js"></script>`
    - La llamada `Regalo.iniciar({ alAbrir() { … } })`
@@ -386,13 +455,30 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
    - `data-demo="demo-dia-de-la-madre/"`: la demo que se abre en el celular.
    - `data-cat="..."`: en qué filtros aparece. Puede tener varias, separadas por espacio:
      `amor`, `celebraciones`, `fechas`.
-   - El número (`09`), el título y la descripción. Para la etiqueta dorada de novedad, añade
+   - El número (`10`), el título y la descripción. Para la etiqueta dorada de novedad, añade
      `<span class="nuevo">Nuevo</span>` al final del título (y quítala cuando ya no sea nuevo).
 5. Publica: `git add plantillas demos docs && git commit -m "Plantilla día de la madre" && git push`.
 
-El motor común (`docs/assets/regalo.js`) ya se encarga de la pantalla "Toca para abrir", la música, la pregunta
-secreta, la cuenta regresiva y la expiración. En la plantilla puedes usar `Regalo.escribir()`, `Regalo.galeria()`,
-`Regalo.confeti()` y `Regalo.flotar()`.
+El motor común (`docs/assets/regalo.js`) ya se encarga de la caja de regalo de la apertura ("Te llegó un detallazo"),
+la música, la pregunta secreta, la cuenta regresiva, la expiración y el pie "Hecho con mucho amor en Detallazo".
+En la plantilla puedes usar `Regalo.escribir()`, `Regalo.galeria()`, `Regalo.confeti()`, `Regalo.flotar()` y
+`Regalo.figura()`. Al terminar la interacción, llama a `Regalo.final()`: muestra las fotos (si hay) y el pie.
+
+### Estilo de los regalos
+
+Todos los regalos comparten un estilo de papelería dibujada a mano, para que no se vean como plantillas genéricas:
+
+- **Colores planos** con contorno de "tinta" (`--rg-tinta`) y sombras sólidas tipo sticker. Nada de brillos,
+  degradados dorados ni efecto vidrio.
+- **Letras:** *Fraunces* para títulos, *Caveat* (escrita a mano) para dedicatorias y firmas, *Nunito* para el texto.
+- **Sin emojis.** Corazones, estrellas, flores y copos son dibujos SVG: `Regalo.flotar([['corazon', '#ff5a6e']])`
+  o `Regalo.figura('estrella', '#ffd166')`. Figuras disponibles: `corazon`, `estrella`, `flor`, `copo`, `circulo`.
+- **Piezas listas** en `regalo.css`: `rg-escena` (pantalla completa centrada), `rg-etiqueta` (texto a mano arriba
+  del título), `rg-titulo`, `rg-ayuda` (instrucción), `rg-boton` (y `rg-secundario`), `rg-carta` (papel con cinta
+  washi), `rg-firma`, `rg-subtitulo` (con subrayado a mano) y la galería de polaroids.
+- **Cada plantilla solo cambia su paleta** en `:root`: `--rg-fondo`, `--rg-acento` (botón), `--rg-acento-tinta`
+  (etiqueta y firma), `--rg-caja` y `--rg-cinta` (la caja de regalo de la apertura) y `--rg-washi` (la cinta).
+  En fondos oscuros (Navidad, Año Nuevo) cambia también `--rg-texto` y `--rg-sombra`.
 
 Si el diseño necesita un dato propio (como `edad` en cumpleaños o `carrera` en graduación), léelo con
 `Regalo.datos.<nombre>` y agrégalo como pregunta en `scripts/nuevo-regalo.mjs` y como campo en el panel
@@ -448,6 +534,7 @@ Por defecto los regalos son **permanentes**.
 | La tarjeta de Spotify no aparece | Revisa que el enlace sea de una **canción** (`/track/`) y que el plan sea Bacán |
 | El video de YouTube no aparece | Ese video no permite verse fuera de YouTube: usa Spotify |
 | El QR no se lee | Revisa que el logo no sea demasiado grande y que `qrColor` sea oscuro |
+| La tarjeta sale sin letras o da error de fuente | Falta la carpeta `marca/fuentes/`: recupérala con `git checkout marca/fuentes` |
 | No encuentro la carpeta de un regalo | Búscala por su código en el Explorador de Windows (ej. `pvnda5gr`), o mira el número en el historial del panel |
 
 ---
@@ -464,6 +551,7 @@ Por defecto los regalos son **permanentes**.
 | `pedidos/` | Pedidos reales y fotos de clientes (`pedidos/fotos/`) | **No** |
 | `entregas/` | QRs, tarjetas y registro de ventas, ordenados por plan y diseño ([sección 3](#3-entregar-el-qr-al-cliente)) | **No**: haz respaldo |
 | `marca/logo.png` | Logo para el centro del QR (opcional) | Sí |
+| `marca/fuentes/` | Letras de la marca para dibujar la tarjeta imprimible | Sí |
 | `config.json` | Dirección base, planes, color y logo del QR | Sí |
 | `scripts/` | Generador de regalos, panel, demos, limpieza y orden de entregas | Sí |
 | `PENDIENTES.md` | Lo que falta por hacer | Sí |

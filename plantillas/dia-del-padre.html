@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>¡Feliz Día del Padre!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="../assets/regalo.css">
+<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">
+<style>
+  :root {
+    --rg-fondo: #d3e6f5;
+    --rg-acento: #ffc23d;
+    --rg-acento-2: #23366b;
+    --rg-acento-tinta: #c2410c;
+    --rg-caja: #23366b;
+    --rg-cinta: #ffc23d;
+    --rg-washi: rgba(126, 196, 255, 0.85);
+    --azul: #23366b;
+  }
+
+  body {
+    min-height: 100svh;
+    user-select: none;
+    -webkit-user-select: none;
+    background-image: repeating-linear-gradient(90deg, transparent 0 34px, rgba(35, 54, 107, 0.06) 34px 68px);
+  }
+
+  .rg-titulo { margin-inline: auto; }
+
+  .copa {
+    position: relative;
+    width: 210px;
+    margin: 30px auto 6px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .copa svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .copa .metal { transition: fill 0.35s ease; }
+  .copa.golpe { animation: golpe 0.35s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .copa.lista { cursor: default; animation: festejo 1.6s ease-in-out infinite; }
+  @keyframes golpe { 40% { transform: scale(1.06, 0.95) rotate(-3deg); } }
+  @keyframes festejo { 25% { transform: rotate(-4deg) translateY(-4px); } 75% { transform: rotate(4deg) translateY(-4px); } }
+
+  .copa .reflejo { transform: translateX(-140px); }
+  .copa.golpe .reflejo { animation: reflejo 0.6s ease-out; }
+  @keyframes reflejo { to { transform: translateX(140px); } }
+
+  .copa .ojos-felices { display: none; }
+  .copa.lista .ojos { display: none; }
+  .copa.lista .ojos-felices { display: inline; }
+
+  .destello {
+    position: absolute;
+    width: 26px;
+    pointer-events: none;
+    translate: -50% -50%;
+    animation: destello 0.7s ease-out forwards;
+  }
+  .destello svg { width: 100%; height: auto; display: block; }
+  @keyframes destello { 0% { transform: scale(0) rotate(0); } 50% { transform: scale(1.1) rotate(40deg); } 100% { transform: scale(0) rotate(80deg); opacity: 0; } }
+
+  .placa {
+    display: inline-block;
+    margin: 4px 0 16px;
+    padding: 10px 22px;
+    background: var(--azul);
+    color: #ffe39a;
+    border: var(--rg-borde);
+    border-radius: 10px;
+    box-shadow: 0 4px 0 var(--rg-sombra);
+    font-family: var(--rg-fuente-titulo);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-weight: 650;
+    font-size: 1.15rem;
+    transform: scale(0) rotate(-8deg);
+    transition: transform 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .placa.rg-visible { transform: rotate(-2deg); }
+
+  .pasos { display: flex; gap: 8px; justify-content: center; margin: 12px 0 0; }
+  .pasos i {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2.5px solid var(--rg-tinta);
+    background: var(--rg-papel);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .pasos i.hecho { background: var(--rg-acento); transform: scale(1.15); }
+</style>
+</head>
+<body>
+  <section class="rg-escena">
+    <p class="rg-etiqueta">Para <span data-campo="para">papá</span></p>
+    <h1 class="rg-titulo" id="titulo">Una copa para el campeón de la casa</h1>
+
+    <button class="copa" id="copa" type="button" aria-label="Pulir la copa">
+      <svg viewBox="0 0 200 240" aria-hidden="true">
+        <defs><clipPath id="vaso"><path d="M48 30h104v40c0 40-24 60-52 62-28-2-52-22-52-62z"/></clipPath></defs>
+        <g fill="none" stroke-linecap="round">
+          <path d="M50 46C16 44 14 104 64 106M150 46c34-2 36 58-14 60" stroke="var(--rg-tinta)" stroke-width="13"/>
+          <path class="metal asa" d="M50 46C16 44 14 104 64 106M150 46c34-2 36 58-14 60" stroke="#b9a77c" stroke-width="6.5"/>
+        </g>
+        <g stroke="var(--rg-tinta)" stroke-width="3.5" stroke-linejoin="round">
+          <path class="metal" d="M48 30h104v40c0 40-24 60-52 62-28-2-52-22-52-62z" fill="#b9a77c"/>
+          <rect class="metal" x="40" y="22" width="120" height="14" rx="7" fill="#b9a77c"/>
+          <rect class="metal" x="89" y="132" width="22" height="26" fill="#b9a77c"/>
+          <path class="metal" d="M62 158h76l10 26H52z" fill="#b9a77c"/>
+          <rect x="36" y="184" width="128" height="40" rx="7" fill="var(--azul)"/>
+        </g>
+        <rect x="70" y="196" width="60" height="16" rx="3" fill="#ffe39a" stroke="var(--rg-tinta)" stroke-width="2.5"/>
+        <g clip-path="url(#vaso)"><g transform="skewX(-18)"><rect class="reflejo" x="60" y="10" width="22" height="140" fill="#fff" opacity=".55"/></g></g>
+        <path d="M60 46v26" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+        <g class="ojos" fill="var(--rg-tinta)"><circle cx="84" cy="62" r="5"/><circle cx="116" cy="62" r="5"/></g>
+        <path class="ojos-felices" d="M78 64q6-8 12 0M110 64q6-8 12 0" fill="none" stroke="var(--rg-tinta)" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M100 80c-8-8-22-8-30 2 8 0 10 8 20 6 6-1 8-4 10-8zM100 80c8-8 22-8 30 2-8 0-10 8-20 6-6-1-8-4-10-8z" fill="#5a3a22" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M92 98q8 6 16 0" fill="none" stroke="var(--rg-tinta)" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <p class="placa" id="placa">Al mejor papá del mundo</p>
+    <p class="rg-ayuda" id="instruccion">Toca la copa para sacarle brillo</p>
+    <div class="pasos" id="pasos" aria-hidden="true"></div>
+  </section>
+
+  <main class="rg-contenido" id="contenido" hidden>
+    <div class="rg-carta rg-oculto" id="carta">
+      <p id="mensaje"></p>
+      <div class="rg-firma">— <span data-campo="de"></span></div>
+    </div>
+    <h2 class="rg-subtitulo rg-oculto" id="tituloFotos">Momentos con papá</h2>
+    <div id="galeria" class="rg-oculto"></div>
+  </main>
+
+<script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>
+<script src="../assets/regalo.js"></script>
+<script>
+  const { $, espera, escribir, galeria, confeti, flotar, figura, final, datos } = Regalo;
+
+  if (datos.placa) $('#placa').textContent = datos.placa;
+
+  // Del bronce opaco al oro brillante, un toque a la vez.
+  const BRILLO = ['#b9a77c', '#cdb067', '#e0b752', '#f0bd45', '#ffc23d'];
+  const TOQUES = BRILLO.length - 1;
+  for (let i = 0; i < TOQUES; i++) $('#pasos').appendChild(document.createElement('i'));
+
+  const copa = $('#copa');
+  let toques = 0, listo = false;
+
+  function destello(x, y) {
+    const d = document.createElement('span');
+    d.className = 'destello';
+    d.innerHTML = figura('estrella', '#ffe39a');
+    d.style.left = x + 'px';
+    d.style.top = y + 'px';
+    copa.appendChild(d);
+    setTimeout(() => d.remove(), 700);
+  }
+
+  copa.addEventListener('click', () => {
+    if (listo) return;
+    toques++;
+    copa.classList.remove('golpe');
+    void copa.offsetWidth;
+    copa.classList.add('golpe');
+    copa.querySelectorAll('.metal').forEach(m => m.setAttribute(m.classList.contains('asa') ? 'stroke' : 'fill', BRILLO[toques]));
+    $('#pasos').children[toques - 1].classList.add('hecho');
+    for (let i = 0; i < 3; i++) destello(30 + Math.random() * 150, 10 + Math.random() * 140);
+    if (navigator.vibrate) navigator.vibrate(18);
+    $('#instruccion').textContent = toques < TOQUES ? '¡Eso! Sigue puliendo' : '¡Quedó brillante!';
+    if (toques === TOQUES) celebrar();
+  });
+
+  async function celebrar() {
+    listo = true;
+    await espera(350);
+    copa.classList.add('lista');
+    $('#placa').classList.add('rg-visible');
+    $('#pasos').remove();
+    confeti({ duracion: 4800, colores: ['#ffc23d', '#23366b', '#fffdf8', '#7ec4ff', '#e5484d'] });
+    flotar([['estrella', '#ffc23d'], ['estrella', '#fffdf8'], ['corazon', '#e5484d']], { cada: 850, duracion: 12000 });
+    $('#titulo').textContent = datos.titulo || '¡Feliz Día del Padre!';
+    $('#instruccion').textContent = 'Te la ganaste, papá';
+    await espera(1900);
+    $('#contenido').hidden = false;
+    $('#carta').classList.add('rg-visible');
+    $('#carta').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await escribir($('#mensaje'), datos.mensaje || 'Gracias por enseñarme con el ejemplo, por cada consejo y por estar siempre.\nEres mi héroe, papá.');
+    final();
+  }
+
+  Regalo.iniciar({});
+  galeria($('#galeria'));
+</script>
+</body>
+</html>

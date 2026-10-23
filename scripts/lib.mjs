@@ -248,6 +248,8 @@ export async function generarQR(codigo, url, pedido = {}) {
     await fs.writeFile(registro, 'fecha,codigo,plantilla,plan,cliente,telefono,url\n');
   }
   const csv = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  // Un regalo se registra una sola vez: regenerarlo con --forzar no agrega otra fila.
+  if ((await fs.readFile(registro, 'utf8')).includes(`,${csv(codigo)},`)) return dir;
   await fs.appendFile(
     registro,
     [new Date().toISOString(), codigo, pedido.plantilla, pedido.plan, pedido.cliente, pedido.telefono, url].map(csv).join(',') + '\n'
@@ -255,65 +257,136 @@ export async function generarQR(codigo, url, pedido = {}) {
   return dir;
 }
 
+
+/* ---------- Tarjeta imprimible ---------- */
+
+// Paleta de la tarjeta según el diseño del regalo (la misma de cada plantilla).
+const PALETAS = {
+  'flores-amarillas': { fondo: '#fdf1d3', caja: '#ffc23d', cinta: '#6fae5b', texto: '#b35c00' },
+  'atrapa-corazones': { fondo: '#ffe3e8', caja: '#ff5a6e', cinta: '#ffd166', texto: '#d6334a' },
+  'carta-amor': { fondo: '#f8e4da', caja: '#f7c9c0', cinta: '#e0475b', texto: '#c22e44' },
+  'cumpleanos': { fondo: '#d9f0e4', caja: '#ff9aad', cinta: '#ffd166', texto: '#d6336c' },
+  'san-valentin': { fondo: '#ffd6de', caja: '#ff5a6e', cinta: '#fffdf8', texto: '#d6334a' },
+  'graduacion': { fondo: '#dfe8fb', caja: '#23366b', cinta: '#ffc23d', texto: '#2c4a9a' },
+  'navidad': { fondo: '#1f5c45', caja: '#e5484d', cinta: '#ffd166', texto: '#c8343a' },
+  'ano-nuevo': { fondo: '#1d2b5e', caja: '#ff6b8b', cinta: '#ffd166', texto: '#d6336c' },
+  'dia-del-padre': { fondo: '#d3e6f5', caja: '#23366b', cinta: '#ffc23d', texto: '#c2410c' }
+};
+const PALETA_BASE = { fondo: '#fff4e6', caja: '#ff8a5b', cinta: '#ffd166', texto: '#c2410c' };
+const TINTA = '#2a211c';
+
+// Fuentes de la marca (licencia OFL) para dibujar el texto de la tarjeta.
+const FUENTES = path.join(RAIZ, 'marca', 'fuentes');
+const LETRAS = {
+  titulo: ['Fraunces SemiBold', 'Fraunces-SemiBold.ttf'],
+  mano: ['Caveat Bold', 'Caveat-Bold.ttf'],
+  texto: ['Nunito ExtraBold', 'Nunito-ExtraBold.ttf'],
+  suave: ['Nunito Bold', 'Nunito-Bold.ttf']
+};
+
+const escXml = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+
+/** Dibuja un texto con una fuente de la marca y devuelve la imagen y su tamaño. */
+async function texto(contenido, letra, tam, color, ancho = 940) {
+  const [nombre, archivo] = LETRAS[letra];
+  const imagen = await sharp({
+    text: {
+      text: `<span foreground="${color}">${escXml(contenido)}</span>`,
+      font: `${nombre} ${tam}`,
+      fontfile: path.join(FUENTES, archivo),
+      width: ancho,
+      align: 'center',
+      dpi: 72,
+      rgba: true,
+      wrap: 'word'
+    }
+  }).png().toBuffer();
+  const { width, height } = await sharp(imagen).metadata();
+  return { imagen, width, height };
+}
+
 /**
- * Crea una tarjeta física de regalo en alta resolución (1200 x 1800 px) lista para imprimir.
+ * Tarjeta física del regalo (1200 × 1800 px = 10 × 15 cm a 300 DPI), con el mismo estilo de papelería
+ * de los regalos: marco del color del diseño, caja de regalo, "Tu regalo está aquí", el QR pegado con
+ * cinta, los pasos para abrirlo y la firma.
  */
-async function generarTarjetaImprimible({ dir, codigo, url, pedido, qrBuffer, marca }) {
-  const destinatario = (pedido.para || 'Alguien especial').replace(/[<>&"']/g, '');
-  const remitente = pedido.de ? `De: ${pedido.de.replace(/[<>&"']/g, '')}` : '';
+async function generarTarjetaImprimible({ dir, codigo, pedido, qrBuffer, marca }) {
+  const p = PALETAS[pedido.plantilla] || PALETA_BASE;
+  const W = 1200, H = 1800, centro = W / 2;
+  const borde = `stroke="${TINTA}" stroke-width="7" stroke-linejoin="round"`;
+  const fino = `stroke="${TINTA}" stroke-width="4" stroke-linejoin="round"`;
+  const washi = (x, y, giro) =>
+    `<g transform="translate(${x} ${y}) rotate(${giro})"><rect x="-80" y="-24" width="160" height="48" fill="${p.cinta}" opacity=".82"/>` +
+    `<path d="M-80 -24h160M-80 24h160" stroke="#fff" stroke-width="2" opacity=".5"/></g>`;
+  const estrella = (x, y, s, c) =>
+    `<path transform="translate(${x} ${y}) scale(${s})" d="M0-20l5.2 10.6 11.6 1.7-8.4 8.2 2 11.6L0 6.6l-10.4 5.5 2-11.6-8.4-8.2 11.6-1.7z" fill="${c}" ${fino}/>`;
+  const corazon = (x, y, s, c) =>
+    `<path transform="translate(${x} ${y}) scale(${s})" d="M0 16C-11 9-17 2-17-5a8.5 8.5 0 0 1 17-3 8.5 8.5 0 0 1 17 3c0 7-6 14-17 21z" fill="${c}" ${fino}/>`;
 
-  // Redimensionar el QR para encajar en la tarjeta
-  const qrTarjeta = await sharp(qrBuffer).resize(620, 620).png().toBuffer();
+  // Textos con las fuentes de la marca
+  const para = await texto(`Para ${pedido.para || 'alguien especial'}`, 'mano', 84, p.texto);
+  const titulo = await texto('Tu regalo está aquí', 'titulo', 96, TINTA);
+  const pasos = await Promise.all(['Abre la cámara', 'Apunta al código', 'Toca el enlace']
+    .map(t => texto(t, 'texto', 32, TINTA, 300)));
+  const numeros = await Promise.all(['1', '2', '3'].map(n => texto(n, 'texto', 40, TINTA, 80)));
+  const firma = pedido.de ? await texto(`De: ${pedido.de}`, 'mano', 70, p.texto) : null;
+  const pie = await texto(`${marca} · Tu regalo listo, hecho con mucho amor`, 'suave', 28, '#7a6d62');
+  const cod = await texto(codigo.toUpperCase(), 'suave', 22, '#a89988', 300);
 
-  const svgBase = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1800" viewBox="0 0 1200 1800">
-    <defs>
-      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#fcf9f2"/>
-        <stop offset="100%" stop-color="#f5ede0"/>
-      </linearGradient>
-      <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-        <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#2a221b" flood-opacity="0.18"/>
-      </filter>
-    </defs>
+  // Posiciones verticales
+  const yPara = 372, yTitulo = yPara + para.height + 2;
+  const yQR = Math.max(610, yTitulo + titulo.height + 44), ladoQR = 600;
+  const yPasos = yQR + ladoQR + 90;
+  const xPasos = [270, 600, 930];
 
-    <!-- Fondo de tarjeta -->
-    <rect width="1200" height="1800" fill="url(#bg)"/>
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+    <rect width="${W}" height="${H}" fill="${p.fondo}"/>
+    <rect x="88" y="88" width="1060" height="1660" rx="44" fill="${TINTA}"/>
+    <rect x="70" y="70" width="1060" height="1660" rx="44" fill="#fffdf8" ${borde}/>
 
-    <!-- Marco decorativo doble -->
-    <rect x="50" y="50" width="1100" height="1700" rx="20" fill="none" stroke="#dfd2bf" stroke-width="2"/>
-    <rect x="64" y="64" width="1072" height="1672" rx="16" fill="none" stroke="#c5933a" stroke-width="3" stroke-opacity="0.5"/>
+    ${estrella(170, 190, 1.6, p.cinta)} ${corazon(1030, 200, 1.6, p.caja)}
+    ${corazon(160, 1640, 1.4, p.caja)} ${estrella(1040, 1630, 1.5, p.cinta)}
 
-    <!-- Cabecera / Marca -->
-    <text x="600" y="190" text-anchor="middle" font-family="'Georgia', serif" font-size="28" letter-spacing="8" fill="#8c7863">· ${marca.toUpperCase()} ·</text>
-    <text x="600" y="270" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="68" fill="#1f1b16">Te llegó un detallazo</text>
+    <g transform="translate(${centro - 117} 120) scale(1.46)">
+      <ellipse cx="80" cy="142" rx="56" ry="6" fill="${TINTA}" opacity=".14"/>
+      <rect x="24" y="66" width="112" height="72" rx="8" fill="${p.caja}" ${fino}/>
+      <rect x="70" y="66" width="20" height="72" fill="${p.cinta}" ${fino}/>
+      <rect x="33" y="76" width="9" height="20" rx="4.5" fill="#fff" opacity=".45"/>
+      <path d="M80 47C70 26 47 25 52 40c3 8 18 8 28 7zM80 47c10-21 33-22 28-7-3 8-18 8-28 7z" fill="${p.cinta}" ${fino}/>
+      <rect x="14" y="46" width="132" height="24" rx="6" fill="${p.caja}" ${fino}/>
+      <rect x="68" y="46" width="24" height="24" fill="${p.cinta}" ${fino}/>
+      <circle cx="80" cy="46" r="6.5" fill="${p.cinta}" ${fino}/>
+    </g>
 
-    <!-- Destinatario -->
-    <text x="600" y="380" text-anchor="middle" font-family="'Georgia', serif" font-size="46" fill="#992437">Para ${destinatario}</text>
+    <rect x="${centro - ladoQR / 2 + 14}" y="${yQR + 14}" width="${ladoQR}" height="${ladoQR}" rx="30" fill="${TINTA}"/>
+    <rect x="${centro - ladoQR / 2}" y="${yQR}" width="${ladoQR}" height="${ladoQR}" rx="30" fill="#fff" ${borde}/>
+    ${washi(centro - ladoQR / 2 + 40, yQR + 14, -32)} ${washi(centro + ladoQR / 2 - 40, yQR + 14, 32)}
 
-    <!-- Marco blanco para el QR con sombra -->
-    <rect x="250" y="470" width="700" height="700" rx="32" fill="#ffffff" filter="url(#shadow)"/>
-    <rect x="250" y="470" width="700" height="700" rx="32" fill="none" stroke="#ece4d8" stroke-width="2"/>
+    <path d="M${xPasos[0] + 70} ${yPasos} H${xPasos[2] - 70}" stroke="${TINTA}" stroke-width="4" stroke-dasharray="2 16" stroke-linecap="round"/>
+    ${xPasos.map(x => `<circle cx="${x}" cy="${yPasos}" r="40" fill="${p.cinta}" ${fino}/>`).join('')}
 
-    <!-- Instrucciones -->
-    <text x="600" y="1270" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="600" font-size="34" letter-spacing="2" fill="#1f1b16">ABRE LA CÁMARA DE TU CELULAR</text>
-    <text x="600" y="1330" text-anchor="middle" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" fill="#66594d">y enfoca este código para descubrir tu sorpresa</text>
+    <path d="M${centro - 150} ${H - 250} c50-18 90 10 150-4 s110-14 150 2" fill="none" stroke="${p.caja}" stroke-width="8" stroke-linecap="round"/>
+  </svg>`;
 
-    <!-- Línea divisoria elegante -->
-    <line x1="450" y1="1440" x2="750" y2="1440" stroke="#c5933a" stroke-width="2" stroke-linecap="round"/>
+  const enCentro = (t, y, x = centro) => ({ input: t.imagen, left: Math.round(x - t.width / 2), top: Math.round(y) });
+  const qr = await sharp(qrBuffer).resize(ladoQR - 60, ladoQR - 60).png().toBuffer();
+  const capas = [
+    enCentro(para, yPara),
+    enCentro(titulo, yTitulo),
+    { input: qr, left: centro - ladoQR / 2 + 30, top: yQR + 30 },
+    ...numeros.map((n, i) => enCentro(n, yPasos - n.height / 2 - 2, xPasos[i])),
+    ...pasos.map((t, i) => enCentro(t, yPasos + 58, xPasos[i])),
+    ...(firma ? [enCentro(firma, yPasos + 150)] : []),
+    enCentro(pie, H - 214),
+    enCentro(cod, H - 164)
+  ];
 
-    <!-- Remitente o Código -->
-    <text x="600" y="1530" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="42" fill="#1f1b16">${remitente}</text>
-    <text x="600" y="1660" text-anchor="middle" font-family="'Courier New', monospace" font-size="20" letter-spacing="4" fill="#a89988">CÓDIGO: ${codigo.toUpperCase()}</text>
-    <text x="600" y="1700" text-anchor="middle" font-family="'Georgia', serif" font-style="italic" font-size="22" fill="#8c7863">Tu regalo listo, hecho con mucho amor</text>
-  </svg>
-  `;
-
-  // Componer el SVG base con el QR incrustado
-  await sharp(Buffer.from(svgBase))
-    .composite([{ input: qrTarjeta, left: 290, top: 510 }])
-    .png({ quality: 95 })
+  await sharp(Buffer.from(svg))
+    .composite(capas)
+    .withMetadata({ density: 300 })
+    .png()
     .toFile(path.join(dir, 'tarjeta-regalo.png'));
 
-  await fs.writeFile(path.join(dir, 'tarjeta-regalo.svg'), svgBase);
+  // La versión SVG anterior ya no se genera (sus letras no coincidían con las de la marca).
+  await fs.rm(path.join(dir, 'tarjeta-regalo.svg'), { force: true });
 }

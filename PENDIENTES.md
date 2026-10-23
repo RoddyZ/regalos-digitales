@@ -6,7 +6,7 @@ Lista de cosas que faltan, para no olvidarlas. Cuando termines una, márcala con
 
 - [ ] **Asegurar el nombre "Detallazo".** Revisar que estén libres y reservarlos antes de publicitar:
   1. Usuario `@detallazo` (o `@detallazo.ec`) en Instagram, TikTok y Facebook.
-  2. Dominio `detallazo.ec` o `detallazo.com` (nic.ec o cualquier registrador). Es el único gasto fijo: unos $10–30 al año.
+  2. Publicar en Cloudflare Pages (gratis, `detallazo.pages.dev`; pasos en el README, sección 11). Más adelante, si se quiere, dominio `detallazo.com` o `.ec` (unos $10–30 al año).
   3. Opcional: registro de marca en el SENADI (senadi.gob.ec), cuando el negocio ya venda seguido.
 - [ ] **Logo.** Diseñar un logo simple de Detallazo y guardarlo en `marca/logo.png` para que salga en el centro del QR
       (ver sección 8 del README).

@@ -10,7 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23e5b869'/><text x='16' y='22' font-size='18' text-anchor='middle' font-family='Georgia,serif' font-style='italic' fill='%23191512'>d</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Pinyon+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Caveat:wght@700&family=Pinyon+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
   try {
     const t = localStorage.getItem('tema');
@@ -943,55 +943,50 @@
 
   /* 2 · Apertura del regalo */
   .vista-regalo {
-    background: radial-gradient(circle at 50% 40%, #1d2a4a, #0a0f1e);
+    background: #fdf1d3;
+    color: #2a211c;
     padding: 0 16px;
   }
 
-  .vr-emblema {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-size: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.02));
-    margin-bottom: 14px;
-  }
+  .vr-emblema { width: 74px; margin-bottom: 10px; }
+  .vr-emblema svg { width: 100%; height: auto; display: block; overflow: visible; }
 
-  .vr-para { font-family: 'Pinyon Script', cursive; font-size: 1.55rem; color: #f5d697; margin: 0; line-height: 1.1; }
-  .vista-regalo h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 1.02rem; line-height: 1.25; margin: 6px 0 16px; }
+  .vr-para { font-family: 'Caveat', cursive; font-weight: 700; font-size: 1.25rem; color: #b35c00; margin: 0; line-height: 1.1; }
+  .vista-regalo h4 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.02rem; line-height: 1.2; margin: 4px 0 14px; color: #2a211c; }
 
   .vr-boton {
     position: relative;
-    font-size: 8.5px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #1a1614;
-    background: linear-gradient(135deg, #f5d697, #e5b869);
-    padding: 9px 16px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #2a211c;
+    background: #ffc23d;
+    border: 1.5px solid #2a211c;
+    box-shadow: 0 2.5px 0 #2a211c;
+    padding: 6px 16px;
     border-radius: 999px;
   }
+  .vr-boton .toque { background: rgba(42, 33, 28, 0.18); border-color: rgba(42, 33, 28, 0.6); }
 
   /* 3 · Flores */
   .vista-flores {
-    background: radial-gradient(ellipse at 50% 100%, #1f2a48 0%, #0b1020 60%, #05070f 100%);
+    background: #fdf1d3;
+    color: #2a211c;
     justify-content: flex-start;
     padding-top: 52px;
   }
 
-  .vf-texto { font-family: 'Fraunces', serif; font-style: italic; font-size: 1rem; color: #f5d697; margin: 0; }
-  .vf-de { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); margin: 4px 0 0; }
+  .vf-texto { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.05rem; text-wrap: balance; padding: 0 14px; color: #2a211c; margin: 0; }
+  .vf-de { font-family: 'Caveat', cursive; font-weight: 700; font-size: 1rem; color: #b35c00; margin: 2px 0 0; }
 
   .vista-flores svg { position: absolute; bottom: 0; left: 0; width: 100%; height: auto; }
 
   .luciernaga {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: #f5d697;
-    box-shadow: 0 0 8px 2px rgba(245, 214, 151, 0.8);
+    background: #ff8a8a;
+    border: 1.5px solid #2a211c;
   }
 
   .toque {
@@ -1161,7 +1156,7 @@
         <div class="tarjeta-regalo" role="img" aria-label="Tarjeta física de regalo con código QR">
           <div class="sello-lacre">✦</div>
           <div class="qr-recuadro">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path stroke="#1f1b16" d="M0 0.5h7m2 0h3m1 0h1m2 0h4m1 0h3m2 0h7M0 1.5h1m5 0h1m4 0h1m1 0h5m3 0h2m3 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h4m1 0h1m1 0h1m1 0h3m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h3m5 0h3m1 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h2m4 0h1m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m3 0h1m1 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h4m3 0h1m2 0h4M0 8.5h1m1 0h5m4 0h5m1 0h1m1 0h1m6 0h5M2 9.5h1m4 0h1m1 0h1m6 0h1m1 0h3m2 0h1m2 0h2m1 0h2m1 0h1M2 10.5h5m2 0h3m3 0h2m1 0h1m1 0h3m1 0h1m3 0h1m1 0h2M0 11.5h1m4 0h1m4 0h1m3 0h1m1 0h1m3 0h3m2 0h1m2 0h4M0 12.5h1m5 0h1m2 0h1m2 0h1m2 0h1m2 0h1m3 0h1m1 0h2m1 0h3m1 0h2M1 13.5h1m1 0h1m3 0h2m1 0h8m1 0h1m3 0h1m2 0h1m2 0h4M0 14.5h4m1 0h2m1 0h1m2 0h1m2 0h1m3 0h1m3 0h1m2 0h3m2 0h2M0 15.5h1m2 0h1m5 0h4m1 0h1m1 0h1m4 0h1m1 0h1m1 0h2m2 0h2M0 16.5h1m3 0h6m1 0h2m4 0h1m2 0h1m1 0h4m1 0h2m3 0h1M0 17.5h2m2 0h2m1 0h1m2 0h1m2 0h2m1 0h5m2 0h1m1 0h3m1 0h2m1 0h1M0 18.5h1m2 0h2m1 0h1m1 0h2m2 0h1m2 0h3m4 0h1m1 0h5m1 0h1M1 19.5h1m2 0h1m2 0h2m2 0h2m2 0h4m2 0h2m4 0h6M0 20.5h3m3 0h4m3 0h1m1 0h2m2 0h2m3 0h2m2 0h2M0 21.5h6m2 0h1m2 0h5m1 0h5m1 0h2m1 0h1m5 0h1M0 22.5h1m1 0h2m1 0h2m3 0h4m1 0h3m2 0h1m1 0h1m6 0h3M0 23.5h1m1 0h1m1 0h1m2 0h2m2 0h1m1 0h3m5 0h4m1 0h5M0 24.5h1m4 0h2m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m2 0h1m1 0h5m2 0h1M8 25.5h1m1 0h2m4 0h1m1 0h3m3 0h1m3 0h1m1 0h3M0 26.5h7m2 0h3m1 0h1m1 0h1m2 0h1m2 0h4m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h2m2 0h1m1 0h1m5 0h5m3 0h5M0 28.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h2m2 0h1m3 0h1m1 0h6m1 0h2M0 29.5h1m1 0h3m1 0h1m1 0h3m1 0h6m1 0h2m1 0h2m1 0h1m2 0h5M0 30.5h1m1 0h3m1 0h1m1 0h5m1 0h1m2 0h1m3 0h1m1 0h1m2 0h2m1 0h1M0 31.5h1m5 0h1m2 0h3m1 0h2m1 0h1m2 0h5m1 0h1m2 0h3M0 32.5h7m1 0h1m1 0h2m4 0h2m2 0h1m1 0h4m1 0h1m3 0h1"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path stroke="#1f1b16" d="M0 0.5h7m1 0h2m3 0h1m1 0h2m1 0h1m3 0h7M0 1.5h1m5 0h1m2 0h1m1 0h1m4 0h1m1 0h3m1 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m2 0h3m3 0h1m1 0h2m3 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h1m3 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h2m2 0h1m3 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h2m1 0h1m1 0h2m1 0h2m1 0h2m1 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m2 0h1m2 0h1m2 0h4M0 8.5h1m3 0h1m1 0h4m2 0h1m2 0h1m1 0h1m2 0h6m2 0h1M0 9.5h4m6 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h7M0 10.5h1m1 0h3m1 0h1m2 0h4m2 0h1m1 0h2m1 0h1m7 0h1M1 11.5h1m5 0h2m1 0h1m1 0h1m2 0h1m1 0h3m1 0h3m1 0h1m1 0h2M0 12.5h4m1 0h2m3 0h2m2 0h2m1 0h1m1 0h3m5 0h1M1 13.5h2m1 0h2m2 0h2m4 0h3m5 0h7M0 14.5h2m1 0h1m2 0h1m1 0h1m4 0h3m4 0h1m2 0h1m1 0h2m1 0h1M1 15.5h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h2m1 0h3m4 0h2M2 16.5h1m1 0h6m2 0h3m2 0h5m1 0h1m3 0h1M0 17.5h2m1 0h1m1 0h1m1 0h1m3 0h1m2 0h5m3 0h4m1 0h2M2 18.5h2m2 0h1m1 0h1m3 0h5m1 0h1m1 0h3m3 0h1m1 0h1M2 19.5h2m3 0h2m4 0h1m1 0h1m1 0h1m2 0h1m1 0h1m4 0h2M0 20.5h7m1 0h1m2 0h3m3 0h1m2 0h6m2 0h1M8 21.5h1m4 0h4m1 0h3m3 0h1m3 0h1M0 22.5h7m1 0h2m1 0h2m2 0h1m1 0h4m1 0h1m1 0h3m1 0h1M0 23.5h1m5 0h1m2 0h4m1 0h1m2 0h1m2 0h1m3 0h1m2 0h2M0 24.5h1m1 0h3m1 0h1m1 0h2m1 0h5m1 0h1m1 0h7m2 0h1M0 25.5h1m1 0h3m1 0h1m2 0h2m4 0h1m2 0h1m2 0h1m6 0h1M0 26.5h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h7m4 0h4M0 27.5h1m5 0h1m6 0h2m2 0h2m1 0h2m1 0h1m1 0h1m1 0h2M0 28.5h7m1 0h1m1 0h1m1 0h1m3 0h2m2 0h1m1 0h4m1 0h1"/></svg>
           </div>
           <div class="dedicatoria">
             <p class="para">Para María</p>
@@ -1186,10 +1181,10 @@
               </div>
 
               <div class="vista vista-regalo">
-                <div class="vr-emblema">🌻</div>
+                <div class="vr-emblema"><svg viewBox="0 0 160 150" aria-hidden="true"><g stroke="#2a211c" stroke-width="5" stroke-linejoin="round"><rect x="24" y="66" width="112" height="72" rx="8" fill="#ffc23d"/><rect x="70" y="66" width="20" height="72" fill="#6fae5b"/><path d="M80 47C70 26 47 25 52 40c3 8 18 8 28 7zM80 47c10-21 33-22 28-7-3 8-18 8-28 7z" fill="#6fae5b"/><rect x="14" y="46" width="132" height="24" rx="6" fill="#ffc23d"/><rect x="68" y="46" width="24" height="24" fill="#6fae5b"/></g></svg></div>
                 <p class="vr-para">Para María</p>
-                <h4>Hay un detalle preparado para ti</h4>
-                <span class="vr-boton">ABRIR DETALLE →<span class="toque"></span></span>
+                <h4>Te llegó un detallazo</h4>
+                <span class="vr-boton">Ábrelo<span class="toque"></span></span>
               </div>
 
               <div class="vista vista-flores">
@@ -1201,21 +1196,21 @@
                 <i class="luciernaga" style="left:84%;top:56%"></i>
                 <i class="luciernaga" style="left:12%;top:62%"></i>
                 <svg viewBox="0 0 180 230" aria-hidden="true">
-                  <path class="tallo" d="M90 230 C88 190 94 160 90 118" stroke="#3f8a4a" stroke-width="3.5" fill="none" stroke-dasharray="120"/>
-                  <path class="tallo" d="M50 230 C52 200 40 180 44 150" stroke="#3f8a4a" stroke-width="3" fill="none" stroke-dasharray="120"/>
-                  <path class="tallo" d="M134 230 C132 205 142 186 138 160" stroke="#3f8a4a" stroke-width="3" fill="none" stroke-dasharray="120"/>
-                  <path d="M90 190 q-18 -6 -24 -20 q16 2 24 20z M90 175 q18 -6 24 -20 q-16 2 -24 20z" fill="#3f8a4a" class="hoja"/>
+                  <path class="tallo" d="M90 230 C88 190 94 160 90 118" stroke="#4f8f4a" stroke-width="4" stroke-linecap="round" fill="none" stroke-dasharray="120"/>
+                  <path class="tallo" d="M50 230 C52 200 40 180 44 150" stroke="#4f8f4a" stroke-width="3.5" stroke-linecap="round" fill="none" stroke-dasharray="120"/>
+                  <path class="tallo" d="M134 230 C132 205 142 186 138 160" stroke="#4f8f4a" stroke-width="3.5" stroke-linecap="round" fill="none" stroke-dasharray="120"/>
+                  <path d="M90 190 q-18 -6 -24 -20 q16 2 24 20z M90 175 q18 -6 24 -20 q-16 2 -24 20z" fill="#6fae5b" stroke="#2a211c" stroke-width="1.6" stroke-linejoin="round" class="hoja"/>
                   <g class="flor" style="transform-origin:90px 112px">
-                    <g fill="#f2c230"><ellipse cx="90" cy="94" rx="8" ry="16"/><ellipse cx="90" cy="130" rx="8" ry="16"/><ellipse cx="72" cy="112" rx="16" ry="8"/><ellipse cx="108" cy="112" rx="16" ry="8"/><ellipse cx="77" cy="99" rx="8" ry="15" transform="rotate(-45 77 99)"/><ellipse cx="103" cy="125" rx="8" ry="15" transform="rotate(-45 103 125)"/><ellipse cx="103" cy="99" rx="8" ry="15" transform="rotate(45 103 99)"/><ellipse cx="77" cy="125" rx="8" ry="15" transform="rotate(45 77 125)"/></g>
-                    <circle cx="90" cy="112" r="9" fill="#6b3f1d"/>
+                    <g fill="#ffc23d" stroke="#2a211c" stroke-width="1.8"><ellipse cx="90" cy="94" rx="8" ry="16"/><ellipse cx="90" cy="130" rx="8" ry="16"/><ellipse cx="72" cy="112" rx="16" ry="8"/><ellipse cx="108" cy="112" rx="16" ry="8"/><ellipse cx="77" cy="99" rx="8" ry="15" transform="rotate(-45 77 99)"/><ellipse cx="103" cy="125" rx="8" ry="15" transform="rotate(-45 103 125)"/><ellipse cx="103" cy="99" rx="8" ry="15" transform="rotate(45 103 99)"/><ellipse cx="77" cy="125" rx="8" ry="15" transform="rotate(45 77 125)"/></g>
+                    <circle cx="90" cy="112" r="9" fill="#7a4a1f" stroke="#2a211c" stroke-width="2"/>
                   </g>
                   <g class="flor" style="transform-origin:44px 146px">
-                    <g fill="#f7d15a"><ellipse cx="44" cy="133" rx="6" ry="12"/><ellipse cx="44" cy="159" rx="6" ry="12"/><ellipse cx="31" cy="146" rx="12" ry="6"/><ellipse cx="57" cy="146" rx="12" ry="6"/></g>
-                    <circle cx="44" cy="146" r="7" fill="#6b3f1d"/>
+                    <g fill="#ffd166" stroke="#2a211c" stroke-width="1.6"><ellipse cx="44" cy="133" rx="6" ry="12"/><ellipse cx="44" cy="159" rx="6" ry="12"/><ellipse cx="31" cy="146" rx="12" ry="6"/><ellipse cx="57" cy="146" rx="12" ry="6"/></g>
+                    <circle cx="44" cy="146" r="7" fill="#7a4a1f" stroke="#2a211c" stroke-width="2"/>
                   </g>
                   <g class="flor" style="transform-origin:138px 156px">
-                    <g fill="#f7d15a"><ellipse cx="138" cy="143" rx="6" ry="12"/><ellipse cx="138" cy="169" rx="6" ry="12"/><ellipse cx="125" cy="156" rx="12" ry="6"/><ellipse cx="151" cy="156" rx="12" ry="6"/></g>
-                    <circle cx="138" cy="156" r="7" fill="#6b3f1d"/>
+                    <g fill="#ffd166" stroke="#2a211c" stroke-width="1.6"><ellipse cx="138" cy="143" rx="6" ry="12"/><ellipse cx="138" cy="169" rx="6" ry="12"/><ellipse cx="125" cy="156" rx="12" ry="6"/><ellipse cx="151" cy="156" rx="12" ry="6"/></g>
+                    <circle cx="138" cy="156" r="7" fill="#7a4a1f" stroke="#2a211c" stroke-width="2"/>
                   </g>
                 </svg>
               </div>
@@ -1258,7 +1253,7 @@
             <span class="num">01</span>
             <div>
               <h3>Flores Amarillas</h3>
-              <p>Un jardín nocturno que germina pétalo a pétalo bajo un manto de luciérnagas. Ideal para el 21 de septiembre o un detalle espontáneo.</p>
+              <p>Un jardín de girasoles que crece en su pantalla bajo un solcito sonriente. Ideal para el 21 de septiembre o un detalle porque sí.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1266,7 +1261,7 @@
             <span class="num">02</span>
             <div>
               <h3>Carta de Amor & Gratitud</h3>
-              <p>Un sobre clásico con sello de lacre que se rompe al tacto. Incluye contador de días juntos y desplegado caligráfico de tu dedicatoria.</p>
+              <p>Un sobre con sello de corazón que se abre con un toque y una carta escrita a mano. Puede contar los días que llevan juntos.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1274,7 +1269,7 @@
             <span class="num">03</span>
             <div>
               <h3>Celebración de Cumpleaños</h3>
-              <p>Pastel artesanal con velas sensibles al tacto o al soplido del micrófono en tiempo real. Al apagarse, brotan confeti y recuerdos.</p>
+              <p>Un pastel con velas de verdad: se apagan tocándolas o soplando al micrófono. Después llegan el confeti, tu mensaje y las fotos.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1282,7 +1277,7 @@
             <span class="num">04</span>
             <div>
               <h3>Atrapa Corazones</h3>
-              <p>Minijuego interactivo estilo arcade chic: al recolectar los corazones en pantalla, se desbloquea el mensaje y la galería de fotos.</p>
+              <p>Un minijuego: van cayendo corazones y hay que atraparlos con el dedo. Al llenar la barra, se abre el mensaje y las fotos.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1290,7 +1285,7 @@
             <span class="num">05</span>
             <div>
               <h3>San Valentín<span class="nuevo">Nuevo</span></h3>
-              <p>La pregunta que no se puede rechazar: «¿Quieres ser mi San Valentín?». El botón del «No» se escapa y el «Sí» crece hasta que lo toquen.</p>
+              <p>«¿Quieres ser mi San Valentín?» El «No» se escapa, el corazón se pone triste y el «Sí» crece hasta que lo toquen.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1298,7 +1293,7 @@
             <span class="num">06</span>
             <div>
               <h3>Graduación<span class="nuevo">Nuevo</span></h3>
-              <p>Un birrete que se lanza al cielo con un toque y un diploma que se despliega con tu dedicatoria, la carrera y las fotos del camino.</p>
+              <p>Un birrete que se lanza al cielo con un toque y un diploma que se desenrolla con tu dedicatoria, la carrera y las fotos del camino.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1306,7 +1301,7 @@
             <span class="num">07</span>
             <div>
               <h3>Feliz Navidad<span class="nuevo">Nuevo</span></h3>
-              <p>Un árbol bajo la nieve que se enciende esfera por esfera. Al brillar la estrella, aparece la carta navideña y los recuerdos del año.</p>
+              <p>Un árbol que se enciende esfera por esfera mientras cae la nieve. Al brillar la estrella, aparece la carta navideña y los recuerdos del año.</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1315,6 +1310,14 @@
             <div>
               <h3>Feliz Año Nuevo<span class="nuevo">Nuevo</span></h3>
               <p>Cuenta regresiva 5, 4, 3, 2, 1 y un cielo de fuegos artificiales que se lanzan con el dedo. Para brindar por todo lo que viene.</p>
+            </div>
+            <span class="btn-probar">Probar →</span>
+          </li>
+          <li class="diseno-item revelar" data-demo="demo-dia-del-padre/" data-cat="fechas">
+            <span class="num">09</span>
+            <div>
+              <h3>Día del Padre<span class="nuevo">Nuevo</span></h3>
+              <p>Una copa para el campeón de la casa: con cada toque brilla más, hasta que aparece la placa «Al mejor papá del mundo».</p>
             </div>
             <span class="btn-probar">Probar →</span>
           </li>
@@ -1410,7 +1413,7 @@
         </div>
       </div>
 
-      <p class="nota-aclaratoria">⚡ Listo el mismo día, de una. Te enviamos el QR y la tarjeta lista para imprimir.</p>
+      <p class="nota-aclaratoria">Listo el mismo día, de una. Te enviamos el QR y una tarjeta de 10 × 15 cm lista para imprimir.</p>
     </div>
   </section>
 
@@ -1438,7 +1441,7 @@
         <div class="paso-card revelar">
           <div class="numero">03</div>
           <h4>Recibes tu QR</h4>
-          <p>Te enviamos el QR y la tarjeta lista para imprimir. Ponla en una caja, un sobre o junto a un ramo, y a esperar la reacción.</p>
+          <p>Te enviamos el QR y una tarjeta de 10 × 15 cm con su nombre y los pasos para abrirlo. Ponla en una caja, un sobre o junto a un ramo, y a esperar la reacción.</p>
         </div>
       </div>
     </div>
@@ -1504,10 +1507,10 @@
     facebook: 'https://www.facebook.com/'
   };
 
-  // api.whatsapp.com conserva los acentos y emojis; wa.me a veces los convierte en "�".
-  // Usa solo emojis simples (✨ ❤) para que se vean igual en celular, web y escritorio.
+  // api.whatsapp.com conserva los acentos; wa.me a veces los convierte en "�".
+  // Sin emojis: cada teléfono los dibuja distinto y en algunos se ven mal.
   const baseWa = `https://api.whatsapp.com/send?phone=${CONTACTO.whatsapp}&text=`;
-  const mensajeDefecto = encodeURIComponent('¡Hola! ✨ Vi Detallazo y quiero sorprender a alguien. ¿Me ayudan a armar el regalo?');
+  const mensajeDefecto = encodeURIComponent('¡Hola! Vi Detallazo y quiero sorprender a alguien. ¿Me ayudan a armar el regalo?');
   document.querySelectorAll('[data-whatsapp]').forEach(a => {
     a.href = baseWa + mensajeDefecto;
     a.target = '_blank';
@@ -1517,8 +1520,8 @@
   document.querySelectorAll('[data-whatsapp-plan]').forEach(a => {
     const plan = a.dataset.whatsappPlan;
     const txt = encodeURIComponent(
-      `¡Hola! ✨ Quiero el plan ${plan} de Detallazo.\n\n` +
-      `• Para quién es:\n• Ocasión:\n• Plantilla que me gustó:\n\n` +
+      `¡Hola! Quiero el plan ${plan} de Detallazo.\n\n` +
+      `• Para quién es:\n• Ocasión:\n• Diseño que me gustó:\n\n` +
       `¿Cómo seguimos?`
     );
     a.href = baseWa + txt;

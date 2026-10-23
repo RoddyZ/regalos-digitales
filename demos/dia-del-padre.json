@@ -1,0 +1,9 @@
+{
+  "plantilla": "dia-del-padre",
+  "plan": "vip",
+  "para": "Papá",
+  "de": "Tus hijos que te adoran",
+  "placa": "Al mejor papá del mundo",
+  "mensaje": "Gracias por levantarte temprano todos los días por nosotros, por cada consejo y por cada partido que vimos juntos.\nEres nuestro héroe.\nTe queremos un montón.",
+  "fotos": ["fotos/muestra3.jpg", { "ruta": "fotos/muestra1.jpg", "texto": "El campeón de la casa" }]
+}

@@ -8,320 +8,208 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../assets/regalo.css">
+<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">
 <style>
   :root {
-    --rg-fondo: #1b1014;
-    --rg-texto: #fbf6ee;
-    --rg-acento: #e5b869;
-    --rg-cera: #991e2f;
-    --rg-sobre: #f4eae0;
-    --rg-papel: #fcf9f2;
-    --rg-tinta: #2c2024;
-    --rg-intro-fondo: radial-gradient(circle at 50% 38%, #2e1820 0%, #12090c 100%);
+    --rg-fondo: #f8e4da;
+    --rg-acento: #e0475b;
+    --rg-acento-2: #f7c9c0;
+    --rg-acento-tinta: #c22e44;
+    --rg-boton-texto: #fffdf8;
+    --rg-caja: #f7c9c0;
+    --rg-cinta: #e0475b;
+    --rg-washi: rgba(224, 71, 91, 0.55);
+    --sobre: #f7c9c0;
+    --solapa: #f3b6ab;
   }
 
   body {
-    background: radial-gradient(circle at 50% 25%, #2a151d 0%, #180b10 65%, #0e0508 100%);
     min-height: 100svh;
+    background-image: repeating-linear-gradient(135deg, transparent 0 22px, rgba(224, 71, 91, 0.05) 22px 44px);
   }
 
-  .escena {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 20px;
-    text-align: center;
-    position: relative;
-    z-index: 2;
-  }
-
-  .subtitulo-dedicatoria {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.2rem;
-    color: var(--rg-acento);
-    margin: 0 0 4px;
-    line-height: 1;
-  }
-
-  h1 {
-    font-family: var(--rg-fuente-titulo);
-    font-weight: 500;
-    font-size: clamp(2.2rem, 7.5vw, 3.4rem);
-    letter-spacing: -0.02em;
-    color: var(--rg-texto);
-    margin: 0 0 10px;
-    line-height: 1.15;
-  }
-
-  .pista {
-    font-size: 0.95rem;
-    color: var(--rg-texto-suave);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin: 0;
-    transition: opacity 0.4s;
-  }
-
-  /* Sobre de Alta Calidad Artesanal */
-  .sobre-envoltorio {
-    margin: 48px auto 20px;
-    position: relative;
-    perspective: 1000px;
-  }
+  .rg-titulo { margin-inline: auto; }
 
   .sobre {
     position: relative;
-    width: min(86vw, 340px);
+    width: min(86vw, 330px);
     aspect-ratio: 3 / 2;
+    margin: 84px auto 10px;
     cursor: pointer;
-    border-radius: 8px;
-    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.75),
-                0 4px 16px rgba(0, 0, 0, 0.3);
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    perspective: 900px;
+    filter: drop-shadow(6px 7px 0 var(--rg-sombra));
+    animation: esperar 3s ease-in-out infinite;
   }
+  .sobre svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
-  .sobre:hover:not(.abierto) {
-    transform: translateY(-4px) scale(1.01);
-  }
-
-  .sobre .cuerpo {
-    position: absolute;
-    inset: 0;
-    background: #eedfd2;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  @keyframes esperar {
+    0%, 75%, 100% { transform: rotate(0); }
+    80% { transform: rotate(-2.5deg); }
+    88% { transform: rotate(2deg); }
   }
 
   .sobre .hoja {
     position: absolute;
     left: 7%;
     right: 7%;
-    top: 8%;
-    bottom: 8%;
+    top: 6%;
+    height: 84%;
     z-index: 2;
     background: var(--rg-papel);
-    border-radius: 4px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: var(--rg-borde);
+    border-radius: 6px;
+    background-image: repeating-linear-gradient(transparent 0 17px, #f0dcd3 17px 19px);
+    background-position: 0 14px;
+    transition: transform 0.9s cubic-bezier(0.3, 1.3, 0.5, 1) 0.45s;
   }
 
-  .sobre .hoja-monograma {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.2rem;
-    color: var(--rg-cera);
-    opacity: 0.8;
-  }
-
-  .sobre .frente {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    border-radius: 8px;
-    pointer-events: none;
-    background: linear-gradient(to top right, #e8d5c4 50%, transparent 50.5%) left / 50% 100% no-repeat,
-                linear-gradient(to top left, #e8d5c4 50%, transparent 50.5%) right / 50% 100% no-repeat,
-                linear-gradient(to top, #decaa9 0 50%, transparent 50%);
-  }
+  .sobre .frente { z-index: 3; pointer-events: none; }
 
   .sobre .solapa {
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 60%;
+    inset: 0;
     z-index: 4;
-    transform-origin: top;
-    background: #d8c2b0;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.4s;
+    transform-origin: 50% 2%;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.35s;
   }
 
-  /* Sello de Lacre Realista */
   .sobre .sello {
     position: absolute;
     left: 50%;
-    top: 60%;
+    top: 58%;
     z-index: 5;
-    width: 58px;
-    height: 58px;
-    margin: -29px 0 0 -29px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #b82a3e, #7a1524 85%);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.55),
-                inset 0 1px 2px rgba(255, 255, 255, 0.35),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.4);
-    display: grid;
-    place-items: center;
-    color: #ffd8df;
-    font-family: var(--rg-fuente-titulo);
-    font-size: 20px;
-    transition: opacity 0.4s, transform 0.4s;
+    width: 64px;
+    translate: -50% -50%;
+    transition: opacity 0.3s, transform 0.3s;
+    animation: latir 1.6s ease-in-out infinite;
   }
+  .sobre .sello svg { position: static; width: 100%; height: auto; }
 
-  .sobre .sello::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border-radius: 50%;
-    border: 1px dashed rgba(255, 255, 255, 0.25);
-  }
+  @keyframes latir { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.12); } 30% { transform: scale(1); } }
 
-  .sobre.abierto {
-    cursor: default;
-  }
-  .sobre.abierto .solapa {
-    transform: rotateX(180deg);
-    z-index: 1;
-  }
-  .sobre.abierto .sello {
-    opacity: 0;
-    transform: scale(0.6);
-    pointer-events: none;
-  }
-  .sobre.abierto .hoja {
-    transform: translateY(-50%);
-  }
+  .sobre.abierto { cursor: default; animation: none; }
+  .sobre.abierto .solapa { transform: rotateX(180deg); z-index: 1; }
+  .sobre.abierto .sello { opacity: 0; transform: scale(1.6); pointer-events: none; }
+  .sobre.abierto .hoja { transform: translateY(-42%); }
 
-  /* Contador de Historia */
   .contador {
-    margin-top: 36px;
-    font-size: 1rem;
-    color: var(--rg-texto-suave);
+    margin-top: 34px;
+    display: inline-block;
+    background: var(--rg-papel);
+    border: var(--rg-borde);
+    border-radius: 16px;
+    padding: 10px 22px 12px;
+    box-shadow: 0 4px 0 var(--rg-sombra);
+    font-weight: 800;
+    font-size: 0.95rem;
   }
   .contador b {
     display: block;
     font-family: var(--rg-fuente-titulo);
-    font-size: 2.8rem;
-    font-weight: 500;
-    color: var(--rg-acento);
-    line-height: 1.1;
-    margin-top: 4px;
-  }
-
-  /* Contenedor de la Carta Desplegada */
-  .contenido {
-    position: relative;
-    z-index: 2;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 0 20px 90px;
-  }
-
-  .carta {
-    background: var(--rg-papel);
-    color: var(--rg-tinta);
-    border-radius: 6px;
-    padding: 42px 32px;
-    box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.65),
-                0 0 0 1px rgba(0,0,0,0.04);
-    position: relative;
-    background-image: repeating-linear-gradient(transparent 0 33px, #ece3d7 33px 34px);
-  }
-
-  .carta .saludo {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.6rem;
-    color: var(--rg-cera);
-    margin: 0 0 16px;
-    line-height: 1;
-  }
-
-  .carta p#mensaje {
-    white-space: pre-line;
-    line-height: 34px;
-    font-size: 1.08rem;
-    margin: 0;
-    min-height: 3.5em;
-    font-family: var(--rg-fuente);
-    font-weight: 400;
-  }
-
-  .carta .rg-firma {
-    color: var(--rg-cera);
     font-size: 2.3rem;
+    font-weight: 700;
+    color: var(--rg-acento-tinta);
+    line-height: 1.05;
   }
 
-  .contenido h2 {
-    font-family: var(--rg-fuente-titulo);
-    font-size: 2.1rem;
-    font-weight: 500;
-    text-align: center;
-    color: var(--rg-acento-luz);
-    margin: 54px 0 12px;
-    letter-spacing: -0.02em;
+  /* La carta: papel rayado y letra escrita a mano */
+  .rg-carta {
+    background-color: var(--rg-papel);
+    background-image: repeating-linear-gradient(transparent 0 37px, #f0dcd3 37px 39px);
+    background-position: 0 30px;
+    padding-top: 30px;
   }
+  .rg-carta .saludo {
+    min-height: 0;
+    font-family: var(--rg-fuente-mano);
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 39px;
+    color: var(--rg-acento-tinta);
+    margin: 0 0 0;
+  }
+  .rg-carta p#mensaje {
+    font-family: var(--rg-fuente-mano);
+    font-weight: 500;
+    font-size: 1.65rem;
+    line-height: 39px;
+  }
+  .rg-firma { font-size: 2.2rem; }
 </style>
 </head>
-<body data-icono="✉">
-  <section class="escena">
-    <p class="subtitulo-dedicatoria">Para ti</p>
-    <h1 data-campo="titulo">Tengo algo que decirte</h1>
-    <p class="pista" id="pista">Toca el sobre para abrir la carta</p>
+<body>
+  <section class="rg-escena">
+    <p class="rg-etiqueta">Para <span data-campo="para">ti</span></p>
+    <h1 class="rg-titulo" data-campo="titulo">Tengo algo que decirte</h1>
+    <p class="rg-ayuda" id="pista">Toca el corazón para abrir la carta</p>
 
-    <div class="sobre-envoltorio">
-      <div class="sobre" id="sobre" role="button" aria-label="Abrir carta">
-        <div class="cuerpo"></div>
-        <div class="hoja"><span class="hoja-monograma">♡</span></div>
-        <div class="frente"></div>
-        <div class="solapa"></div>
-        <div class="sello">✦</div>
+    <div class="sobre" id="sobre" role="button" aria-label="Abrir la carta">
+      <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="2" y="2" width="296" height="196" rx="10" fill="var(--solapa)" stroke="var(--rg-tinta)" stroke-width="3"/>
+      </svg>
+      <div class="hoja"></div>
+      <svg class="frente" viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 62L150 132 298 62V188a10 10 0 0 1-10 10H12A10 10 0 0 1 2 188z" fill="var(--sobre)" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M6 194L118 116M294 194L182 116" stroke="var(--rg-tinta)" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="solapa">
+        <svg viewBox="0 0 300 200" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2 12A10 10 0 0 1 12 2H288a10 10 0 0 1 10 10L150 124z" fill="var(--solapa)" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="sello" aria-hidden="true">
+        <svg viewBox="0 0 64 60">
+          <path d="M32 54C14 43 5 32 5 21A13 13 0 0 1 32 15a13 13 0 0 1 27 6c0 11-9 22-27 33z" fill="#e0475b" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M32 44C21 37 15 30 15 23a7 7 0 0 1 17-3 7 7 0 0 1 17 3c0 7-6 14-17 21z" fill="none" stroke="#fff" stroke-width="2" opacity=".55"/>
+        </svg>
       </div>
     </div>
 
     <div class="contador rg-oculto" id="contador"></div>
   </section>
 
-  <main class="contenido" id="contenido" hidden>
-    <article class="carta rg-oculto" id="carta">
+  <main class="rg-contenido" id="contenido" hidden>
+    <article class="rg-carta rg-oculto" id="carta">
       <p class="saludo">Para <span data-campo="para">ti</span>:</p>
       <p id="mensaje"></p>
       <div class="rg-firma">Con todo mi amor, <span data-campo="de"></span></div>
     </article>
-    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia en imágenes</h2>
+    <h2 class="rg-subtitulo rg-oculto" id="tituloFotos">Nuestra historia</h2>
     <div id="galeria" class="rg-oculto"></div>
   </main>
 
 <script>window.REGALO = {"para":"Mamá","de":"Tu hija que te adora","titulo":"Feliz día, mamá","saludo":"Mi querida mamá:","mensaje":"Gracias por cada desvelo, por cada consejo y por cada abrazo.\nTodo lo bueno que soy te lo debo a ti.\nTe amo infinitamente.","fotos":[{"src":"f1.webp","texto":"Siempre juntas"},{"src":"f2.webp"}]};</script>
 <script src="../assets/regalo.js"></script>
 <script>
-  const { $, espera, escribir, galeria, flotar, diasDesde, datos } = Regalo;
+  const { $, espera, escribir, galeria, flotar, diasDesde, final, datos } = Regalo;
 
   if (datos.saludo) $('.saludo').textContent = datos.saludo;
 
   const dias = diasDesde(datos.desde);
   if (dias !== null && dias >= 0) {
-    $('#contador').innerHTML = `${Regalo.esc(datos.textoContador || 'Compartiendo el camino hace')}<b>${dias.toLocaleString('es')} días</b>`;
+    $('#contador').innerHTML = `${Regalo.esc(datos.textoContador || 'Juntos desde hace')}<b>${dias.toLocaleString('es')} días</b>`;
   } else $('#contador').remove();
 
   let abierto = false;
   $('#sobre').addEventListener('click', async () => {
     if (abierto) return;
     abierto = true;
+    if (navigator.vibrate) navigator.vibrate(20);
     $('#sobre').classList.add('abierto');
     $('#pista').style.opacity = '0';
-    flotar(['♡', '✧', '❤'], { cada: 420 });
+    flotar([['corazon', '#e0475b'], ['corazon', '#f7c9c0'], ['corazon', '#fffdf8']], { cada: 650 });
     await espera(1500);
     $('#contador') && $('#contador').classList.add('rg-visible');
     $('#contenido').hidden = false;
-    await espera(800);
+    await espera(700);
     $('#carta').classList.add('rg-visible');
     $('#carta').scrollIntoView({ behavior: 'smooth', block: 'start' });
     await escribir($('#mensaje'), datos.mensaje || 'Gracias por estar en mi vida cada día.');
-    if (datos.fotos && datos.fotos.length) {
-      $('#tituloFotos').classList.add('rg-visible');
-      $('#galeria').classList.add('rg-visible');
-    }
+    final();
   });
 
   Regalo.iniciar({});
   galeria($('#galeria'));
-  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
 </script>
 </body>
 </html>
