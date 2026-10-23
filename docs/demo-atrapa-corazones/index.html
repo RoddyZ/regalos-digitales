@@ -8,57 +8,53 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../assets/regalo.css">
+<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">
 <style>
   :root {
-    --rg-fondo: #130d17;
-    --rg-texto: #fdf8f4;
-    --rg-acento: #e5b869;
-    --rg-acento-rosa: #e8829b;
-    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #25162a, #0b070d);
+    --rg-fondo: #ffe3e8;
+    --rg-acento: #ff5a6e;
+    --rg-acento-2: #ffd166;
+    --rg-acento-tinta: #d6334a;
+    --rg-boton-texto: #fffdf8;
+    --rg-caja: #ff5a6e;
+    --rg-cinta: #ffd166;
+    --rg-washi: rgba(255, 154, 173, 0.8);
   }
 
   body {
-    background: radial-gradient(circle at 50% 100%, #29182f 0%, #130d17 65%, #0a060c 100%);
     min-height: 100svh;
     user-select: none;
     -webkit-user-select: none;
+    background-image: radial-gradient(rgba(214, 51, 74, 0.16) 2px, transparent 2.5px);
+    background-size: 26px 26px;
   }
 
   .hud {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 14px;
+    left: 14px;
+    right: 14px;
     z-index: 25;
-    padding: 24px 20px;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 12px 16px 14px;
     text-align: center;
-    transition: opacity 0.6s ease;
-    backdrop-filter: blur(10px);
-    background: linear-gradient(180deg, rgba(19, 13, 23, 0.8) 0%, transparent 100%);
+    background: var(--rg-papel);
+    border: var(--rg-borde);
+    border-radius: 18px;
+    box-shadow: 0 5px 0 var(--rg-sombra);
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
+  .hud.fuera { opacity: 0; transform: translateY(-30px); }
 
-  .hud p {
-    margin: 0 0 12px;
-    font-weight: 500;
-    font-size: 0.98rem;
-    letter-spacing: 0.02em;
-    color: var(--rg-texto);
-  }
-
-  .hud p span {
-    font-family: var(--rg-fuente-titulo);
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--rg-acento);
-  }
+  .hud p { margin: 0 0 9px; font-weight: 800; font-size: 1rem; }
+  .hud p b { font-family: var(--rg-fuente-titulo); font-size: 1.25rem; color: var(--rg-acento-tinta); }
 
   .barra {
-    height: 8px;
-    max-width: 320px;
-    margin: 0 auto;
+    height: 16px;
+    border: var(--rg-borde);
     border-radius: 99px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #fff;
     overflow: hidden;
   }
 
@@ -66,149 +62,85 @@
     display: block;
     height: 100%;
     width: 0;
-    background: linear-gradient(90deg, var(--rg-acento), var(--rg-acento-rosa));
-    border-radius: inherit;
-    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.35) 0 6px, transparent 6px 12px), var(--rg-acento);
+    border-right: 2.5px solid var(--rg-tinta);
+    transition: width 0.3s cubic-bezier(0.3, 1.4, 0.5, 1);
   }
 
-  #juego {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    touch-action: manipulation;
-  }
+  #juego { position: fixed; inset: 0; overflow: hidden; touch-action: manipulation; }
 
   .corazon {
     position: absolute;
-    top: -70px;
-    font-size: 44px;
-    line-height: 1;
-    padding: 12px;
+    top: -80px;
+    width: 58px;
+    padding: 8px;
     cursor: pointer;
     animation: caer linear forwards;
-    filter: drop-shadow(0 6px 16px rgba(232, 130, 155, 0.45));
-    transition: transform 0.1s;
   }
+  .corazon svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .corazon.atrapado { animation: explotar 0.35s ease-out forwards !important; pointer-events: none; }
 
-  .corazon.atrapado {
-    animation: explotar 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
-    pointer-events: none;
-  }
-
-  @keyframes caer {
-    to { transform: translateY(calc(100svh + 130px)) rotate(18deg); }
-  }
-
-  @keyframes explotar {
-    to { transform: scale(2.2); opacity: 0; }
-  }
+  @keyframes caer { to { transform: translateY(calc(100svh + 140px)) rotate(var(--giro)); } }
+  @keyframes explotar { 40% { transform: scale(1.35); } to { transform: scale(0.2); opacity: 0; } }
 
   .mas {
     position: absolute;
     font-family: var(--rg-fuente-titulo);
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--rg-acento);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--rg-acento-tinta);
     pointer-events: none;
-    animation: flotar-num 0.8s ease-out forwards;
+    translate: -50% -50%;
+    animation: subir 0.8s ease-out forwards;
   }
+  @keyframes subir { to { transform: translateY(-46px); opacity: 0; } }
 
-  @keyframes flotar-num {
-    to { transform: translateY(-45px); opacity: 0; }
-  }
-
-  /* Sección final tras completar el juego */
   .final {
     position: relative;
     z-index: 30;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 14vh 20px 90px;
     text-align: center;
+    padding-top: 12svh;
   }
-
-  .final h1 {
-    font-family: var(--rg-fuente-titulo);
-    font-weight: 500;
-    font-size: clamp(2.4rem, 8.5vw, 3.8rem);
-    letter-spacing: -0.02em;
-    color: var(--rg-texto);
-    margin: 0 0 20px;
-    line-height: 1.15;
-  }
-
-  .final-subtitulo {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.2rem;
-    color: var(--rg-acento);
-    margin: 0 0 4px;
-  }
-
-  .carta {
-    text-align: left;
-    background: rgba(25, 17, 28, 0.75);
-    border: 1px solid rgba(229, 184, 105, 0.3);
-    border-radius: 16px;
-    padding: 38px 30px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.7);
-  }
-
-  .carta p {
-    white-space: pre-line;
-    line-height: 1.75;
-    font-size: 1.08rem;
-    margin: 0;
-    min-height: 3.5em;
-  }
-
-  .carta .rg-firma {
-    color: var(--rg-acento);
-  }
-
-  .final h2 {
-    font-family: var(--rg-fuente-titulo);
-    font-size: 2.1rem;
-    color: var(--rg-acento);
-    margin: 54px 0 12px;
-  }
+  .final .rg-titulo { margin-inline: auto; margin-bottom: 34px; }
 </style>
 </head>
-<body data-icono="💘">
+<body>
   <div class="hud" id="hud">
-    <p id="textoHud">Atrapa <span id="meta">15</span> corazones para abrir tu mensaje</p>
+    <p id="textoHud">Atrapa <b id="meta">15</b> corazones para abrir tu mensaje</p>
     <div class="barra"><i id="progreso"></i></div>
   </div>
 
   <div id="juego"></div>
 
-  <main class="final" id="final" hidden>
-    <p class="final-subtitulo">Sorpresa</p>
-    <h1 class="rg-oculto" id="titulo" data-campo="titulo">¡Lo lograste!</h1>
-    <div class="carta rg-oculto" id="carta">
+  <main class="rg-contenido final" id="final" hidden>
+    <p class="rg-etiqueta">¡Sorpresa!</p>
+    <h1 class="rg-titulo rg-oculto" id="titulo" data-campo="titulo">¡Me atrapaste!</h1>
+    <div class="rg-carta rg-oculto" id="carta">
       <p id="mensaje"></p>
       <div class="rg-firma">— <span data-campo="de"></span></div>
     </div>
-    <h2 class="rg-oculto" id="tituloFotos">Nuestros recuerdos</h2>
+    <h2 class="rg-subtitulo rg-oculto" id="tituloFotos">Nuestros recuerdos</h2>
     <div id="galeria" class="rg-oculto"></div>
   </main>
 
-<script>window.REGALO = {"para":"Vale","de":"Tu novio","titulo":"¡Me atrapaste!","meta":12,"mensaje":"Así como atrapaste todos esos corazones, un día atrapaste el mío.\nFeliz aniversario, amor. 💘","fotos":[{"src":"f1.webp"},{"src":"f2.webp"},{"src":"f3.webp"}]};</script>
+<script>window.REGALO = {"para":"Vale","de":"Tu novio","titulo":"¡Me atrapaste!","meta":12,"mensaje":"Así como atrapaste todos esos corazones, un día atrapaste el mío.\nFeliz aniversario, amor.","fotos":[{"src":"f1.webp"},{"src":"f2.webp"},{"src":"f3.webp"}]};</script>
 <script src="../assets/regalo.js"></script>
 <script>
-  const { $, espera, escribir, galeria, confeti, flotar, datos } = Regalo;
+  const { $, espera, escribir, galeria, confeti, flotar, figura, final, datos } = Regalo;
   const META = Math.max(3, parseInt(datos.meta, 10) || 15);
   $('#meta').textContent = META;
   const juego = $('#juego');
-  const simbolos = datos.simbolos || ['❤', '♡', '💖', '✦'];
+  const colores = ['#ff5a6e', '#ff5a6e', '#ff9aad', '#fffdf8', '#ffd166'];
   let atrapados = 0, generador = null;
 
   function soltar() {
     const c = document.createElement('div');
     c.className = 'corazon';
-    c.textContent = simbolos[(Math.random() * simbolos.length) | 0];
-    c.style.left = 6 + Math.random() * 80 + 'vw';
-    c.style.animationDuration = Math.max(2.5, 5.2 - atrapados * 0.14) + Math.random() * 1.4 + 's';
+    c.innerHTML = figura('corazon', colores[(Math.random() * colores.length) | 0]);
+    c.style.left = 4 + Math.random() * 78 + 'vw';
+    c.style.width = 50 + Math.random() * 22 + 'px';
+    c.style.setProperty('--giro', (Math.random() - 0.5) * 50 + 'deg');
+    c.style.animationDuration = Math.max(2.6, 5.2 - atrapados * 0.14) + Math.random() * 1.4 + 's';
     c.addEventListener('pointerdown', e => atrapar(c, e));
     c.addEventListener('animationend', () => c.classList.contains('atrapado') || c.remove());
     juego.appendChild(c);
@@ -217,7 +149,7 @@
   function atrapar(c, e) {
     if (c.classList.contains('atrapado')) return;
     c.classList.add('atrapado');
-    setTimeout(() => c.remove(), 400);
+    setTimeout(() => c.remove(), 350);
 
     const m = document.createElement('div');
     m.className = 'mas';
@@ -235,22 +167,19 @@
 
   async function ganar() {
     clearInterval(generador);
-    $('#textoHud').textContent = '¡Sorpresa desbloqueada! ✨';
-    confeti({ colores: ['#f3d08c', '#e8829b', '#ffffff', '#c6a4e8'], duracion: 4500 });
+    $('#textoHud').textContent = '¡Lo lograste!';
+    confeti({ colores: ['#ff5a6e', '#ff9aad', '#ffd166', '#fffdf8'], duracion: 4200 });
     await espera(800);
     juego.querySelectorAll('.corazon').forEach(c => c.remove());
-    $('#hud').style.opacity = '0';
+    $('#hud').classList.add('fuera');
     $('#final').hidden = false;
-    flotar(['♡', '✧', '✦'], { cada: 600 });
+    flotar([['corazon', '#ff5a6e'], ['corazon', '#ff9aad'], ['corazon', '#fffdf8']], { cada: 900 });
     await espera(100);
     $('#titulo').classList.add('rg-visible');
-    await espera(700);
+    await espera(600);
     $('#carta').classList.add('rg-visible');
     await escribir($('#mensaje'), datos.mensaje || 'Así como atrapaste cada uno de esos corazones, atrapaste el mío.');
-    if (datos.fotos && datos.fotos.length) {
-      $('#tituloFotos').classList.add('rg-visible');
-      $('#galeria').classList.add('rg-visible');
-    }
+    final();
   }
 
   Regalo.iniciar({
@@ -261,7 +190,6 @@
   });
 
   galeria($('#galeria'));
-  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
 </script>
 </body>
 </html>

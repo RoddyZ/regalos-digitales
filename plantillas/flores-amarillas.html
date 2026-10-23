@@ -8,91 +8,53 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../assets/regalo.css">
+<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">
 <style>
   :root {
-    --rg-fondo: #090e18;
-    --rg-texto: #fefcf7;
-    --rg-acento: #f5b738;
-    --rg-acento-luz: #fce38a;
-    --rg-verde-tallo: #386641;
-    --rg-verde-hoja: #4b8056;
-    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #18253d, #060911);
+    --rg-fondo: #fdf1d3;
+    --rg-acento: #ffc23d;
+    --rg-acento-2: #6fae5b;
+    --rg-acento-tinta: #b35c00;
+    --rg-caja: #ffc23d;
+    --rg-cinta: #6fae5b;
+    --rg-washi: rgba(111, 174, 91, 0.75);
+    --tallo: #4f8f4a;
+    --petalo: #ffc23d;
+    --centro: #7a4a1f;
   }
 
-  body {
-    background: radial-gradient(circle at 50% 10%, #162238 0%, #0b111e 65%, #05070c 100%);
-    min-height: 100svh;
-  }
+  .escena { position: relative; min-height: 100svh; overflow: hidden; }
 
-  .cielo {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
+  .sol {
+    position: absolute;
+    top: 7svh;
+    right: 7%;
+    width: 92px;
     z-index: 1;
-  }
-
-  .estrella {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #ffffff;
-    border-radius: 50%;
-    animation: brillar 3.5s ease-in-out infinite;
-  }
-
-  .luciernaga {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #fff6a6;
-    box-shadow: 0 0 12px 3px rgba(245, 183, 56, 0.7);
-    animation: volar 10s ease-in-out infinite alternate;
     opacity: 0;
+    transform: translateY(30px) scale(0.6);
+    transition: opacity 0.8s ease, transform 1s cubic-bezier(0.3, 1.4, 0.5, 1);
   }
+  .sol.rg-visible { opacity: 1; transform: none; }
+  .sol .rayos { transform-origin: 50px 50px; animation: girar 24s linear infinite; }
+  @keyframes girar { to { transform: rotate(360deg); } }
 
-  @keyframes brillar {
-    0%, 100% { opacity: 0.15; transform: scale(0.8); }
-    50% { opacity: 0.85; transform: scale(1.2); }
+  .nube {
+    position: absolute;
+    width: 110px;
+    z-index: 1;
+    animation: pasar linear infinite;
   }
-
-  @keyframes volar {
-    0% { opacity: 0; transform: translate(0, 0); }
-    25% { opacity: 0.9; }
-    100% { opacity: 0.2; transform: translate(70px, -90px); }
-  }
-
-  .escena {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    z-index: 2;
+  @keyframes pasar {
+    from { transform: translateX(-140px); }
+    to { transform: translateX(calc(100vw + 40px)); }
   }
 
   .cabecera {
-    text-align: center;
-    padding: 10vh 20px 0;
+    position: relative;
     z-index: 3;
-  }
-
-  .dedicatoria-caligrafica {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.2rem;
-    color: var(--rg-acento);
-    margin: 0 0 4px;
-    line-height: 1;
-  }
-
-  .cabecera h1 {
-    font-family: var(--rg-fuente-titulo);
-    font-weight: 500;
-    font-size: clamp(2.3rem, 8vw, 3.8rem);
-    letter-spacing: -0.02em;
-    margin: 0;
-    color: var(--rg-texto);
-    line-height: 1.15;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 22svh 22px 0;
   }
 
   #jardin {
@@ -100,164 +62,112 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 72svh;
     width: 100%;
+    height: 62svh;
     z-index: 2;
+    overflow: visible;
   }
 
-  .tallo {
-    fill: none;
-    stroke: var(--rg-verde-tallo);
-    stroke-width: 4.5;
-    stroke-linecap: round;
-  }
-
+  .tallo-borde { fill: none; stroke: var(--rg-tinta); stroke-width: 7.5; stroke-linecap: round; }
+  .tallo { fill: none; stroke: var(--tallo); stroke-width: 4; stroke-linecap: round; }
   .hoja {
-    fill: var(--rg-verde-hoja);
+    fill: var(--rg-acento-2);
+    stroke: var(--rg-tinta);
+    stroke-width: 2.4;
+    stroke-linejoin: round;
     transform: scale(0);
-    transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-box: fill-box;
+    transition: transform 0.9s cubic-bezier(0.3, 1.4, 0.5, 1);
   }
+  .hoja.izq { transform-origin: 100% 50%; }
+  .hoja.der { transform-origin: 0% 50%; }
 
   .flor {
     transform-box: fill-box;
     transform-origin: center;
-    transform: scale(0) rotate(-70deg);
-    transition: transform 1.5s cubic-bezier(0.2, 1.3, 0.4, 1);
-    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+    transform: scale(0) rotate(-90deg);
+    transition: transform 1.1s cubic-bezier(0.3, 1.5, 0.5, 1);
   }
+  .flor ellipse { fill: var(--petalo); stroke: var(--rg-tinta); stroke-width: 2.2; }
+  .flor .centro { fill: var(--centro); stroke: var(--rg-tinta); stroke-width: 2.4; }
+  .flor .semilla { fill: #a8692e; }
 
   .crecida .hoja { transform: scale(1); }
   .crecida .flor { transform: scale(1) rotate(0); }
-  .flor .centro { fill: #5c3510; }
-  .flor.abierta { animation: mecer 6s ease-in-out infinite; }
+  .flor.abierta { animation: mecer 5s ease-in-out infinite; }
+  @keyframes mecer { 50% { transform: rotate(7deg); } }
 
-  @keyframes mecer {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(5deg); }
-  }
+  .loma { fill: #a7cf7f; stroke: var(--rg-tinta); stroke-width: 3; }
 
   .bajar {
     position: absolute;
-    bottom: 24px;
+    bottom: 18px;
     left: 50%;
-    transform: translateX(-50%);
     z-index: 4;
-    font-size: 0.82rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--rg-acento-luz);
-    opacity: 0;
-    transition: opacity 1s;
-    text-align: center;
+    translate: -50% 0;
+    background: var(--rg-papel);
+    border: var(--rg-borde);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    box-shadow: 0 4px 0 var(--rg-sombra);
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 6px;
+    opacity: 0;
+    transition: opacity 0.6s;
   }
+  .bajar.rg-visible { opacity: 1; animation: rebote 2s ease-in-out infinite; }
+  @keyframes rebote { 50% { transform: translateY(6px); } }
 
-  .bajar.rg-visible {
-    opacity: 0.85;
-    animation: rebote 2.2s infinite ease-in-out;
-  }
-
-  @keyframes rebote {
-    0%, 100% { transform: translate(-50%, 0); }
-    50% { transform: translate(-50%, 8px); }
-  }
-
-  .contenido {
-    position: relative;
-    z-index: 3;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 48px 20px 90px;
-  }
-
-  .carta {
-    background: rgba(14, 21, 35, 0.72);
-    border: 1px solid rgba(245, 183, 56, 0.28);
-    border-radius: 16px;
-    padding: 38px 30px;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.75);
-    color: #fbf7ee;
-  }
-
-  .carta p {
-    white-space: pre-line;
-    line-height: 1.8;
-    font-size: 1.08rem;
-    margin: 0;
-    min-height: 3.5em;
-  }
-
-  .carta .rg-firma {
-    color: var(--rg-acento);
-  }
-
-  .contenido h2 {
-    font-family: var(--rg-fuente-titulo);
-    font-size: 2.1rem;
-    text-align: center;
-    color: var(--rg-acento-luz);
-    margin: 54px 0 12px;
-    letter-spacing: -0.02em;
-  }
+  .rg-contenido { padding-top: 56px; }
 </style>
 </head>
-<body data-icono="🌻">
-  <div class="cielo" id="cielo"></div>
-
+<body>
   <section class="escena">
+    <svg class="sol" id="sol" viewBox="0 0 100 100" aria-hidden="true">
+      <g class="rayos" stroke="var(--rg-tinta)" stroke-width="3" stroke-linecap="round">
+        <path d="M50 4v12M50 84v12M4 50h12M84 50h12M17 17l9 9M74 74l9 9M17 83l9-9M74 26l9-9"/>
+      </g>
+      <circle cx="50" cy="50" r="24" fill="#ffd166" stroke="var(--rg-tinta)" stroke-width="3"/>
+      <path d="M40 48q3-4 6 0M54 48q3-4 6 0" fill="none" stroke="var(--rg-tinta)" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M45 56q5 5 10 0" fill="none" stroke="var(--rg-tinta)" stroke-width="2.6" stroke-linecap="round"/>
+      <circle cx="37" cy="55" r="3.5" fill="#ff9a7a" opacity=".7"/><circle cx="63" cy="55" r="3.5" fill="#ff9a7a" opacity=".7"/>
+    </svg>
+    <svg class="nube" style="top:13svh; animation-duration:46s; animation-delay:-18s" viewBox="0 0 110 50" aria-hidden="true">
+      <path d="M22 44a14 14 0 0 1 2-28 20 20 0 0 1 38-4 15 15 0 0 1 26 10 11 11 0 0 1 0 22z" fill="#fffdf8" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+    <svg class="nube" style="top:30svh; width:80px; animation-duration:60s; animation-delay:-41s" viewBox="0 0 110 50" aria-hidden="true">
+      <path d="M22 44a14 14 0 0 1 2-28 20 20 0 0 1 38-4 15 15 0 0 1 26 10 11 11 0 0 1 0 22z" fill="#fffdf8" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+    </svg>
+
     <header class="cabecera rg-oculto" id="cabecera">
-      <p class="dedicatoria-caligrafica">Para ti</p>
-      <h1 data-campo="titulo">Flores amarillas para ti</h1>
+      <p class="rg-etiqueta">Para <span data-campo="para">ti</span></p>
+      <h1 class="rg-titulo" data-campo="titulo" style="margin-inline:auto">Flores amarillas para ti</h1>
     </header>
 
     <svg id="jardin" viewBox="0 0 400 520" preserveAspectRatio="xMidYMax meet" aria-hidden="true"></svg>
 
     <div class="bajar" id="bajar">
-      <span>Desliza hacia abajo</span>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+      Desliza, hay más
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </div>
   </section>
 
-  <main class="contenido">
-    <div class="carta rg-oculto" id="carta">
+  <main class="rg-contenido">
+    <div class="rg-carta rg-oculto" id="carta">
       <p id="mensaje"></p>
       <div class="rg-firma">— <span data-campo="de"></span></div>
     </div>
-    <h2 class="rg-oculto" id="tituloFotos">Nuestros momentos</h2>
+    <h2 class="rg-subtitulo rg-oculto" id="tituloFotos">Nuestros momentos</h2>
     <div id="galeria" class="rg-oculto"></div>
   </main>
 
 <script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>
 <script src="../assets/regalo.js"></script>
 <script>
-  const { $, espera, escribir, galeria, flotar, datos } = Regalo;
-
-  const cielo = $('#cielo');
-  for (let i = 0; i < 75; i++) {
-    const e = document.createElement('div');
-    e.className = 'estrella';
-    Object.assign(e.style, {
-      left: Math.random() * 100 + '%',
-      top: Math.random() * 65 + '%',
-      animationDelay: Math.random() * 3.5 + 's'
-    });
-    cielo.appendChild(e);
-  }
-  for (let i = 0; i < 15; i++) {
-    const l = document.createElement('div');
-    l.className = 'luciernaga';
-    Object.assign(l.style, {
-      left: Math.random() * 95 + '%',
-      top: 40 + Math.random() * 55 + '%',
-      animationDelay: Math.random() * 9 + 's',
-      animationDuration: 7 + Math.random() * 6 + 's'
-    });
-    cielo.appendChild(l);
-  }
+  const { $, espera, escribir, galeria, flotar, final, datos } = Regalo;
 
   const NS = 'http://www.w3.org/2000/svg';
   const svg = $('#jardin');
@@ -267,73 +177,67 @@
     padre && padre.appendChild(n);
     return n;
   };
-  const defs = el('defs', {}, svg);
-  const grad = el('radialGradient', { id: 'petalo', cx: '50%', cy: '100%', r: '100%' }, defs);
-  el('stop', { offset: '0%', 'stop-color': '#e69516' }, grad);
-  el('stop', { offset: '100%', 'stop-color': '#fce38a' }, grad);
 
+  // Girasoles: tallo con contorno, dos hojas y la flor que se abre girando.
   const flores = [];
-  const posiciones = [40, 95, 150, 200, 250, 305, 360, 120, 280, 70, 330];
-  posiciones.forEach((x, i) => {
-    const alto = 190 + Math.random() * 230;
-    const topeY = 520 - alto;
-    const curva = x + (Math.random() - 0.5) * 50;
+  [[46, 300], [104, 230], [160, 330], [212, 260], [262, 350], [318, 240], [372, 300], [132, 170], [290, 175]].forEach(([x, alto], i) => {
+    const tope = 500 - alto;
+    const curva = x + (i % 2 ? 22 : -22);
+    const d = `M${x} 520 Q${curva} ${520 - alto / 2} ${x} ${tope}`;
     const g = el('g', {}, svg);
-    const tallo = el('path', { class: 'tallo', d: `M${x} 520 Q${curva} ${520 - alto/2} ${x} ${topeY}` }, g);
-    const lado = i % 2 ? 1 : -1;
-    const hy = 520 - alto * (0.3 + Math.random() * 0.2);
-    el('path', { class: 'hoja', d: `M${x} ${hy} q${18*lado} -14 ${30*lado} -4 q${-14*lado} 12 ${-30*lado} 4z`, style: `transform-origin:${x}px ${hy}px` }, g);
+    const borde = el('path', { class: 'tallo-borde', d }, g);
+    const tallo = el('path', { class: 'tallo', d }, g);
+    const hy = 520 - alto * 0.42;
+    el('path', { class: 'hoja izq', d: `M${x - 2} ${hy} q-14 -16 -32 -10 q12 16 32 10z` }, g);
+    el('path', { class: 'hoja der', d: `M${x + 2} ${hy + 26} q14 -16 32 -10 q-12 16 -32 10z` }, g);
     const flor = el('g', { class: 'flor' }, g);
-    const radio = 14 + Math.random() * 10;
-    for (let capa = 0; capa < 2; capa++) {
-      const n = 14;
-      for (let p = 0; p < n; p++) {
-        const ang = (360 / n) * p + capa * (180 / n);
-        el('ellipse', { cx: x, cy: topeY - radio * (capa ? 0.45 : 0.62), rx: radio * 0.28, ry: radio * (capa ? 0.45 : 0.62), fill: 'url(#petalo)', transform: `rotate(${ang} ${x} ${topeY})`, opacity: capa ? 1 : 0.92 }, flor);
-      }
+    const r = 17 + (i % 3) * 4;
+    for (let p = 0; p < 12; p++) {
+      el('ellipse', { cx: x, cy: tope - r * 0.78, rx: r * 0.3, ry: r * 0.62, transform: `rotate(${p * 30} ${x} ${tope})` }, flor);
     }
-    el('circle', { class: 'centro', cx: x, cy: topeY, r: radio * 0.32 }, flor);
-    const largo = tallo.getTotalLength();
-    tallo.style.strokeDasharray = largo;
-    tallo.style.strokeDashoffset = largo;
-    tallo.style.transition = 'stroke-dashoffset 2.2s ease-out';
-    flores.push({ g, tallo, flor, orden: Math.random() });
+    el('circle', { class: 'centro', cx: x, cy: tope, r: r * 0.5 }, flor);
+    [[-0.2, -0.15], [0.18, -0.05], [-0.02, 0.2]].forEach(([dx, dy]) =>
+      el('circle', { class: 'semilla', cx: x + dx * r, cy: tope + dy * r, r: 2 }, flor));
+    [borde, tallo].forEach(t => {
+      const largo = t.getTotalLength();
+      t.style.strokeDasharray = largo;
+      t.style.strokeDashoffset = largo;
+      t.style.transition = 'stroke-dashoffset 1.8s ease-out';
+    });
+    flores.push({ g, trazos: [borde, tallo], flor, orden: Math.random() });
   });
+  el('path', { class: 'loma', d: 'M-20 490 Q90 458 200 478 T420 470 V540 H-20z' }, svg);
 
-  function mostrar(elem) { elem && elem.classList.add('rg-visible'); }
+  const mostrar = e => e && e.classList.add('rg-visible');
 
   Regalo.iniciar({
     async alAbrir() {
-      await espera(400);
+      mostrar($('#sol'));
+      await espera(300);
       mostrar($('#cabecera'));
-      flores.sort((a, b) => a.orden - b.orden);
-      flores.forEach((f, i) => setTimeout(() => {
-        f.tallo.style.strokeDashoffset = 0;
+      flores.sort((a, b) => a.orden - b.orden).forEach((f, i) => setTimeout(() => {
+        f.trazos.forEach(t => t.style.strokeDashoffset = 0);
         setTimeout(() => {
           f.g.classList.add('crecida');
-          setTimeout(() => f.flor.classList.add('abierta'), 1500);
-        }, 1900);
-      }, i * 260));
-      await espera(4200);
+          setTimeout(() => f.flor.classList.add('abierta'), 1200);
+        }, 1500);
+      }, i * 230));
+      await espera(3800);
       mostrar($('#bajar'));
-      flotar(['✿', '❀', '✧'], { cada: 900 });
+      flotar([['flor', '#ffc23d'], ['flor', '#fffdf8'], ['corazon', '#ff8a8a']], { cada: 1500, tamano: [16, 28] });
 
       const obs = new IntersectionObserver(async ([e]) => {
         if (!e.isIntersecting) return;
         obs.disconnect();
         mostrar($('#carta'));
         await escribir($('#mensaje'), datos.mensaje || 'Porque hay personas que hacen florecer todo a su alrededor.');
-        if (datos.fotos && datos.fotos.length) {
-          mostrar($('#tituloFotos'));
-          mostrar($('#galeria'));
-        }
+        final();
       }, { threshold: 0.25 });
       obs.observe($('#carta'));
     }
   });
 
   galeria($('#galeria'));
-  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
 </script>
 </body>
 </html>

@@ -1,5 +1,23 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>Regalo no encontrado</title>
-<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#170f1c;color:#fbeff5;font-family:system-ui,sans-serif;text-align:center;padding:16px}div{font-size:64px}</style></head>
-<body><main><div>🎁</div><p>Este regalo no existe o ya no está disponible.<br>Revisa que el enlace esté completo.</p></main></body></html>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,650&family=Nunito:wght@700;800&display=swap">
+<style>
+  body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: #fff4e6; color: #2a211c; font-family: 'Nunito', system-ui, sans-serif; font-weight: 700; text-align: center; padding: 16px; }
+  svg { width: 140px; margin: 0 auto 18px; display: block; overflow: visible; }
+  h1 { font-family: 'Fraunces', Georgia, serif; font-weight: 650; font-size: 1.9rem; margin: 0 0 10px; }
+  p { margin: 0 auto 24px; max-width: 22em; color: rgba(42, 33, 28, 0.7); line-height: 1.5; }
+  a { display: inline-block; color: #2a211c; background: #ff8a5b; border: 2.5px solid #2a211c; border-radius: 999px; padding: 12px 26px; box-shadow: 0 5px 0 #2a211c; text-decoration: none; font-weight: 800; }
+</style></head>
+<body><main>
+  <svg viewBox="0 0 160 150" aria-hidden="true"><g stroke="#2a211c" stroke-width="3" stroke-linejoin="round">
+    <rect x="24" y="66" width="112" height="72" rx="8" fill="#ff8a5b"/><rect x="70" y="66" width="20" height="72" fill="#ffd166"/>
+    <g transform="rotate(-14 14 70)"><rect x="14" y="40" width="132" height="24" rx="6" fill="#ff8a5b"/><rect x="68" y="40" width="24" height="24" fill="#ffd166"/></g>
+  </g><path d="M66 100q4-5 8 0M86 100q4-5 8 0M70 118q10-8 20 0" fill="none" stroke="#2a211c" stroke-width="3" stroke-linecap="round"/></svg>
+  <h1>Esta cajita está vacía</h1>
+  <p>Este regalo no existe o ya no está disponible. Revisa que el enlace esté completo.</p>
+  <a href="/" id="inicio">Conocer Detallazo</a>
+</main>
+<script>/* En github.io el sitio vive en /regalos-digitales/; con dominio propio, en la raíz. */
+if (location.hostname.endsWith("github.io")) document.getElementById("inicio").href = "/" + location.pathname.split("/")[1] + "/";</script>
+</body></html>

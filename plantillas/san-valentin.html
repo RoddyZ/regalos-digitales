@@ -8,198 +8,126 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../assets/regalo.css">
+<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">
 <style>
   :root {
-    --rg-fondo: #16080e;
-    --rg-texto: #fdf6f4;
-    --rg-acento: #e9b9a0;
-    --rg-acento-luz: #f6d6c4;
-    --rg-rosa: #e8708c;
-    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #3a1220, #0d0508);
+    --rg-fondo: #ffd6de;
+    --rg-acento: #ff5a6e;
+    --rg-acento-2: #fffdf8;
+    --rg-acento-tinta: #d6334a;
+    --rg-boton-texto: #fffdf8;
+    --rg-caja: #ff5a6e;
+    --rg-cinta: #fffdf8;
+    --rg-washi: rgba(255, 90, 110, 0.55);
   }
 
   body {
-    background: radial-gradient(ellipse at 50% 30%, #3b1222 0%, #1d0a12 55%, #0b0407 100%);
     min-height: 100svh;
     user-select: none;
     -webkit-user-select: none;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.55) 3px, transparent 3.5px);
+    background-size: 30px 30px;
   }
 
-  .escena {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 30px 20px 48px;
-    position: relative;
-    z-index: 2;
+  .corazon {
+    width: 150px;
+    margin: 0 auto 18px;
+    animation: latir 1.4s ease-in-out infinite;
   }
+  .corazon svg { width: 100%; height: auto; display: block; overflow: visible; }
+  @keyframes latir { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.08); } 28% { transform: scale(1); } 42% { transform: scale(1.05); } }
 
-  .corazon-grande {
-    width: 120px;
-    margin: 0 auto 26px;
-    filter: drop-shadow(0 18px 30px rgba(232, 112, 140, 0.45));
-    animation: latir 1.3s ease-in-out infinite;
-  }
+  .corazon .cara { display: none; }
+  .corazon[data-estado="normal"] .normal,
+  .corazon[data-estado="triste"] .triste,
+  .corazon[data-estado="feliz"] .feliz { display: inline; }
+  .corazon[data-estado="triste"] { animation: temblar 0.4s ease; }
+  @keyframes temblar { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
 
-  .corazon-grande svg { width: 100%; height: auto; display: block; }
-
-  @keyframes latir {
-    0%, 100% { transform: scale(1); }
-    15% { transform: scale(1.12); }
-    30% { transform: scale(1); }
-    45% { transform: scale(1.08); }
-  }
-
-  .para {
-    font-family: var(--rg-fuente-acento);
-    font-size: 2.3rem;
-    color: var(--rg-acento-luz);
-    margin: 0 0 6px;
-    line-height: 1;
-  }
-
-  h1 {
-    font-family: var(--rg-fuente-titulo);
-    font-size: clamp(2.2rem, 8vw, 3.4rem);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin: 0 0 34px;
-    line-height: 1.15;
-    max-width: 14em;
-  }
+  .rg-titulo { margin-inline: auto; margin-bottom: 28px; }
 
   .respuestas {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     align-items: center;
     justify-content: center;
     min-height: 70px;
   }
 
-  .respuestas button {
-    font-family: var(--rg-fuente);
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 999px;
-    padding: 14px 34px;
-    cursor: pointer;
-    border: 0;
-    transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  #si {
-    color: #fff;
-    background: linear-gradient(135deg, #f08aa3, #d04f6f);
-    box-shadow: 0 12px 28px -8px rgba(232, 112, 140, 0.7);
-    transform: scale(var(--crece, 1));
-  }
-
+  #si { transform: scale(var(--crece, 1)); transition: transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1); }
+  #si:active { transform: scale(var(--crece, 1)) translateY(4px); }
   #no {
-    color: var(--rg-texto);
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
     white-space: nowrap;
     z-index: 20;
+    transition: left 0.3s cubic-bezier(0.3, 1.3, 0.5, 1), top 0.3s cubic-bezier(0.3, 1.3, 0.5, 1);
   }
-
   #no.huyendo { position: fixed; }
 
-  .pista {
-    margin: 22px 0 0;
-    color: var(--rg-texto-suave);
-    font-size: 0.9rem;
-    min-height: 1.4em;
-  }
-
-  .contenido {
-    position: relative;
-    z-index: 2;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 0 20px 90px;
-  }
-
-  .carta {
-    background: #fdf7f4;
-    color: #2c1d22;
-    border-radius: 16px;
-    padding: 38px 30px;
-    box-shadow: 0 24px 55px -14px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(233, 185, 160, 0.4);
-  }
-
-  .carta p {
-    white-space: pre-line;
-    line-height: 1.75;
-    font-size: 1.08rem;
-    margin: 0;
-    min-height: 3em;
-  }
-
-  .carta .rg-firma { color: #b23c5a; }
-
-  .contenido h2 {
-    font-family: var(--rg-fuente-titulo);
-    font-size: 2.1rem;
-    text-align: center;
-    color: var(--rg-acento-luz);
-    margin: 54px 0 12px;
-  }
+  .rg-ayuda { margin-top: 20px; }
 </style>
 </head>
-<body data-icono="💌">
-  <section class="escena" id="escena">
-    <div class="corazon-grande" aria-hidden="true">
-      <svg viewBox="0 0 100 90">
-        <defs>
-          <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#f6a0b4"/>
-            <stop offset="1" stop-color="#c8405f"/>
-          </linearGradient>
-        </defs>
-        <path d="M50 86 C20 64 2 46 2 26 A22 22 0 0 1 50 14 A22 22 0 0 1 98 26 C98 46 80 64 50 86 Z" fill="url(#g)"/>
-        <ellipse cx="30" cy="24" rx="9" ry="5" fill="#fff" opacity="0.35" transform="rotate(-30 30 24)"/>
+<body>
+  <section class="rg-escena" id="escena">
+    <div class="corazon" id="corazon" data-estado="normal" aria-hidden="true">
+      <svg viewBox="0 0 120 110">
+        <path d="M60 102C24 80 6 60 6 36A26 26 0 0 1 60 22a26 26 0 0 1 54 14c0 24-18 44-54 66z" fill="#ff5a6e" stroke="var(--rg-tinta)" stroke-width="3.5" stroke-linejoin="round"/>
+        <path d="M20 36a13 13 0 0 1 13-13" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".65"/>
+        <ellipse cx="33" cy="66" rx="7" ry="4.5" fill="#ffb3c0"/><ellipse cx="87" cy="66" rx="7" ry="4.5" fill="#ffb3c0"/>
+        <g class="cara normal" fill="var(--rg-tinta)">
+          <circle cx="44" cy="54" r="5.5"/><circle cx="76" cy="54" r="5.5"/>
+          <circle cx="46" cy="52" r="1.8" fill="#fff"/><circle cx="78" cy="52" r="1.8" fill="#fff"/>
+          <path d="M53 66q7 7 14 0" fill="none" stroke="var(--rg-tinta)" stroke-width="3.2" stroke-linecap="round"/>
+        </g>
+        <g class="cara triste" fill="var(--rg-tinta)">
+          <circle cx="44" cy="56" r="5.5"/><circle cx="76" cy="56" r="5.5"/>
+          <path d="M36 49l12-5M84 49l-12-5" stroke="var(--rg-tinta)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M53 74q7-7 14 0" fill="none" stroke="var(--rg-tinta)" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M80 63q3 6 0 9q-3-3 0-9z" fill="#7ec4ff" stroke="var(--rg-tinta)" stroke-width="1.8"/>
+        </g>
+        <g class="cara feliz">
+          <path d="M38 56q6-9 12 0M70 56q6-9 12 0" fill="none" stroke="var(--rg-tinta)" stroke-width="3.4" stroke-linecap="round"/>
+          <path d="M49 64q11 16 22 0z" fill="#9c1f33" stroke="var(--rg-tinta)" stroke-width="3" stroke-linejoin="round"/>
+        </g>
       </svg>
     </div>
-    <p class="para" data-campo="para" data-opcional></p>
-    <h1 id="propuesta">¿Quieres ser mi San Valentín?</h1>
+    <p class="rg-etiqueta" data-campo="para" data-opcional></p>
+    <h1 class="rg-titulo" id="propuesta">¿Quieres ser mi San Valentín?</h1>
     <div class="respuestas">
-      <button id="si" type="button">Sí ❤</button>
-      <button id="no" type="button">No</button>
+      <button class="rg-boton" id="si" type="button">Sí</button>
+      <button class="rg-boton rg-secundario" id="no" type="button">No</button>
     </div>
-    <p class="pista" id="pista"></p>
+    <p class="rg-ayuda" id="pista"></p>
   </section>
 
-  <main class="contenido" id="contenido" hidden>
-    <div class="carta rg-oculto" id="carta">
+  <main class="rg-contenido" id="contenido" hidden>
+    <div class="rg-carta rg-oculto" id="carta">
       <p id="mensaje"></p>
       <div class="rg-firma">— <span data-campo="de"></span></div>
     </div>
-    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia</h2>
+    <h2 class="rg-subtitulo rg-oculto" id="tituloFotos">Nuestra historia</h2>
     <div id="galeria" class="rg-oculto"></div>
   </main>
 
 <script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>
 <script src="../assets/regalo.js"></script>
 <script>
-  const { $, espera, escribir, galeria, confeti, flotar, datos } = Regalo;
+  const { $, espera, escribir, galeria, confeti, flotar, final, datos } = Regalo;
 
   if (datos.propuesta) $('#propuesta').textContent = datos.propuesta;
 
-  // El "No" se escapa y el "Sí" crece cada vez que intentan tocarlo.
-  const frases = ['¿En serio? 🥺', 'Piénsalo bien…', '¿Segurísimo?', 'Me vas a romper el corazón', 'Última oportunidad', 'Ese botón no funciona 😌'];
-  const no = $('#no'), si = $('#si');
-  let intentos = 0;
+  // El "No" se escapa, el corazón se pone triste y el "Sí" crece cada vez.
+  const frases = ['¿En serio?', 'Piénsalo bien…', '¿Segurísimo?', 'Me rompes el corazón', 'Última oportunidad', 'Ese botón no funciona'];
+  const no = $('#no'), si = $('#si'), corazon = $('#corazon');
+  let intentos = 0, tristeza = null;
 
   function escapar(e) {
     e.preventDefault();
     intentos++;
     no.textContent = frases[Math.min(intentos - 1, frases.length - 1)];
-    si.style.setProperty('--crece', Math.min(1 + intentos * 0.14, 1.9));
+    si.style.setProperty('--crece', Math.min(1 + intentos * 0.15, 1.9));
+    corazon.dataset.estado = 'triste';
+    clearTimeout(tristeza);
+    tristeza = setTimeout(() => corazon.dataset.estado === 'triste' && (corazon.dataset.estado = 'normal'), 1400);
     const r = no.getBoundingClientRect();
     if (!no.classList.contains('huyendo')) {
       no.style.left = r.left + 'px';
@@ -208,12 +136,10 @@
       void no.offsetWidth;
     }
     const margen = 16;
-    const x = margen + Math.random() * Math.max(0, innerWidth - r.width - margen * 2);
-    const y = margen + Math.random() * Math.max(0, innerHeight - r.height - margen * 2);
-    no.style.left = x + 'px';
-    no.style.top = y + 'px';
+    no.style.left = margen + Math.random() * Math.max(0, innerWidth - r.width - margen * 2) + 'px';
+    no.style.top = margen + Math.random() * Math.max(0, innerHeight - r.height - margen * 2) + 'px';
     if (navigator.vibrate) navigator.vibrate(12);
-    if (intentos >= 3) $('#pista').textContent = 'Creo que solo queda una opción ❤';
+    if (intentos >= 3) $('#pista').textContent = 'Creo que solo queda una opción…';
   }
   no.addEventListener('pointerenter', e => e.pointerType === 'mouse' && escapar(e));
   no.addEventListener('pointerdown', escapar);
@@ -222,26 +148,24 @@
   si.addEventListener('click', async () => {
     no.remove();
     si.disabled = true;
+    clearTimeout(tristeza);
+    corazon.dataset.estado = 'feliz';
     $('#pista').textContent = '';
     if (navigator.vibrate) navigator.vibrate([30, 40, 30]);
-    confeti({ duracion: 5000, colores: ['#f08aa3', '#f6d6c4', '#ffffff', '#d04f6f', '#e9b9a0'] });
-    flotar(['❤', '♡', '✧'], { cada: 420, duracion: 14000 });
+    confeti({ duracion: 4800, colores: ['#ff5a6e', '#ff9aad', '#fffdf8', '#ffd166'] });
+    flotar([['corazon', '#ff5a6e'], ['corazon', '#fffdf8'], ['corazon', '#ff9aad']], { cada: 500, duracion: 14000 });
     $('#propuesta').textContent = datos.titulo || '¡Sabía que dirías que sí!';
-    si.textContent = 'Sí, para siempre ❤';
+    si.textContent = 'Sí, mil veces sí';
     await espera(1800);
     $('#contenido').hidden = false;
     $('#carta').classList.add('rg-visible');
     $('#carta').scrollIntoView({ behavior: 'smooth', block: 'center' });
     await escribir($('#mensaje'), datos.mensaje || 'Gracias por elegirme otra vez.\nContigo cada día se siente como 14 de febrero.');
-    if (datos.fotos && datos.fotos.length) {
-      $('#tituloFotos').classList.add('rg-visible');
-      $('#galeria').classList.add('rg-visible');
-    }
+    final();
   });
 
   Regalo.iniciar({});
   galeria($('#galeria'));
-  if (!datos.fotos || !datos.fotos.length) $('#tituloFotos').remove();
 </script>
 </body>
 </html>

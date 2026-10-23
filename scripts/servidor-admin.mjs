@@ -516,7 +516,7 @@ const HTML_ADMIN = `<!doctype html>
 
         <!-- Específicos de cada diseño: solo se muestra el que corresponde -->
         <div class="form-group" data-plantilla="carta-amor">
-          <label>¿Desde cuándo están juntos? <span class="optional">(muestra "Llevamos juntos X días")</span></label>
+          <label>¿Desde cuándo están juntos? <span class="optional">(muestra "Juntos desde hace X días")</span></label>
           <input type="date" name="desde">
         </div>
         <div class="form-group" data-plantilla="cumpleanos">
@@ -534,6 +534,10 @@ const HTML_ADMIN = `<!doctype html>
         <div class="form-group" data-plantilla="san-valentin">
           <label>Pregunta <span class="optional">(vacío = «¿Quieres ser mi San Valentín?»)</span></label>
           <input type="text" name="propuesta" placeholder="Ej. ¿Quieres ser mi novia?">
+        </div>
+        <div class="form-group" data-plantilla="dia-del-padre">
+          <label>Texto de la placa <span class="optional">(vacío = «Al mejor papá del mundo»)</span></label>
+          <input type="text" name="placa" maxlength="40" placeholder="Ej. Al mejor papá y abuelito">
         </div>
         <div class="form-group" data-plantilla="atrapa-corazones">
           <label>Corazones para ganar <span class="optional">(vacío = 15)</span></label>
@@ -607,7 +611,7 @@ const HTML_ADMIN = `<!doctype html>
   const NOMBRES = {
     'flores-amarillas': 'Flores Amarillas', 'carta-amor': 'Carta de Amor', 'cumpleanos': 'Cumpleaños',
     'atrapa-corazones': 'Atrapa Corazones', 'san-valentin': 'San Valentín', 'graduacion': 'Graduación',
-    'navidad': 'Navidad', 'ano-nuevo': 'Año Nuevo'
+    'navidad': 'Navidad', 'ano-nuevo': 'Año Nuevo', 'dia-del-padre': 'Día del Padre'
   };
   const $ = s => document.querySelector(s);
   let CONFIG = null;

@@ -5,7 +5,8 @@ y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay serv
 
 - **Portada / tienda:** https://roddyz.github.io/regalos-digitales/
 - **Demos:** `…/demo-flores-amarillas/`, `…/demo-carta-amor/`, `…/demo-cumpleanos/`, `…/demo-atrapa-corazones/`,
-  `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-vip/` (clave: *amarillas*)
+  `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-dia-del-padre/`,
+  `…/demo-vip/` (clave: *amarillas*)
 - **Pendientes:** lo que falta por hacer está en [PENDIENTES.md](PENDIENTES.md).
 
 ---
@@ -48,7 +49,7 @@ Listo. Esto solo se hace la primera vez (o en una computadora nueva).
 
 **Antes de empezar**, pide al cliente por WhatsApp:
 
-- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones, San Valentín, graduación, Navidad o Año Nuevo)
+- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones, San Valentín, graduación, Navidad, Año Nuevo o Día del Padre)
   y el plan (Sencillo, Chévere o Bacán).
 - Para quién es y cómo firma.
 - El mensaje.
@@ -92,11 +93,12 @@ El asistente te pregunta todo, una cosa a la vez:
 | Fotos | **Arrastra la foto** desde la carpeta hasta la terminal y pulsa Enter. Después te pide un pie de foto (opcional). Enter vacío para terminar |
 | Canción | Pega el enlace de Spotify o YouTube (ver [sección 5](#5-música-enlace-de-spotify)) |
 | Pregunta secreta / Se abre el | Solo plan Bacán. Enter para saltar (ver [sección 7](#7-extras-del-plan-bacán-pregunta-secreta-y-apertura-programada)) |
-| ¿Desde cuándo están juntos? | Solo carta-amor. Fecha `2022-02-14` para mostrar "Llevamos juntos X días". Enter para saltar |
+| ¿Desde cuándo están juntos? | Solo carta-amor. Fecha `2022-02-14` para mostrar "Juntos desde hace X días". Enter para saltar |
 | Edad | Solo cumpleaños. Enter para saltar |
 | Carrera o logro | Solo graduación. Ej. `Ingeniería en Software · Promoción 2026`. Enter para saltar |
 | Año que llega | Solo año nuevo. Enter = automático (desde julio muestra el año siguiente) |
 | Pregunta | Solo San Valentín. Enter = *"¿Quieres ser mi San Valentín?"*. Puedes poner otra, ej. *"¿Quieres ser mi novia?"* |
+| Texto de la placa | Solo Día del Padre. Enter = *"Al mejor papá del mundo"*. Ej. *"Al mejor papá y abuelito"* (máx. 40 letras) |
 | Cliente / Teléfono | Datos de quien compra. **Son privados**: no salen en la página |
 | ¿Publicar ya en internet? | `s` para subirlo de una vez; `n` para revisarlo antes |
 
@@ -376,8 +378,8 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
 ## 12. Crear una plantilla nueva
 
 1. Copia una plantilla de `plantillas/` (ej. `carta-amor.html` → `dia-de-la-madre.html`) y cambia el diseño.
-2. Conserva estas cuatro piezas, que conectan la plantilla con el sistema:
-   - `<link rel="stylesheet" href="../assets/regalo.css">`
+2. Conserva estas piezas, que conectan la plantilla con el sistema:
+   - `<link rel="stylesheet" href="../assets/regalo.css">` y `<link rel="icon" href="../assets/icono.svg" type="image/svg+xml">`
    - `<script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>` (aquí se ponen los datos de cada regalo)
    - `<script src="../assets/regalo.js"></script>`
    - La llamada `Regalo.iniciar({ alAbrir() { … } })`
@@ -386,13 +388,30 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
    - `data-demo="demo-dia-de-la-madre/"`: la demo que se abre en el celular.
    - `data-cat="..."`: en qué filtros aparece. Puede tener varias, separadas por espacio:
      `amor`, `celebraciones`, `fechas`.
-   - El número (`09`), el título y la descripción. Para la etiqueta dorada de novedad, añade
+   - El número (`10`), el título y la descripción. Para la etiqueta dorada de novedad, añade
      `<span class="nuevo">Nuevo</span>` al final del título (y quítala cuando ya no sea nuevo).
 5. Publica: `git add plantillas demos docs && git commit -m "Plantilla día de la madre" && git push`.
 
-El motor común (`docs/assets/regalo.js`) ya se encarga de la pantalla "Toca para abrir", la música, la pregunta
-secreta, la cuenta regresiva y la expiración. En la plantilla puedes usar `Regalo.escribir()`, `Regalo.galeria()`,
-`Regalo.confeti()` y `Regalo.flotar()`.
+El motor común (`docs/assets/regalo.js`) ya se encarga de la caja de regalo de la apertura ("Te llegó un detallazo"),
+la música, la pregunta secreta, la cuenta regresiva, la expiración y el pie "Hecho con mucho amor en Detallazo".
+En la plantilla puedes usar `Regalo.escribir()`, `Regalo.galeria()`, `Regalo.confeti()`, `Regalo.flotar()` y
+`Regalo.figura()`. Al terminar la interacción, llama a `Regalo.final()`: muestra las fotos (si hay) y el pie.
+
+### Estilo de los regalos
+
+Todos los regalos comparten un estilo de papelería dibujada a mano, para que no se vean como plantillas genéricas:
+
+- **Colores planos** con contorno de "tinta" (`--rg-tinta`) y sombras sólidas tipo sticker. Nada de brillos,
+  degradados dorados ni efecto vidrio.
+- **Letras:** *Fraunces* para títulos, *Caveat* (escrita a mano) para dedicatorias y firmas, *Nunito* para el texto.
+- **Sin emojis.** Corazones, estrellas, flores y copos son dibujos SVG: `Regalo.flotar([['corazon', '#ff5a6e']])`
+  o `Regalo.figura('estrella', '#ffd166')`. Figuras disponibles: `corazon`, `estrella`, `flor`, `copo`, `circulo`.
+- **Piezas listas** en `regalo.css`: `rg-escena` (pantalla completa centrada), `rg-etiqueta` (texto a mano arriba
+  del título), `rg-titulo`, `rg-ayuda` (instrucción), `rg-boton` (y `rg-secundario`), `rg-carta` (papel con cinta
+  washi), `rg-firma`, `rg-subtitulo` (con subrayado a mano) y la galería de polaroids.
+- **Cada plantilla solo cambia su paleta** en `:root`: `--rg-fondo`, `--rg-acento` (botón), `--rg-acento-tinta`
+  (etiqueta y firma), `--rg-caja` y `--rg-cinta` (la caja de regalo de la apertura) y `--rg-washi` (la cinta).
+  En fondos oscuros (Navidad, Año Nuevo) cambia también `--rg-texto` y `--rg-sombra`.
 
 Si el diseño necesita un dato propio (como `edad` en cumpleaños o `carrera` en graduación), léelo con
 `Regalo.datos.<nombre>` y agrégalo como pregunta en `scripts/nuevo-regalo.mjs` y como campo en el panel

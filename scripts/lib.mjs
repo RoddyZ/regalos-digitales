@@ -248,6 +248,8 @@ export async function generarQR(codigo, url, pedido = {}) {
     await fs.writeFile(registro, 'fecha,codigo,plantilla,plan,cliente,telefono,url\n');
   }
   const csv = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  // Un regalo se registra una sola vez: regenerarlo con --forzar no agrega otra fila.
+  if ((await fs.readFile(registro, 'utf8')).includes(`,${csv(codigo)},`)) return dir;
   await fs.appendFile(
     registro,
     [new Date().toISOString(), codigo, pedido.plantilla, pedido.plan, pedido.cliente, pedido.telefono, url].map(csv).join(',') + '\n'
