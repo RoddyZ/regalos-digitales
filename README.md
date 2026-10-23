@@ -176,10 +176,29 @@ Dentro de cada carpeta encuentras:
 |---|---|
 | `qr.png` | Para enviar por WhatsApp o imprimir en tamaño normal (1200×1200 px) |
 | `qr.svg` | Para imprimir en grande (no pierde calidad) |
-| `tarjeta-regalo.png` | Tarjeta lista para imprimir (1200×1800 px) con el QR, el nombre y la firma |
+| `tarjeta-regalo.png` | Tarjeta lista para imprimir (ver abajo) |
 | `pedido.json` | Copia del pedido, por si acaso |
 
 **Antes de entregar, escanea el QR con tu celular** y prueba el regalo completo.
+
+### La tarjeta para imprimir
+
+`tarjeta-regalo.png` mide **10 × 15 cm** (1200 × 1800 px a 300 DPI), el tamaño de una foto normal. Trae:
+
+- Un marco del color del diseño (amarillo en flores, rosado en carta, verde en Navidad…).
+- La cajita de regalo, *"Para María"* escrito a mano y el título **"Tu regalo está aquí"**.
+- El QR pegado con cinta y los 3 pasos para abrirlo: *Abre la cámara · Apunta al código · Toca el enlace*.
+- La firma (*"De: Andrés"*), la frase de la marca y el código del regalo.
+
+Para imprimirla:
+
+1. Ábrela y elige **Imprimir → tamaño 10 × 15 cm** (o "4 × 6 pulgadas"), sin márgenes y al 100 %.
+2. Mejor en papel fotográfico o cartulina mate. También sirve en un estudio de fotos: se pide como foto de 10 × 15.
+3. Si usas una hoja A4, entran 4 tarjetas: recórtalas por el borde de color.
+4. Escanea la tarjeta impresa antes de entregarla.
+
+Las letras de la tarjeta (Fraunces, Caveat y Nunito, de licencia libre) están en `marca/fuentes/`. No las borres:
+sin ellas la tarjeta no se puede generar.
 
 > ⚠️ La carpeta `entregas/` no se sube a internet: **haz una copia de respaldo** (Google Drive, USB) de vez en cuando.
 
@@ -467,6 +486,7 @@ Por defecto los regalos son **permanentes**.
 | La tarjeta de Spotify no aparece | Revisa que el enlace sea de una **canción** (`/track/`) y que el plan sea Bacán |
 | El video de YouTube no aparece | Ese video no permite verse fuera de YouTube: usa Spotify |
 | El QR no se lee | Revisa que el logo no sea demasiado grande y que `qrColor` sea oscuro |
+| La tarjeta sale sin letras o da error de fuente | Falta la carpeta `marca/fuentes/`: recupérala con `git checkout marca/fuentes` |
 | No encuentro la carpeta de un regalo | Búscala por su código en el Explorador de Windows (ej. `pvnda5gr`), o mira el número en el historial del panel |
 
 ---
@@ -483,6 +503,7 @@ Por defecto los regalos son **permanentes**.
 | `pedidos/` | Pedidos reales y fotos de clientes (`pedidos/fotos/`) | **No** |
 | `entregas/` | QRs, tarjetas y registro de ventas, ordenados por plan y diseño ([sección 3](#3-entregar-el-qr-al-cliente)) | **No**: haz respaldo |
 | `marca/logo.png` | Logo para el centro del QR (opcional) | Sí |
+| `marca/fuentes/` | Letras de la marca para dibujar la tarjeta imprimible | Sí |
 | `config.json` | Dirección base, planes, color y logo del QR | Sí |
 | `scripts/` | Generador de regalos, panel, demos, limpieza y orden de entregas | Sí |
 | `PENDIENTES.md` | Lo que falta por hacer | Sí |

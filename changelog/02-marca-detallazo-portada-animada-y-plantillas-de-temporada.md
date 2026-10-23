@@ -63,6 +63,16 @@
 - Se quitó el reproductor de mp3 del motor (la música ya era solo por enlace).
 - Los 2 regalos ya entregados se regeneraron con `--forzar`: **mismo enlace y mismo QR**, diseño nuevo.
 
+### Tarjeta para imprimir (`tarjeta-regalo.png`)
+- **Rediseñada** con el mismo estilo: marco del color del diseño, cajita de regalo, *"Para María"* escrito a mano,
+  título **"Tu regalo está aquí"**, QR pegado con cinta y los 3 pasos (*Abre la cámara · Apunta al código · Toca el
+  enlace*), firma y frase de la marca.
+- **Letras de la marca** en la imagen: se dibujan con Fraunces, Caveat y Nunito incluidas en `marca/fuentes/`
+  (licencia OFL). Antes salían en Georgia/Arial.
+- **10 × 15 cm a 300 DPI**, el tamaño de una foto. Ya no se genera `tarjeta-regalo.svg`, que salía con otras letras.
+- El QR de la tarjeta se comprobó con un lector: se lee incluso reducido a 300 px.
+- En la portada, los textos dicen qué trae la tarjeta y su tamaño.
+
 ## 5. Plantillas nuevas (`plantillas/`)
 
 | Plantilla | Interacción | Dato propio |
@@ -115,3 +125,4 @@ Cada una tiene su demo (`demos/*.json` → `docs/demo-*`).
 - **De punta a punta:** regalo creado desde el panel con foto y regenerado desde la terminal con `--forzar`; regalo
   del Día del Padre creado desde el panel con placa personalizada. Las pruebas se borraron.
 - **Portada:** 9 diseños, filtros y los 4 mensajes de WhatsApp revisados.
+- **Tarjetas:** generadas para carta, atrapa corazones, Navidad y Día del Padre (con un nombre largo); QR leído en todas.
