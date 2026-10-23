@@ -6,61 +6,274 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Una carta para ti</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="../assets/regalo.css">
 <style>
   :root {
-    --rg-fondo: #3b0d1a;
-    --rg-texto: #fff1ec;
-    --rg-acento: #ff6b81;
-    --rg-intro-fondo: radial-gradient(circle at 50% 35%, #7a1d33, #26060f);
+    --rg-fondo: #1b1014;
+    --rg-texto: #fbf6ee;
+    --rg-acento: #e5b869;
+    --rg-cera: #991e2f;
+    --rg-sobre: #f4eae0;
+    --rg-papel: #fcf9f2;
+    --rg-tinta: #2c2024;
+    --rg-intro-fondo: radial-gradient(circle at 50% 38%, #2e1820 0%, #12090c 100%);
   }
-  body { background: radial-gradient(circle at 50% 20%, #6d1a2e, #3b0d1a 60%, #26060f); min-height: 100svh; }
 
-  .escena { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 16px; text-align: center; }
-  .escena > p { margin: 0; opacity: .85; min-height: 1.5em; }
-  .sobre .hoja span { display: block; text-align: center; padding-top: 14%; font-family: var(--rg-fuente-titulo); font-size: 1.5rem; color: #a4133c; }
-  h1 { font-family: var(--rg-fuente-titulo); font-size: clamp(2.2rem, 9vw, 3.4rem); color: var(--rg-acento); margin: 0 0 6px; }
+  body {
+    background: radial-gradient(circle at 50% 25%, #2a151d 0%, #180b10 65%, #0e0508 100%);
+    min-height: 100svh;
+  }
 
-  /* Sobre */
-  .sobre { position: relative; margin-top: 110px; width: min(86vw, 340px); aspect-ratio: 3 / 2; cursor: pointer; perspective: 800px; }
-  .sobre .cuerpo { position: absolute; inset: 0; background: #f4d9c6; border-radius: 6px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
-  .sobre .frente { position: absolute; inset: 0; z-index: 3; border-radius: 6px;
-    background: linear-gradient(to top right, #edcbb3 50%, transparent 50.5%) left / 50% 100% no-repeat,
-                linear-gradient(to top left, #edcbb3 50%, transparent 50.5%) right / 50% 100% no-repeat,
-                linear-gradient(to top, #e8c1a6 0 50%, transparent 50%); }
-  .sobre .solapa { position: absolute; left: 0; right: 0; top: 0; height: 60%; z-index: 4; transform-origin: top;
-    background: #e3b797; clip-path: polygon(0 0, 100% 0, 50% 100%); transition: transform .8s ease, z-index 0s .4s; }
-  .sobre .sello { position: absolute; left: 50%; top: 60%; z-index: 5; width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ff4d6d, #a4133c); display: grid; place-items: center; font-size: 24px; box-shadow: 0 3px 8px rgba(0,0,0,.4); transition: opacity .4s; animation: rg-latido 1.8s infinite; }
-  .sobre .hoja { position: absolute; left: 6%; right: 6%; top: 8%; bottom: 8%; z-index: 2; background: #fffaf3; border-radius: 4px; transition: transform 1s ease .6s; }
-  .sobre.abierto { cursor: default; }
-  .sobre.abierto .solapa { transform: rotateX(180deg); z-index: 1; }
-  .sobre.abierto .sello { opacity: 0; }
-  .sobre.abierto .hoja { transform: translateY(-45%); }
+  .escena {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
 
-  .contador { margin-top: 40px; font-size: 1.05rem; }
-  .contador b { display: block; font-family: var(--rg-fuente-titulo); font-size: 3rem; color: var(--rg-acento); line-height: 1.1; }
+  .subtitulo-dedicatoria {
+    font-family: var(--rg-fuente-acento);
+    font-size: 2.2rem;
+    color: var(--rg-acento);
+    margin: 0 0 4px;
+    line-height: 1;
+  }
 
-  .contenido { position: relative; z-index: 2; max-width: 620px; margin: 0 auto; padding: 0 16px 80px; }
-  .carta { background: #fffaf3; color: #4a1c26; border-radius: 6px; padding: 30px 24px;
-    background-image: repeating-linear-gradient(transparent 0 31px, #f1dfd4 31px 32px); box-shadow: 0 20px 50px rgba(0,0,0,.4); }
-  .carta .saludo { font-family: var(--rg-fuente-titulo); font-size: 1.8rem; margin: 0 0 10px; }
-  .carta p#mensaje { white-space: pre-line; line-height: 32px; font-size: 1.08rem; margin: 0; min-height: 3em; }
-  .contenido h2 { font-family: var(--rg-fuente-titulo); font-size: 2rem; text-align: center; color: var(--rg-acento); margin: 48px 0 8px; }
+  h1 {
+    font-family: var(--rg-fuente-titulo);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 7.5vw, 3.4rem);
+    letter-spacing: -0.02em;
+    color: var(--rg-texto);
+    margin: 0 0 10px;
+    line-height: 1.15;
+  }
+
+  .pista {
+    font-size: 0.95rem;
+    color: var(--rg-texto-suave);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin: 0;
+    transition: opacity 0.4s;
+  }
+
+  /* Sobre de Alta Calidad Artesanal */
+  .sobre-envoltorio {
+    margin: 48px auto 20px;
+    position: relative;
+    perspective: 1000px;
+  }
+
+  .sobre {
+    position: relative;
+    width: min(86vw, 340px);
+    aspect-ratio: 3 / 2;
+    cursor: pointer;
+    border-radius: 8px;
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.75),
+                0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .sobre:hover:not(.abierto) {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .sobre .cuerpo {
+    position: absolute;
+    inset: 0;
+    background: #eedfd2;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .sobre .hoja {
+    position: absolute;
+    left: 7%;
+    right: 7%;
+    top: 8%;
+    bottom: 8%;
+    z-index: 2;
+    background: var(--rg-papel);
+    border-radius: 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sobre .hoja-monograma {
+    font-family: var(--rg-fuente-acento);
+    font-size: 2.2rem;
+    color: var(--rg-cera);
+    opacity: 0.8;
+  }
+
+  .sobre .frente {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 8px;
+    pointer-events: none;
+    background: linear-gradient(to top right, #e8d5c4 50%, transparent 50.5%) left / 50% 100% no-repeat,
+                linear-gradient(to top left, #e8d5c4 50%, transparent 50.5%) right / 50% 100% no-repeat,
+                linear-gradient(to top, #decaa9 0 50%, transparent 50%);
+  }
+
+  .sobre .solapa {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 60%;
+    z-index: 4;
+    transform-origin: top;
+    background: #d8c2b0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.4s;
+  }
+
+  /* Sello de Lacre Realista */
+  .sobre .sello {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    z-index: 5;
+    width: 58px;
+    height: 58px;
+    margin: -29px 0 0 -29px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #b82a3e, #7a1524 85%);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.55),
+                inset 0 1px 2px rgba(255, 255, 255, 0.35),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+    display: grid;
+    place-items: center;
+    color: #ffd8df;
+    font-family: var(--rg-fuente-titulo);
+    font-size: 20px;
+    transition: opacity 0.4s, transform 0.4s;
+  }
+
+  .sobre .sello::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.25);
+  }
+
+  .sobre.abierto {
+    cursor: default;
+  }
+  .sobre.abierto .solapa {
+    transform: rotateX(180deg);
+    z-index: 1;
+  }
+  .sobre.abierto .sello {
+    opacity: 0;
+    transform: scale(0.6);
+    pointer-events: none;
+  }
+  .sobre.abierto .hoja {
+    transform: translateY(-50%);
+  }
+
+  /* Contador de Historia */
+  .contador {
+    margin-top: 36px;
+    font-size: 1rem;
+    color: var(--rg-texto-suave);
+  }
+  .contador b {
+    display: block;
+    font-family: var(--rg-fuente-titulo);
+    font-size: 2.8rem;
+    font-weight: 500;
+    color: var(--rg-acento);
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+
+  /* Contenedor de la Carta Desplegada */
+  .contenido {
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 20px 90px;
+  }
+
+  .carta {
+    background: var(--rg-papel);
+    color: var(--rg-tinta);
+    border-radius: 6px;
+    padding: 42px 32px;
+    box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.65),
+                0 0 0 1px rgba(0,0,0,0.04);
+    position: relative;
+    background-image: repeating-linear-gradient(transparent 0 33px, #ece3d7 33px 34px);
+  }
+
+  .carta .saludo {
+    font-family: var(--rg-fuente-acento);
+    font-size: 2.6rem;
+    color: var(--rg-cera);
+    margin: 0 0 16px;
+    line-height: 1;
+  }
+
+  .carta p#mensaje {
+    white-space: pre-line;
+    line-height: 34px;
+    font-size: 1.08rem;
+    margin: 0;
+    min-height: 3.5em;
+    font-family: var(--rg-fuente);
+    font-weight: 400;
+  }
+
+  .carta .rg-firma {
+    color: var(--rg-cera);
+    font-size: 2.3rem;
+  }
+
+  .contenido h2 {
+    font-family: var(--rg-fuente-titulo);
+    font-size: 2.1rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--rg-acento-luz);
+    margin: 54px 0 12px;
+    letter-spacing: -0.02em;
+  }
 </style>
 </head>
-<body data-icono="💌">
+<body data-icono="✉">
   <section class="escena">
+    <p class="subtitulo-dedicatoria">Para ti</p>
     <h1 data-campo="titulo">Tengo algo que decirte</h1>
-    <p id="pista">Toca el sobre para abrirlo</p>
-    <div class="sobre" id="sobre" role="button" aria-label="Abrir la carta">
-      <div class="cuerpo"></div>
-      <div class="hoja"><span>♡</span></div>
-      <div class="frente"></div>
-      <div class="solapa"></div>
-      <div class="sello">❤</div>
+    <p class="pista" id="pista">Toca el sobre para abrir la carta</p>
+
+    <div class="sobre-envoltorio">
+      <div class="sobre" id="sobre" role="button" aria-label="Abrir carta">
+        <div class="cuerpo"></div>
+        <div class="hoja"><span class="hoja-monograma">♡</span></div>
+        <div class="frente"></div>
+        <div class="solapa"></div>
+        <div class="sello">✦</div>
+      </div>
     </div>
+
     <div class="contador rg-oculto" id="contador"></div>
   </section>
 
@@ -68,9 +281,9 @@
     <article class="carta rg-oculto" id="carta">
       <p class="saludo">Para <span data-campo="para">ti</span>:</p>
       <p id="mensaje"></p>
-      <div class="rg-firma">Con amor, <span data-campo="de"></span></div>
+      <div class="rg-firma">Con todo mi amor, <span data-campo="de"></span></div>
     </article>
-    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia</h2>
+    <h2 class="rg-oculto" id="tituloFotos">Nuestra historia en imágenes</h2>
     <div id="galeria" class="rg-oculto"></div>
   </main>
 
@@ -79,12 +292,11 @@
 <script>
   const { $, espera, escribir, galeria, flotar, diasDesde, datos } = Regalo;
 
-  // Saludo configurable ("Mi querida mamá:"); por defecto "Para <nombre>:".
   if (datos.saludo) $('.saludo').textContent = datos.saludo;
 
   const dias = diasDesde(datos.desde);
   if (dias !== null && dias >= 0) {
-    $('#contador').innerHTML = `${Regalo.esc(datos.textoContador || 'Llevamos juntos')}<b>${dias.toLocaleString('es')} días</b>`;
+    $('#contador').innerHTML = `${Regalo.esc(datos.textoContador || 'Compartiendo el camino hace')}<b>${dias.toLocaleString('es')} días</b>`;
   } else $('#contador').remove();
 
   let abierto = false;
@@ -92,16 +304,19 @@
     if (abierto) return;
     abierto = true;
     $('#sobre').classList.add('abierto');
-    $('#pista').textContent = '';
-    flotar(['❤', '💕', '♡'], { cada: 380 });
-    await espera(1600);
+    $('#pista').style.opacity = '0';
+    flotar(['♡', '✧', '❤'], { cada: 420 });
+    await espera(1500);
     $('#contador') && $('#contador').classList.add('rg-visible');
     $('#contenido').hidden = false;
-    await espera(900);
+    await espera(800);
     $('#carta').classList.add('rg-visible');
     $('#carta').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    await escribir($('#mensaje'), datos.mensaje || 'Gracias por existir.');
-    if (datos.fotos && datos.fotos.length) { $('#tituloFotos').classList.add('rg-visible'); $('#galeria').classList.add('rg-visible'); }
+    await escribir($('#mensaje'), datos.mensaje || 'Gracias por estar en mi vida cada día.');
+    if (datos.fotos && datos.fotos.length) {
+      $('#tituloFotos').classList.add('rg-visible');
+      $('#galeria').classList.add('rg-visible');
+    }
   });
 
   Regalo.iniciar({});
