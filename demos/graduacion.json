@@ -1,0 +1,9 @@
+{
+  "plantilla": "graduacion",
+  "plan": "chevere",
+  "para": "Daniela",
+  "de": "Tu familia",
+  "carrera": "Ingeniería en Software · Promoción 2026",
+  "mensaje": "Cada desvelo, cada examen y cada sacrificio te trajeron hasta aquí.\nHoy celebramos a la profesional que siempre supimos que serías.\nEstamos muy orgullosos de ti.",
+  "fotos": [{ "ruta": "fotos/muestra2.jpg", "texto": "El primer día de clases" }]
+}

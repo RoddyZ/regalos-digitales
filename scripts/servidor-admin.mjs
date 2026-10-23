@@ -1,7 +1,7 @@
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { generarRegalo, leerConfig, RAIZ, PLANTILLAS, ENTREGAS, SITIO } from './lib.mjs';
+import { generarRegalo, leerConfig, listarEntregas, slug, RAIZ, PLANTILLAS, ENTREGAS, SITIO } from './lib.mjs';
 
 const PUERTO = process.env.PORT || 4200;
 
@@ -44,6 +44,9 @@ function responderJson(res, statusCode, datos) {
   });
   res.end(JSON.stringify(datos));
 }
+
+// Ruta de la carpeta de entrega para usarla en URLs: 03-vip/cumpleanos/0003-sofi-abc
+const rutaWeb = dir => path.relative(ENTREGAS, dir).split(path.sep).join('/');
 
 async function servirArchivo(res, rutaAbsoluta) {
   try {
@@ -89,15 +92,7 @@ const server = http.createServer(async (req, res) => {
   // API: Lista de pedidos generados
   if (pathname === '/api/pedidos' && req.method === 'GET') {
     try {
-      const entregas = await fs.readdir(ENTREGAS).catch(() => []);
-      const pedidos = [];
-      for (const dir of entregas) {
-        const pedPath = path.join(ENTREGAS, dir, 'pedido.json');
-        try {
-          const raw = await fs.readFile(pedPath, 'utf8');
-          pedidos.push(JSON.parse(raw));
-        } catch {}
-      }
+      const pedidos = (await listarEntregas()).map(e => ({ ...e.pedido, numero: e.numero, carpeta: path.relative(ENTREGAS, e.dir) }));
       responderJson(res, 200, { pedidos });
     } catch (e) {
       responderJson(res, 500, { error: e.message });
@@ -107,54 +102,48 @@ const server = http.createServer(async (req, res) => {
 
   // API: Crear nuevo regalo
   if (pathname === '/api/crear' && req.method === 'POST') {
+    // Las fotos originales se guardan en pedidos/fotos/<fecha>/ (privado, no se sube) para poder
+    // regenerar el regalo después con: npm run nuevo -- pedidos/<archivo>.json --forzar
+    const PEDIDOS = path.join(RAIZ, 'pedidos');
+    const carpetaFotos = `fotos/${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}`;
+    let fotosGuardadas = false;
     try {
       const body = await parseBody(req);
-      const tempDir = path.join(RAIZ, 'scratch', 'admin-uploads', Date.now().toString());
-      await fs.mkdir(tempDir, { recursive: true });
 
-      // Si las fotos vienen en data URLs (base64) desde el navegador, guardarlas temporalmente
       const fotosProcesadas = [];
       if (Array.isArray(body.fotos)) {
         for (const [i, f] of body.fotos.entries()) {
-          if (typeof f === 'string' && f.startsWith('data:image/')) {
-            const matches = f.match(/^data:image\/([a-zA-Z+]+);base64,(.+)$/);
-            if (matches) {
-              const ext = matches[1].replace('jpeg', 'jpg');
-              const buffer = Buffer.from(matches[2], 'base64');
-              const nombreFoto = `foto_${i + 1}.${ext}`;
-              const fotoPath = path.join(tempDir, nombreFoto);
-              await fs.writeFile(fotoPath, buffer);
-              fotosProcesadas.push(fotoPath);
-            }
-          } else {
-            fotosProcesadas.push(f);
-          }
+          const partes = typeof f === 'string' && f.match(/^data:image\/([a-zA-Z+]+);base64,(.+)$/);
+          if (!partes) continue;
+          await fs.mkdir(path.join(PEDIDOS, carpetaFotos), { recursive: true });
+          fotosGuardadas = true;
+          const relativa = `${carpetaFotos}/foto_${i + 1}.${partes[1].replace('jpeg', 'jpg')}`;
+          await fs.writeFile(path.join(PEDIDOS, relativa), Buffer.from(partes[2], 'base64'));
+          fotosProcesadas.push(relativa);
         }
       }
       body.fotos = fotosProcesadas;
 
       const resultado = await generarRegalo(body, {
-        baseDir: RAIZ,
+        baseDir: PEDIDOS,
         forzar: true,
         conQR: true
       });
 
-      // Guardar registro de pedido en pedidos/
-      const nombreArchivo = `${(body.para || 'regalo').toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g, '-')}-${resultado.codigo}`;
-      await fs.mkdir(path.join(RAIZ, 'pedidos'), { recursive: true });
-      await fs.writeFile(path.join(RAIZ, 'pedidos', `${nombreArchivo}.json`), JSON.stringify({ codigo: resultado.codigo, ...body }, null, 2));
-
-      // Limpiar fotos temporales
-      await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+      // Guardar el pedido en pedidos/ (las rutas de las fotos son relativas a esa carpeta)
+      const nombreArchivo = `${slug(body.para)}-${resultado.codigo}`;
+      await fs.writeFile(path.join(PEDIDOS, `${nombreArchivo}.json`), JSON.stringify({ codigo: resultado.codigo, ...body }, null, 2));
 
       responderJson(res, 200, {
         ok: true,
         codigo: resultado.codigo,
         url: resultado.url,
-        qr: `/entregas/${resultado.codigo}/qr.png`,
-        tarjeta: `/entregas/${resultado.codigo}/tarjeta-regalo.png`
+        carpeta: path.relative(ENTREGAS, resultado.entrega),
+        qr: `/entregas/${rutaWeb(resultado.entrega)}/qr.png`,
+        tarjeta: `/entregas/${rutaWeb(resultado.entrega)}/tarjeta-regalo.png`
       });
     } catch (e) {
+      if (fotosGuardadas) await fs.rm(path.join(PEDIDOS, carpetaFotos), { recursive: true, force: true }).catch(() => {});
       responderJson(res, 400, { ok: false, error: e.message });
     }
     return;
@@ -191,13 +180,14 @@ const server = http.createServer(async (req, res) => {
   res.end('Ruta no encontrada');
 });
 
-server.listen(PUERTO, () => {
+server.listen(PUERTO, '127.0.0.1', () => {
   console.log(`
   ════════════════════════════════════════════════════════════
-  ✦ DETALLE QR · Panel de Administración & Estudio de Pedidos
+  ✦ DETALLAZO · Panel de Administración & Estudio de Pedidos
   ════════════════════════════════════════════════════════════
   Accede desde tu navegador en:
   👉 http://localhost:${PUERTO}
+  🔒 Solo funciona en esta computadora: no se publica en internet.
 
   Presiona Ctrl + C en esta terminal para detener el servidor.
   ════════════════════════════════════════════════════════════
@@ -209,7 +199,7 @@ const HTML_ADMIN = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Detalle QR · Panel de Control</title>
+<title>Detallazo · Panel de Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -453,6 +443,19 @@ const HTML_ADMIN = `<!doctype html>
     align-items: center;
     font-size: 0.88rem;
   }
+  .incluye { margin: 10px 0 0; font-size: 0.82rem; color: var(--gold); }
+  .aviso-plan { margin: 0 0 10px; font-size: 0.82rem; color: var(--text-muted); }
+  .aviso-plan:empty { display: none; }
+  .bloqueado input, .bloqueado textarea, .bloqueado .dropzone { opacity: 0.35; pointer-events: none; }
+  .bloqueado > label { color: var(--text-muted); }
+  .dropzone.lleno { opacity: 0.6; cursor: default; }
+  .thumb { position: relative; padding: 0; border: 0; background: none; cursor: pointer; }
+  .thumb img { width: 64px; height: 64px; border-radius: 8px; object-fit: cover; border: 1px solid var(--line); display: block; }
+  .thumb span {
+    position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; line-height: 20px; text-align: center;
+  }
+  [hidden] { display: none !important; }
   @media (max-width: 900px) {
     .container { grid-template-columns: 1fr; }
   }
@@ -460,7 +463,7 @@ const HTML_ADMIN = `<!doctype html>
 </head>
 <body>
   <div class="header">
-    <div class="brand">Detalle<span> QR</span> · Estudio de Creación</div>
+    <div class="brand">Detall<span>azo</span> · Estudio de Creación</div>
     <span class="badge-live">● Servidor Activo</span>
   </div>
 
@@ -478,17 +481,14 @@ const HTML_ADMIN = `<!doctype html>
           <input type="hidden" name="plantilla" id="plantillaInput" required>
         </div>
 
-        <!-- Plan -->
+        <!-- Plan: define qué campos se pueden llenar (se lee de config.json) -->
         <div class="form-group">
-          <label>2. Plan de Entrega</label>
+          <label>2. Plan</label>
           <div class="grid-2">
-            <select name="plan" id="planInput">
-              <option value="basico">Básico ($5) · Sin fotos</option>
-              <option value="chevere" selected>Chévere ($10) · 1 Foto Polaroid</option>
-              <option value="vip">VIP ($15) · Hasta 10 Fotos + Música + Clave</option>
-            </select>
+            <select name="plan" id="planInput"></select>
             <input type="text" name="codigo" placeholder="Código personalizado (opcional)">
           </div>
+          <p class="incluye" id="incluye"></p>
         </div>
 
         <!-- Nombres -->
@@ -505,7 +505,7 @@ const HTML_ADMIN = `<!doctype html>
 
         <!-- Título y Mensaje -->
         <div class="form-group">
-          <label>Título Grande <span class="optional">(dejar en blanco para usar el de la plantilla)</span></label>
+          <label>Título Grande <span class="optional">(dejar en blanco para usar el del diseño)</span></label>
           <input type="text" name="titulo" placeholder="Ej. Feliz Aniversario, mi amor">
         </div>
 
@@ -514,9 +514,36 @@ const HTML_ADMIN = `<!doctype html>
           <textarea name="mensaje" placeholder="Escribe aquí tu mensaje especial..." required></textarea>
         </div>
 
-        <!-- Fotos -->
-        <div class="form-group" id="fotosGroup">
-          <label>Fotografías <span class="optional">(arrastra imágenes aquí)</span></label>
+        <!-- Específicos de cada diseño: solo se muestra el que corresponde -->
+        <div class="form-group" data-plantilla="carta-amor">
+          <label>¿Desde cuándo están juntos? <span class="optional">(muestra "Llevamos juntos X días")</span></label>
+          <input type="date" name="desde">
+        </div>
+        <div class="form-group" data-plantilla="cumpleanos">
+          <label>Edad que cumple <span class="optional">(opcional)</span></label>
+          <input type="number" name="edad" min="1" max="120" placeholder="Ej. 24">
+        </div>
+        <div class="form-group" data-plantilla="graduacion">
+          <label>Carrera o logro <span class="optional">(opcional)</span></label>
+          <input type="text" name="carrera" placeholder="Ej. Ingeniería en Software · Promoción 2026">
+        </div>
+        <div class="form-group" data-plantilla="ano-nuevo">
+          <label>Año que llega <span class="optional">(vacío = automático)</span></label>
+          <input type="number" name="anio" min="2024" max="2100" placeholder="Ej. 2027">
+        </div>
+        <div class="form-group" data-plantilla="san-valentin">
+          <label>Pregunta <span class="optional">(vacío = «¿Quieres ser mi San Valentín?»)</span></label>
+          <input type="text" name="propuesta" placeholder="Ej. ¿Quieres ser mi novia?">
+        </div>
+        <div class="form-group" data-plantilla="atrapa-corazones">
+          <label>Corazones para ganar <span class="optional">(vacío = 15)</span></label>
+          <input type="number" name="meta" min="3" max="40" placeholder="15">
+        </div>
+
+        <!-- Fotos: según maxFotos del plan -->
+        <div class="form-group" data-requiere="fotos">
+          <label>Fotografías <span class="optional" id="contadorFotos"></span></label>
+          <p class="aviso-plan"></p>
           <div class="dropzone" id="dropzone">
             <p>📷 Haz clic o arrastra fotos aquí (JPG, PNG, WebP)</p>
             <input type="file" id="fileInput" multiple accept="image/*" style="display:none">
@@ -524,33 +551,26 @@ const HTML_ADMIN = `<!doctype html>
           <div class="preview-fotos" id="previewFotos"></div>
         </div>
 
-        <!-- Música (VIP) -->
-        <div class="form-group">
-          <label>Canción / Música <span class="optional">(Enlace de Spotify o YouTube)</span></label>
-          <input type="url" name="musica" placeholder="https://open.spotify.com/track/...">
+        <!-- Música: solo enlaces (no se suben archivos de audio) -->
+        <div class="form-group" data-requiere="musica">
+          <label>Canción <span class="optional">(enlace de Spotify: en la app, Compartir → Copiar enlace)</span></label>
+          <p class="aviso-plan"></p>
+          <input type="url" name="musica" placeholder="https://open.spotify.com/track/..."
+                 pattern="https://(open\\.spotify\\.com|(www\\.)?youtube\\.com|youtu\\.be)/.+"
+                 title="Pega un enlace de Spotify (o de YouTube)">
         </div>
 
-        <!-- Extras VIP -->
-        <div class="form-group grid-2">
-          <div>
-            <label>Pregunta Secreta <span class="optional">(VIP)</span></label>
-            <input type="text" name="pregunta" placeholder="Ej. ¿Dónde nos conocimos?">
+        <!-- Extras: pregunta secreta y apertura programada -->
+        <div class="form-group" data-requiere="extras">
+          <label>Extras <span class="optional">(pregunta secreta y apertura programada)</span></label>
+          <p class="aviso-plan"></p>
+          <div class="grid-2">
+            <input type="text" name="pregunta" placeholder="Pregunta secreta. Ej. ¿Dónde nos conocimos?">
+            <input type="text" name="respuesta" placeholder="Respuestas válidas, separadas con |">
           </div>
-          <div>
-            <label>Respuesta Aceptada <span class="optional">(separar con |)</span></label>
-            <input type="text" name="respuesta" placeholder="cafeteria|en el cafe">
-          </div>
-        </div>
-
-        <!-- Específicos por plantilla -->
-        <div class="form-group grid-2">
-          <div>
-            <label>Fecha inicio <span class="optional">(Solo Carta de Amor: AAAA-MM-DD)</span></label>
-            <input type="date" name="desde">
-          </div>
-          <div>
-            <label>Edad <span class="optional">(Solo Cumpleaños)</span></label>
-            <input type="number" name="edad" placeholder="Ej. 24">
+          <div class="grid-2" style="margin-top: 12px;">
+            <input type="text" name="pista" placeholder="Pista tras 2 errores (opcional)">
+            <input type="datetime-local" name="abreEl" title="Se abre el (vacío = de inmediato)">
           </div>
         </div>
 
@@ -565,6 +585,7 @@ const HTML_ADMIN = `<!doctype html>
         <p style="color: var(--text-muted); font-size: 0.9rem;">El detalle ha sido generado con éxito en alta resolución.</p>
         <img class="qr-img" id="resQr" alt="Código QR">
         <div class="url-pill" id="resUrl"></div>
+        <p style="color: var(--text-muted); font-size: 0.8rem; margin: 0 0 16px;">📁 entregas/<span id="resCarpeta"></span></p>
         <div class="action-buttons">
           <a class="btn-action" id="btnVerWeb" target="_blank">🌐 Ver Web en Vivo</a>
           <a class="btn-action" id="btnDescargarTarjeta" download="tarjeta-regalo.png">🖨 Descargar Tarjeta Imprimible (300 DPI)</a>
@@ -583,36 +604,84 @@ const HTML_ADMIN = `<!doctype html>
   </div>
 
 <script>
-  let fotosBase64 = [];
+  const NOMBRES = {
+    'flores-amarillas': 'Flores Amarillas', 'carta-amor': 'Carta de Amor', 'cumpleanos': 'Cumpleaños',
+    'atrapa-corazones': 'Atrapa Corazones', 'san-valentin': 'San Valentín', 'graduacion': 'Graduación',
+    'navidad': 'Navidad', 'ano-nuevo': 'Año Nuevo'
+  };
+  const $ = s => document.querySelector(s);
+  let CONFIG = null;
+  let fotos = []; // data URLs de las fotos elegidas
 
-  // Cargar configuración
+  const planActual = () => CONFIG.planes[$('#planInput').value];
+
+  function resumenPlan(p) {
+    const partes = [p.maxFotos ? (p.maxFotos === 1 ? '1 foto' : 'hasta ' + p.maxFotos + ' fotos') : 'sin fotos'];
+    if (p.musica) partes.push('canción');
+    if (p.extras) partes.push('pregunta secreta y apertura programada');
+    return partes.join(' · ');
+  }
+
+  // Activa o bloquea los campos según el plan. Los campos bloqueados no se envían.
+  function aplicarPlan() {
+    const p = planActual();
+    document.querySelectorAll('[data-requiere]').forEach(g => {
+      const req = g.dataset.requiere;
+      const ok = req === 'fotos' ? p.maxFotos > 0 : !!p[req];
+      g.classList.toggle('bloqueado', !ok);
+      g.querySelectorAll('input, textarea, select').forEach(i => { i.disabled = !ok; });
+      g.querySelector('.aviso-plan').textContent = ok ? '' : '🔒 No incluido en el plan ' + p.nombre + '. Sube de plan para activarlo.';
+    });
+    if (fotos.length > p.maxFotos) fotos = fotos.slice(0, p.maxFotos);
+    pintarFotos();
+    $('#incluye').textContent = 'Incluye: ' + resumenPlan(p);
+  }
+
+  // Muestra solo los campos propios del diseño elegido.
+  function aplicarPlantilla(nombre) {
+    document.querySelectorAll('[data-plantilla]').forEach(g => {
+      const ok = g.dataset.plantilla === nombre;
+      g.hidden = !ok;
+      g.querySelectorAll('input').forEach(i => { i.disabled = !ok; });
+    });
+  }
+
   async function cargarConfig() {
     const res = await fetch('/api/config');
     const { config, plantillas } = await res.json();
-    const cont = document.getElementById('plantillasContainer');
-    cont.innerHTML = plantillas.map((p, i) => \`
-      <div class="template-opt \${i === 0 ? 'selected' : ''}" data-val="\${p}">
-        <b>\${p}</b>
-        <small>Plantilla interactiva</small>
+    CONFIG = config;
+
+    $('#planInput').innerHTML = Object.entries(config.planes).map(([clave, p]) =>
+      \`<option value="\${clave}" \${clave === 'chevere' ? 'selected' : ''}>\${p.nombre} ($\${p.precio}) · \${resumenPlan(p)}</option>\`
+    ).join('');
+    $('#planInput').onchange = aplicarPlan;
+
+    const inicial = plantillas.includes('flores-amarillas') ? 'flores-amarillas' : plantillas[0];
+    const cont = $('#plantillasContainer');
+    cont.innerHTML = plantillas.map(p => \`
+      <div class="template-opt \${p === inicial ? 'selected' : ''}" data-val="\${p}">
+        <b>\${NOMBRES[p] || p}</b>
+        <small>\${p}</small>
       </div>
     \`).join('');
-
-    document.getElementById('plantillaInput').value = plantillas[0];
-
+    $('#plantillaInput').value = inicial;
     document.querySelectorAll('.template-opt').forEach(opt => {
       opt.addEventListener('click', () => {
         document.querySelectorAll('.template-opt').forEach(x => x.classList.remove('selected'));
         opt.classList.add('selected');
-        document.getElementById('plantillaInput').value = opt.dataset.val;
+        $('#plantillaInput').value = opt.dataset.val;
+        aplicarPlantilla(opt.dataset.val);
       });
     });
+
+    aplicarPlantilla(inicial);
+    aplicarPlan();
   }
 
-  // Cargar Historial
   async function cargarHistorial() {
     const res = await fetch('/api/pedidos');
     const { pedidos } = await res.json();
-    const cont = document.getElementById('historialList');
+    const cont = $('#historialList');
     if (!pedidos.length) {
       cont.innerHTML = '<li style="color:var(--text-muted); font-size:0.85rem;">No hay pedidos generados aún.</li>';
       return;
@@ -621,53 +690,63 @@ const HTML_ADMIN = `<!doctype html>
       <li class="history-item">
         <div>
           <b>\${p.para || 'Regalo'}</b>
-          <div style="color:var(--text-muted); font-size:0.75rem;">\${p.plantilla} · \${p.codigo}</div>
+          <div style="color:var(--text-muted); font-size:0.75rem;">\${p.numero ? '#' + String(p.numero).padStart(4, '0') + ' · ' : ''}\${NOMBRES[p.plantilla] || p.plantilla} · \${p.codigo}</div>
         </div>
         <a class="btn-action" style="padding:6px 12px; font-size:0.75rem;" href="/docs/\${p.codigo}/" target="_blank">Abrir</a>
       </li>
     \`).join('');
   }
 
-  // Manejo de Dropzone de fotos
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const preview = document.getElementById('previewFotos');
+  // ---------- Fotos ----------
+  const dropzone = $('#dropzone');
+  const fileInput = $('#fileInput');
 
-  dropzone.onclick = () => fileInput.click();
-  dropzone.ondragover = e => { e.preventDefault(); dropzone.classList.add('dragover'); };
+  function pintarFotos() {
+    const max = planActual().maxFotos;
+    $('#previewFotos').innerHTML = fotos.map((f, i) =>
+      \`<button type="button" class="thumb" data-i="\${i}" title="Quitar foto"><img src="\${f}" alt=""><span>×</span></button>\`
+    ).join('');
+    document.querySelectorAll('.thumb').forEach(b => b.onclick = () => { fotos.splice(+b.dataset.i, 1); pintarFotos(); });
+    $('#contadorFotos').textContent = max ? \`(\${fotos.length} de \${max})\` : '';
+    dropzone.classList.toggle('lleno', fotos.length >= max);
+    dropzone.querySelector('p').textContent = fotos.length >= max && max
+      ? '✔ Ya tienes las ' + max + ' foto(s) de este plan. Toca una foto para quitarla.'
+      : '📷 Haz clic o arrastra fotos aquí (JPG, PNG, WebP)';
+  }
+
+  function procesarArchivos(files) {
+    const max = planActual().maxFotos;
+    const libres = max - fotos.length;
+    const elegidas = [...files].filter(f => f.type.startsWith('image/'));
+    if (elegidas.length > libres) alert('Este plan admite ' + max + ' foto(s). Se agregarán solo ' + Math.max(0, libres) + '.');
+    elegidas.slice(0, Math.max(0, libres)).forEach(f => {
+      const reader = new FileReader();
+      reader.onload = ev => { if (fotos.length < max) { fotos.push(ev.target.result); pintarFotos(); } };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  const zonaActiva = () => planActual().maxFotos > fotos.length;
+  dropzone.onclick = () => zonaActiva() && fileInput.click();
+  dropzone.ondragover = e => { e.preventDefault(); zonaActiva() && dropzone.classList.add('dragover'); };
   dropzone.ondragleave = () => dropzone.classList.remove('dragover');
   dropzone.ondrop = e => {
     e.preventDefault();
     dropzone.classList.remove('dragover');
-    procesarArchivos(e.dataTransfer.files);
+    if (zonaActiva()) procesarArchivos(e.dataTransfer.files);
   };
-  fileInput.onchange = e => procesarArchivos(e.target.files);
+  fileInput.onchange = e => { procesarArchivos(e.target.files); fileInput.value = ''; };
 
-  function procesarArchivos(files) {
-    for (const f of files) {
-      if (!f.type.startsWith('image/')) continue;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        fotosBase64.push(ev.target.result);
-        const img = document.createElement('img');
-        img.className = 'preview-thumb';
-        img.src = ev.target.result;
-        preview.appendChild(img);
-      };
-      reader.readAsDataURL(f);
-    }
-  }
-
-  // Envío del Formulario
-  document.getElementById('formPedido').onsubmit = async e => {
+  // ---------- Envío ----------
+  $('#formPedido').onsubmit = async e => {
     e.preventDefault();
-    const btn = document.getElementById('btnCrear');
+    const btn = $('#btnCrear');
     btn.disabled = true;
     btn.textContent = 'Procesando imágenes y QR...';
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-    data.fotos = fotosBase64;
+    // FormData ignora los campos bloqueados; también se descartan los vacíos.
+    const data = Object.fromEntries([...new FormData(e.target).entries()].filter(([, v]) => String(v).trim() !== ''));
+    if (planActual().maxFotos) data.fotos = fotos;
 
     try {
       const res = await fetch('/api/crear', {
@@ -678,12 +757,13 @@ const HTML_ADMIN = `<!doctype html>
       const json = await res.json();
       if (!json.ok) throw new Error(json.error);
 
-      document.getElementById('resQr').src = json.qr + '?t=' + Date.now();
-      document.getElementById('resUrl').textContent = json.url;
-      document.getElementById('btnVerWeb').href = '/docs/' + json.codigo + '/';
-      document.getElementById('btnDescargarTarjeta').href = json.tarjeta;
-      document.getElementById('btnDescargarQr').href = json.qr;
-      document.getElementById('resultCard').classList.add('visible');
+      $('#resQr').src = json.qr + '?t=' + Date.now();
+      $('#resUrl').textContent = json.url;
+      $('#resCarpeta').textContent = json.carpeta.split(String.fromCharCode(92)).join('/');
+      $('#btnVerWeb').href = '/docs/' + json.codigo + '/';
+      $('#btnDescargarTarjeta').href = json.tarjeta;
+      $('#btnDescargarQr').href = json.qr;
+      $('#resultCard').classList.add('visible');
       cargarHistorial();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Detalle QR · Motor Estético de Regalos Digitales
+   Detallazo · Motor Estético de Regalos Digitales
    Diseño Editorial & Boutique (Sin clichés sintéticos ni neones de IA)
    ========================================================================== */
 
@@ -36,6 +36,10 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+
+/* Vista previa dentro del celular de la portada (iframe): sin barra de desplazamiento */
+.rg-embebido { scrollbar-width: none; }
+.rg-embebido::-webkit-scrollbar, .rg-embebido body::-webkit-scrollbar { display: none; }
 
 /* Micro-textura de grano orgánico en el fondo */
 body::before {

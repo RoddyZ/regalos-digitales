@@ -1,12 +1,12 @@
 {
   "urlBase": "https://roddyz.github.io/regalos-digitales/",
-  "marca": "Detalle QR",
+  "marca": "Detallazo",
   "qrLogo": "marca/logo.png",
   "qrColor": "#1f1b16",
   "planes": {
     "basico": {
       "precio": 5,
-      "nombre": "Básico",
+      "nombre": "Sencillo",
       "maxFotos": 0,
       "musica": false,
       "extras": false,
@@ -22,7 +22,7 @@
     },
     "vip": {
       "precio": 15,
-      "nombre": "VIP",
+      "nombre": "Bacán",
       "maxFotos": 10,
       "musica": true,
       "extras": true,

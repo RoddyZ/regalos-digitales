@@ -1,0 +1,8 @@
+{
+  "plantilla": "navidad",
+  "plan": "vip",
+  "para": "Mamá",
+  "de": "Tus hijos",
+  "mensaje": "Gracias por llenar cada Navidad de risas, abrazos y el mejor pristiño del mundo.\nQue esta noche esté llena de paz y amor.\nTe amamos.",
+  "fotos": ["fotos/muestra1.jpg", { "ruta": "fotos/muestra3.jpg", "texto": "Navidad en familia" }]
+}

@@ -1,9 +1,12 @@
 /* ==========================================================================
-   Detalle QR · Motor Estético de Regalos Digitales (Lógica de Cliente)
+   Detallazo · Motor Estético de Regalos Digitales (Lógica de Cliente)
    ========================================================================== */
 (function () {
   const R = window.REGALO || {};
   const $ = (s, el = document) => el.querySelector(s);
+
+  // Dentro del celular de la portada: sin barra de desplazamiento visible.
+  if (window.self !== window.top) document.documentElement.classList.add('rg-embebido');
 
   function esc(t) {
     return String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

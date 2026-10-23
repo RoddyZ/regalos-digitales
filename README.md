@@ -1,10 +1,12 @@
-# Detalle QR · Regalos digitales con QR
+# Detallazo · Tu regalo listo, hecho con mucho amor
 
 Cada regalo es una página web con su propio enlace (por ejemplo `https://roddyz.github.io/regalos-digitales/pvnda5gr/`)
 y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay servidor ni base de datos que pagar.
 
 - **Portada / tienda:** https://roddyz.github.io/regalos-digitales/
-- **Demos:** `…/demo-flores-amarillas/`, `…/demo-carta-amor/`, `…/demo-cumpleanos/`, `…/demo-atrapa-corazones/`, `…/demo-vip/` (clave: *amarillas*)
+- **Demos:** `…/demo-flores-amarillas/`, `…/demo-carta-amor/`, `…/demo-cumpleanos/`, `…/demo-atrapa-corazones/`,
+  `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-vip/` (clave: *amarillas*)
+- **Pendientes:** lo que falta por hacer está en [PENDIENTES.md](PENDIENTES.md).
 
 ---
 
@@ -14,9 +16,9 @@ y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay serv
 2. [Crear un regalo paso a paso](#2-crear-un-regalo-paso-a-paso)
 3. [Entregar el QR al cliente](#3-entregar-el-qr-al-cliente)
 4. [Hacer cambios a un regalo ya entregado](#4-hacer-cambios-a-un-regalo-ya-entregado)
-5. [Música: Spotify, YouTube o mp3](#5-música-spotify-youtube-o-mp3)
+5. [Música: enlace de Spotify](#5-música-enlace-de-spotify)
 6. [Planes y precios](#6-planes-y-precios)
-7. [Extras VIP: pregunta secreta y apertura programada](#7-extras-vip-pregunta-secreta-y-apertura-programada)
+7. [Extras del plan Bacán: pregunta secreta y apertura programada](#7-extras-del-plan-bacán-pregunta-secreta-y-apertura-programada)
 8. [Poner tu logo en el QR](#8-poner-tu-logo-en-el-qr)
 9. [Cambiar WhatsApp y redes sociales de la portada](#9-cambiar-whatsapp-y-redes-sociales-de-la-portada)
 10. [Privacidad: qué se sube y qué no](#10-privacidad-qué-se-sube-y-qué-no)
@@ -46,7 +48,8 @@ Listo. Esto solo se hace la primera vez (o en una computadora nueva).
 
 **Antes de empezar**, pide al cliente por WhatsApp:
 
-- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones) y el plan (Básico, Chévere o VIP).
+- El diseño (flores amarillas, carta de amor, cumpleaños, atrapa corazones, San Valentín, graduación, Navidad o Año Nuevo)
+  y el plan (Sencillo, Chévere o Bacán).
 - Para quién es y cómo firma.
 - El mensaje.
 - Las fotos (si el plan las incluye).
@@ -62,6 +65,15 @@ npm run admin
 ```
 Abre `http://localhost:4200` en tu navegador para crear el regalo con interfaz visual, arrastrar fotos y descargar la tarjeta imprimible directamente.
 
+- **Es privado:** el panel corre solo en tu computadora (`127.0.0.1`). No se publica en internet y tampoco se puede
+  abrir desde otro equipo de tu wifi. Lo que sí es público es la portada y los regalos (carpeta `docs/`).
+- **Se adapta al plan:** al elegir el plan, los campos que no incluye quedan bloqueados (🔒) y no se envían. Las fotos
+  se limitan a las que permite el plan (Sencillo: 0, Chévere: 1, Bacán: 10); para quitar una, tócala.
+- **Se adapta al diseño:** solo aparecen los campos propios del diseño elegido (edad en cumpleaños, carrera en
+  graduación, etc.).
+- Los límites salen de `config.json`. Si los cambias ahí, el panel se ajusta solo. Aunque alguien se salte el panel,
+  el generador vuelve a revisar el pedido y lo rechaza si no cuadra con el plan.
+
 ### Opción B: Desde la terminal interactiva
 ```bash
 npm run nuevo
@@ -72,16 +84,19 @@ El asistente te pregunta todo, una cosa a la vez:
 | Pregunta | Qué responder |
 |---|---|
 | Diseño | El número de la lista (ej. `2` para carta-amor) |
-| Plan | `1` Básico, `2` Chévere, `3` VIP |
+| Plan | `1` Sencillo, `2` Chévere, `3` Bacán |
 | Para | Nombre de quien recibe: `Lorena` |
 | De | Firma: `Roddy` |
 | Título grande | Ej. `Feliz aniversario`. Enter = el título por defecto del diseño |
 | Mensaje | Escribe línea por línea. **Enter en una línea vacía** para terminar |
 | Fotos | **Arrastra la foto** desde la carpeta hasta la terminal y pulsa Enter. Después te pide un pie de foto (opcional). Enter vacío para terminar |
-| Canción | Pega el enlace de Spotify o YouTube (ver [sección 5](#5-música-spotify-youtube-o-mp3)) |
-| Pregunta secreta / Se abre el | Solo VIP. Enter para saltar (ver [sección 7](#7-extras-vip-pregunta-secreta-y-apertura-programada)) |
+| Canción | Pega el enlace de Spotify o YouTube (ver [sección 5](#5-música-enlace-de-spotify)) |
+| Pregunta secreta / Se abre el | Solo plan Bacán. Enter para saltar (ver [sección 7](#7-extras-del-plan-bacán-pregunta-secreta-y-apertura-programada)) |
 | ¿Desde cuándo están juntos? | Solo carta-amor. Fecha `2022-02-14` para mostrar "Llevamos juntos X días". Enter para saltar |
 | Edad | Solo cumpleaños. Enter para saltar |
+| Carrera o logro | Solo graduación. Ej. `Ingeniería en Software · Promoción 2026`. Enter para saltar |
+| Año que llega | Solo año nuevo. Enter = automático (desde julio muestra el año siguiente) |
+| Pregunta | Solo San Valentín. Enter = *"¿Quieres ser mi San Valentín?"*. Puedes poner otra, ej. *"¿Quieres ser mi novia?"* |
 | Cliente / Teléfono | Datos de quien compra. **Son privados**: no salen en la página |
 | ¿Publicar ya en internet? | `s` para subirlo de una vez; `n` para revisarlo antes |
 
@@ -91,8 +106,9 @@ Al terminar verás algo así:
 ✔ Regalo creado con éxito
   Código:  pvnda5gr
   URL:     https://roddyz.github.io/regalos-digitales/pvnda5gr/
-  QR:      D:\regalos-digitales\entregas\pvnda5gr\qr.png
-  Tarjeta: D:\regalos-digitales\entregas\pvnda5gr\tarjeta-regalo.png (300 DPI lista para imprimir)
+  Carpeta: entregas\03-vip\carta-amor\0001-lorena-pvnda5gr
+  QR:      D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\qr.png
+  Tarjeta: D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\tarjeta-regalo.png (300 DPI lista para imprimir)
   Pedido:  pedidos\lorena-2026-09-29.json
 ```
 
@@ -120,15 +136,46 @@ Abre `http://localhost:5173/pvnda5gr/` en el navegador. Para ver cómo se ve en 
 
 ## 3. Entregar el QR al cliente
 
-En `entregas/<codigo>/` encuentras:
+Cada regalo tiene su carpeta, ordenada por **plan → diseño → número de pedido**:
+
+```
+entregas/
+├── registro.csv                          ← lista de todas las ventas (se abre en Excel)
+├── 01-basico/
+│   └── cumpleanos/
+│       └── 0004-sofi-k3m9tq2w/
+├── 02-chevere/
+│   └── graduacion/
+│       └── 0005-daniela-p7xr2bn4/
+└── 03-vip/
+    ├── carta-amor/
+    │   └── 0001-lorena-pvnda5gr/
+    └── atrapa-corazones/
+        └── 0002-lorena-mi-amor-7udxbxfa/
+```
+
+El nombre de cada carpeta es `<número>-<para quién>-<código>`:
+
+- **Número** (`0001`, `0002`…): el orden en que hiciste los pedidos. Nunca se repite.
+- **Para quién**: el nombre de quien recibe, sin tildes ni espacios.
+- **Código**: el mismo de la URL (`…/regalos-digitales/pvnda5gr/`). **La URL y el QR no dependen de esta carpeta**,
+  así que ordenar o mover carpetas nunca rompe un QR ya impreso.
+
+Si cambias un regalo de plan o de diseño (con `--forzar` o desde el panel), su carpeta se mueve sola al lugar
+correcto y **conserva su número**.
+
+> **¿Tenías entregas con el formato viejo (`entregas/<codigo>/`)?** Ejecuta una vez `npm run ordenar-entregas`.
+> Las mueve al formato nuevo y les asigna número según el orden de `registro.csv`. Se puede correr varias veces:
+> lo que ya está ordenado no se toca.
+
+Dentro de cada carpeta encuentras:
 
 | Archivo | Para qué |
 |---|---|
 | `qr.png` | Para enviar por WhatsApp o imprimir en tamaño normal (1200×1200 px) |
 | `qr.svg` | Para imprimir en grande (no pierde calidad) |
+| `tarjeta-regalo.png` | Tarjeta lista para imprimir (1200×1800 px) con el QR, el nombre y la firma |
 | `pedido.json` | Copia del pedido, por si acaso |
-
-Además, `entregas/registro.csv` lleva la lista de todas las ventas (se abre en Excel).
 
 **Antes de entregar, escanea el QR con tu celular** y prueba el regalo completo.
 
@@ -160,15 +207,15 @@ Para crear un regalo desde un archivo, sin el asistente, copia `pedidos/ejemplo.
 
 ---
 
-## 5. Música: Spotify, YouTube o mp3
+## 5. Música: enlace de Spotify
 
-Solo el plan **VIP** incluye canción. Hay tres formas; la recomendada es Spotify.
+Solo el plan **Bacán** incluye canción. **Siempre es un enlace**: no se suben archivos de audio, así la página
+no pesa nada más (la música la sirve Spotify).
 
 | Opción | Cómo se ve y se escucha | Qué pegar |
 |---|---|---|
 | **Spotify** ⭐ | Tarjeta oficial abajo, con la portada del disco y botón ▶. Sin cuenta suena un **fragmento de 30 s** (como en las historias de Instagram); con cuenta de Spotify, la canción completa | Enlace de la canción: `https://open.spotify.com/track/...` |
 | **YouTube** | Reproductor pequeño en una esquina; hay que tocar ▶ | Enlace del video: `https://www.youtube.com/watch?v=...` o `https://youtu.be/...` |
-| **mp3 propio** | Suena de fondo **automáticamente** al abrir el regalo, con un botón ♪ para pausar | Ruta al archivo: arrástralo a la terminal |
 
 **Cómo obtener el enlace de Spotify:**
 en la app, busca la canción → `⋯` → *Compartir* → *Copiar enlace de la canción*. Sirven tanto
@@ -178,7 +225,10 @@ en la app, busca la canción → `⋯` → *Compartir* → *Copiar enlace de la 
 
 - **No se descargan canciones de YouTube**: va contra sus reglas, y el archivo quedaría en un repositorio público.
   Con Spotify y YouTube usamos sus reproductores oficiales, que es lo permitido.
-- El mp3 propio solo úsalo si tienes permiso para usarlo (música libre de derechos, una grabación propia, una nota de voz…).
+- Si pegas un archivo o un enlace que no es de Spotify/YouTube, el generador lo rechaza.
+- **¿Por qué no suena sola al abrir?** Los celulares bloquean que una página reproduzca sonido por su cuenta, y la
+  tarjeta de Spotify no permite reproducción automática. Por eso aparece la tarjeta de la canción apenas se abre
+  el regalo y la persona toca ▶. Es lo más confiable: funciona igual en iPhone y Android.
 - Algunos videos de YouTube no permiten verse fuera de YouTube. Si pasa, el reproductor simplemente no aparece: usa Spotify.
 
 ---
@@ -187,11 +237,15 @@ en la app, busca la canción → `⋯` → *Compartir* → *Copiar enlace de la 
 
 Todos los planes funcionan con cualquier diseño.
 
-| Plan | Precio | Fotos | Canción | Extras VIP |
+| Plan | Precio | Fotos | Canción | Pregunta secreta y apertura programada |
 |---|---|---|---|---|
-| Básico | $5 | — | — | — |
+| Sencillo | $5 | — | — | — |
 | Chévere | $10 | 1 | — | — |
-| VIP | $15 | hasta 10 | ✅ | ✅ |
+| Bacán | $15 | hasta 10 | ✅ | ✅ |
+
+> **Nombre visible y nombre interno.** El cliente ve *Sencillo · Chévere · Bacán*. Por dentro (en los pedidos `.json`,
+> en `config.json` y en las carpetas de `entregas/`) se siguen llamando `basico`, `chevere` y `vip`.
+> Así no se rompe nada de lo que ya existe. Si cambias el nombre visible, cambia solo `nombre` en `config.json`.
 
 **Para cambiar precios o lo que incluye cada plan:**
 
@@ -211,11 +265,11 @@ Todos los planes funcionan con cualquier diseño.
    ```
 
 Si un pedido trae algo que su plan no incluye, el generador no lo deja pasar y avisa
-(por ejemplo: *"El plan Básico no incluye fotos."*).
+(por ejemplo: *"El plan Sencillo admite hasta 0 foto(s)…"*).
 
 ---
 
-## 7. Extras VIP: pregunta secreta y apertura programada
+## 7. Extras del plan Bacán: pregunta secreta y apertura programada
 
 **Pregunta secreta:** antes de abrir el regalo aparece una pregunta que solo esa persona sabe responder.
 
@@ -254,15 +308,20 @@ Todo está en **un solo lugar**: al final de `docs/index.html`, en el bloque `CO
 ```js
 const CONTACTO = {
   whatsapp: '593992700393',                  // formato internacional, sin + ni espacios
-  instagram: 'https://www.instagram.com/',   // ej. https://www.instagram.com/detalleqr
-  tiktok: 'https://www.tiktok.com/',         // ej. https://www.tiktok.com/@detalleqr
-  facebook: 'https://www.facebook.com/'      // ej. https://www.facebook.com/detalleqr
+  instagram: 'https://www.instagram.com/',   // ej. https://www.instagram.com/detallazo
+  tiktok: 'https://www.tiktok.com/',         // ej. https://www.tiktok.com/@detallazo
+  facebook: 'https://www.facebook.com/'      // ej. https://www.facebook.com/detallazo
 };
 ```
 
-- **WhatsApp:** es el botón "Pedir el mío". Cuando un cliente lo toca, se abre un chat contigo con el mensaje
-  *"¡Hola! Quiero un regalo con QR 🎁"* ya escrito. Número con código de país (593) y sin el 0 inicial.
-- **Redes:** pega el enlace completo de cada perfil.
+- **WhatsApp:** son los botones "Pedir el mío" y "Elegir plan". Al tocarlos se abre un chat contigo con un mensaje
+  ya escrito. Número con código de país (593) y sin el 0 inicial.
+  - Botón general: *"¡Hola! ✨ Vi Detallazo y quiero sorprender a alguien. ¿Me ayudan a armar el regalo?"*
+  - Botones de plan: el cliente recibe una mini ficha para llenar (para quién es, ocasión, plantilla).
+  - Los textos están en `mensajeDefecto` y en el bloque `data-whatsapp-plan`, justo debajo de `CONTACTO`.
+  - **Emojis:** usa solo los "simples" (✨ ❤ ☺ ✔). Los más nuevos (🎁 🥰 👋) pueden llegar como `�` en
+    WhatsApp Web/escritorio. Por eso el enlace usa `api.whatsapp.com/send` y no `wa.me`.
+- **Redes:** por ahora están **ocultas** (no hay perfiles todavía). Cómo activarlas: ver [PENDIENTES.md](PENDIENTES.md).
 
 Luego:
 
@@ -297,7 +356,7 @@ regalos publicados se pueden ver navegando el repositorio en GitHub. Los código
 1. En GitHub: *Settings → General → Change visibility → Private*.
 2. En https://pages.cloudflare.com: *Create project → Connect to Git →* elige el repositorio.
 3. *Build command:* vacío. *Build output directory:* `docs`.
-4. Cambia `urlBase` en `config.json` por la nueva dirección (ej. `https://detalleqr.pages.dev/`).
+4. Cambia `urlBase` en `config.json` por la nueva dirección (ej. `https://detallazo.pages.dev/`).
 
    > Los QR ya entregados apuntan a la dirección vieja: haz esta migración **antes** de vender mucho.
 
@@ -316,19 +375,53 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
 
 ## 12. Crear una plantilla nueva
 
-1. Copia una plantilla de `plantillas/` (ej. `carta-amor.html` → `navidad.html`) y cambia el diseño.
+1. Copia una plantilla de `plantillas/` (ej. `carta-amor.html` → `dia-de-la-madre.html`) y cambia el diseño.
 2. Conserva estas cuatro piezas, que conectan la plantilla con el sistema:
    - `<link rel="stylesheet" href="../assets/regalo.css">`
    - `<script>window.REGALO = /*__DATOS__*/{}/*__FIN__*/;</script>` (aquí se ponen los datos de cada regalo)
    - `<script src="../assets/regalo.js"></script>`
    - La llamada `Regalo.iniciar({ alAbrir() { … } })`
-3. Crea `demos/navidad.json` (copia otro de esa carpeta) y ejecuta `npm run demos`.
-4. Agrega el diseño al catálogo de la portada (`docs/index.html`, lista `id="lista"`).
-5. Publica: `git add plantillas demos docs && git commit -m "Plantilla navidad" && git push`.
+3. Crea `demos/dia-de-la-madre.json` (copia otro de esa carpeta) y ejecuta `npm run demos`.
+4. Agrega el diseño al catálogo de la portada (`docs/index.html`, lista `id="lista"`). Copia un `<li>` y cambia:
+   - `data-demo="demo-dia-de-la-madre/"`: la demo que se abre en el celular.
+   - `data-cat="..."`: en qué filtros aparece. Puede tener varias, separadas por espacio:
+     `amor`, `celebraciones`, `fechas`.
+   - El número (`09`), el título y la descripción. Para la etiqueta dorada de novedad, añade
+     `<span class="nuevo">Nuevo</span>` al final del título (y quítala cuando ya no sea nuevo).
+5. Publica: `git add plantillas demos docs && git commit -m "Plantilla día de la madre" && git push`.
 
 El motor común (`docs/assets/regalo.js`) ya se encarga de la pantalla "Toca para abrir", la música, la pregunta
 secreta, la cuenta regresiva y la expiración. En la plantilla puedes usar `Regalo.escribir()`, `Regalo.galeria()`,
 `Regalo.confeti()` y `Regalo.flotar()`.
+
+Si el diseño necesita un dato propio (como `edad` en cumpleaños o `carrera` en graduación), léelo con
+`Regalo.datos.<nombre>` y agrégalo como pregunta en `scripts/nuevo-regalo.mjs` y como campo en el panel
+(`scripts/servidor-admin.mjs`, bloque "Específicos por plantilla").
+
+### Animaciones de la portada
+
+La portada usa dos librerías gratuitas, guardadas **dentro del proyecto** en `docs/assets/vendor/` (no dependen
+de otros servidores):
+
+| Librería | Para qué se usa |
+|---|---|
+| **GSAP** (+ ScrollTrigger y SplitText) | La escena del celular que escanea la tarjeta, los títulos que aparecen palabra por palabra y la transición del celular del catálogo |
+| **Lenis** | El desplazamiento suave al bajar por la página |
+
+- Todo el código de animación está al final de `docs/index.html`, después de los `<script src="assets/vendor/…">`.
+- Las tarjetas que "suben" al aparecer solo necesitan la clase `revelar`. Los títulos que se arman palabra por palabra,
+  la clase `dividir`.
+- Si alguien tiene activado *"reducir movimiento"* en su celular, las animaciones se apagan solas.
+- Si las librerías no cargan, la página se ve completa igual (solo sin animación).
+
+**Actualizar las librerías** (opcional, una vez al año está bien):
+
+```
+npm pack gsap lenis
+```
+
+Descomprime los `.tgz` y copia `gsap/dist/gsap.min.js`, `ScrollTrigger.min.js`, `SplitText.min.js` y
+`lenis/dist/lenis.min.js` a `docs/assets/vendor/`. Revisa la portada con `npm run servir` antes de publicar.
 
 ---
 
@@ -352,9 +445,10 @@ Por defecto los regalos son **permanentes**.
 | El asistente no muestra lo que escribes | Actualiza el proyecto (`git pull`). Usa la terminal de VS Code o PowerShell. **Ctrl+C** cancela sin crear nada |
 | `✘ No encuentro ese archivo` al arrastrar una foto | Revisa que el archivo exista; también puedes escribir la ruta completa |
 | El enlace da "Regalo no encontrado" | Espera 2 minutos después del `git push`; revisa en *Actions* que la publicación terminó |
-| La tarjeta de Spotify no aparece | Revisa que el enlace sea de una **canción** (`/track/`) y que el plan sea VIP |
+| La tarjeta de Spotify no aparece | Revisa que el enlace sea de una **canción** (`/track/`) y que el plan sea Bacán |
 | El video de YouTube no aparece | Ese video no permite verse fuera de YouTube: usa Spotify |
 | El QR no se lee | Revisa que el logo no sea demasiado grande y que `qrColor` sea oscuro |
+| No encuentro la carpeta de un regalo | Búscala por su código en el Explorador de Windows (ej. `pvnda5gr`), o mira el número en el historial del panel |
 
 ---
 
@@ -365,19 +459,23 @@ Por defecto los regalos son **permanentes**.
 | `plantillas/*.html` | Los diseños | Sí |
 | `docs/` | El sitio publicado: portada (`index.html`), `assets/`, demos y regalos | Sí |
 | `docs/assets/regalo.js` | Motor común de los regalos | Sí |
+| `docs/assets/vendor/` | Librerías de animación de la portada (GSAP, Lenis) | Sí |
 | `demos/` | Pedidos de muestra con fotos de relleno → `npm run demos` regenera `docs/demo-*` | Sí |
 | `pedidos/` | Pedidos reales y fotos de clientes (`pedidos/fotos/`) | **No** |
-| `entregas/` | QRs y registro de ventas | **No** — haz respaldo |
+| `entregas/` | QRs, tarjetas y registro de ventas, ordenados por plan y diseño ([sección 3](#3-entregar-el-qr-al-cliente)) | **No**: haz respaldo |
 | `marca/logo.png` | Logo para el centro del QR (opcional) | Sí |
 | `config.json` | Dirección base, planes, color y logo del QR | Sí |
-| `scripts/` | Generador de regalos, demos y limpieza | Sí |
+| `scripts/` | Generador de regalos, panel, demos, limpieza y orden de entregas | Sí |
+| `PENDIENTES.md` | Lo que falta por hacer | Sí |
 
 **Comandos:**
 
 | Comando | Qué hace |
 |---|---|
+| `npm run admin` | Panel visual para crear regalos: http://localhost:4200 |
 | `npm run nuevo` | Asistente para crear un regalo |
 | `npm run nuevo -- pedidos/x.json [--forzar] [--publicar]` | Crear o actualizar un regalo desde un archivo |
 | `npm run demos` | Regenerar las demos |
 | `npm run servir` | Ver el sitio en tu computadora: http://localhost:5173 |
 | `npm run limpiar` | Borrar del sitio los regalos expirados |
+| `npm run ordenar-entregas` | Pasar las entregas viejas al orden por plan/diseño/número |
