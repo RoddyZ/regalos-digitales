@@ -1,9 +1,9 @@
 # Detallazo · Tu regalo listo, hecho con mucho amor
 
-Cada regalo es una página web con su propio enlace (por ejemplo `https://roddyz.github.io/regalos-digitales/pvnda5gr/`)
-y un código QR que la abre. Todo se publica gratis en GitHub Pages: no hay servidor ni base de datos que pagar.
+Cada regalo es una página web con su propio enlace (por ejemplo `https://detallazo-ec.pages.dev/pvnda5gr/`)
+y un código QR que la abre. Todo se publica gratis en Cloudflare Pages: no hay servidor ni base de datos que pagar.
 
-- **Portada / tienda:** https://roddyz.github.io/regalos-digitales/
+- **Portada / tienda:** https://detallazo-ec.pages.dev/
 - **Demos:** `…/demo-flores-amarillas/`, `…/demo-carta-amor/`, `…/demo-cumpleanos/`, `…/demo-atrapa-corazones/`,
   `…/demo-san-valentin/`, `…/demo-graduacion/`, `…/demo-navidad/`, `…/demo-ano-nuevo/`, `…/demo-dia-del-padre/`,
   `…/demo-vip/` (clave: *amarillas*)
@@ -107,7 +107,7 @@ Al terminar verás algo así:
 ```
 ✔ Regalo creado con éxito
   Código:  pvnda5gr
-  URL:     https://roddyz.github.io/regalos-digitales/pvnda5gr/
+  URL:     https://detallazo-ec.pages.dev/pvnda5gr/
   Carpeta: entregas\03-vip\carta-amor\0001-lorena-pvnda5gr
   QR:      D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\qr.png
   Tarjeta: D:\regalos-digitales\entregas\03-vip\carta-amor\0001-lorena-pvnda5gr\tarjeta-regalo.png (300 DPI lista para imprimir)
@@ -305,7 +305,7 @@ Si un pedido trae algo que su plan no incluye, el generador no lo deja pasar y a
 - Formato: `2027-02-14 00:00` (año-mes-día hora:minutos, hora del celular de quien lo abre).
 - Ideal para entregar el QR la noche anterior y que se abra a la medianoche.
 
-Pruébalo en la demo: https://roddyz.github.io/regalos-digitales/demo-vip/ (respuesta: *amarillas*).
+Pruébalo en la demo: https://detallazo-ec.pages.dev/demo-vip/ (respuesta: *amarillas*).
 
 ---
 
@@ -397,6 +397,9 @@ Cada `git push` vuelve a publicar el sitio en 1 a 2 minutos. Para ver el estado:
 GitHub Pages es para proyectos personales; sus reglas no permiten usarlo como tienda. **Cloudflare Pages** es
 gratis, sí permite uso comercial, no limita las visitas y publica la misma carpeta `docs/` con cada `git push`.
 Te da una dirección gratis del tipo **`detallazo.pages.dev`**.
+
+> **Ya está hecho:** el sitio oficial es **https://detallazo-ec.pages.dev/** y `urlBase` ya apunta ahí. Cada `git push`
+> a `main` lo publica solo. Los pasos de abajo sirven si algún día hay que volver a crearlo.
 
 **A. Crear el sitio (una sola vez, unos 10 minutos)**
 
